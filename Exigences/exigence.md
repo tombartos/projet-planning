@@ -1,0 +1,131 @@
+---
+abstract: |
+  Voici les exigences du projet planning réalisé par les M1IM de
+  l'université de Toulon dans le cadre du cours de modélisation et
+  gestion de projet.
+author:
+- BARTIER Tom
+- ROBLIN Yann
+- BA GUBAIR Emad
+- MARCAIS André
+date: 2025-03-01
+title: Exigences Planning
+---
+
+# Login
+
+-   EX_LOGIN_001
+
+    -   Créer un compte
+
+    -   L'administrateur doit pouvoir créer des comptes élève,
+        professeur, et responsable d'emploi du temps
+
+-   EX_LOGIN_002
+
+    -   Se connecter
+
+    -   L'utilisateur doit pouvoir se connecter qu'il soit élève,
+        professeur ou responsable d'emploi du temps sur une unique
+        interface.
+
+-   EX_LOGIN_003
+
+    -   Consulter anonymement
+
+    -   Les utilisateurs doivent pouvoir accéder anonymement à
+        l'application avec des restrictions.
+
+# Fonctionnalités générales
+
+-   EX_BASE_FEATURES_001
+
+    -   Consulter emploi du temps personnel
+
+    -   Les utilisateurs connectés doivent pouvoir consulter leur emploi
+        temps respectif
+
+-   EX_BASE_FEATURES_002
+
+    -   Consulter emploi du temps salles
+
+    -   Les utilisateurs connectés ainsi que les anonymes doivent
+        pouvoir consulter l'emploi du temps des salles
+
+-   EX_BASE_FEATURES_003
+
+    -   Consulter emploi du temps d'un groupe
+
+    -   Les utilisateurs connectés doivent pouvoir consulter l'emploi du
+        temps d'un groupe
+
+-   EX_BASE_FEATURES_004
+
+    -   Consulter emploi du temps d'un professeur
+
+    -   Les utilisateurs connectés doivent pouvoir consulter l'emploi du
+        temps d'un professeur
+
+-   EX_BASE_FEATURES_005
+
+    -   Consulter emploi du temps d'une matière
+
+    -   Les utilisateurs connectés doivent pouvoir consulter l'emploi du
+        temps d'une matière
+
+-   EX_BASE_FEATURES_006
+
+    -   Export iCal
+
+    -   Les utilisateurs connectés doivent pouvoir exporter leur emploi
+        du temps au format iCal pour le sy
+
+-   EX_BASE_FEATURES_007
+
+    -   Consulter nombre d'heures par module
+
+    -   Les utilisateur euvent consulter le nombre d'heures d'un module
+
+-   EX_BASE_FEATURES_008
+
+    -   Consulter le nombre d'heures total
+
+    -   Les utilisateurs peuvent consulter le nombre d'heures total d'un
+        groupe ou d'un étudiant
+
+-   EX_BASE_FEATURES_009
+
+    -   Télécharger PDF
+
+    -   Les utilisateurs peuvent télécharger le planning au format PDF
+
+# Report/annulation de cours
+
+-   EX_REPORT_001
+
+    -   Reporter un cours
+
+    -   Les professeurs doivent pouvoir reporter un cours
+
+-   EX_REPORT_002
+
+    -   Annuler un cours
+
+    -   Les professeurs doivent pouvoir annuler un cours
+
+-   EX_REPORT_003
+
+    -   Contacter responsable
+
+    -   Un professeur peut contacter automatiquement le responsable de
+        l'emploi du temps correspondant pour réserver une salle à une
+        heure pour un cours
+
+-   EX_REPORT_004
+
+    -   Consulter cours reporté/annulé
+
+    -   Les utilisateurs connectés peuvent voir la liste des cours
+        reportés ou annulés
+
+<!-- vim: set ts=4 sw=4 tw=72 et :-->
