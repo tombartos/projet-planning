@@ -99,6 +99,15 @@ title: Exigences Planning
 
     -   Les utilisateurs peuvent télécharger le planning au format PDF
 
+-   EX_BASE_FEATURES_010
+
+    -   Rajouter une note sur un cours
+    -   Les professeurs peuvent rajouter une petite note sur un cours
+
+-   EX_BASE_FEATURES_011
+    -   Consulter les notes de cours
+    -   Les étudiants et les professeurs peuvent consulter les petites notes de cours
+
 # Report/annulation de cours
 
 -   EX_REPORT_001
@@ -107,7 +116,7 @@ title: Exigences Planning
 
     -   Les professeurs doivent pouvoir reporter un cours
 
--   EX_REPORT_002
+-   EX_REPORT_002m
 
     -   Annuler un cours
 
@@ -127,5 +136,27 @@ title: Exigences Planning
 
     -   Les utilisateurs connectés peuvent voir la liste des cours
         reportés ou annulés
+
+# Absences
+
+-   EX_ABSENCES_001
+
+    -   Faire l'appel
+    -   Les professeurs peuvent faire l'appel pendant un cours
+
+-   EX_ABSENCES_002
+
+    -   Consulter absences sur un cours
+    -   Les professeurs peuvent consulter les élèves qu'ils ont noté comme absents à un cours
+
+-   EX_ABSENCES_003
+
+    -   Etudiant consulter absences
+    -   Les étudiants peuvent consulter leurs absences passées
+
+-   EX_ABSENCES_004
+
+    -   Prévenir d'un retard/absence
+    -   Les étudiants peuvent prévenir les professeurs si ils ont un retard / absence de prévu
 
 <!-- vim: set ts=4 sw=4 tw=72 et :-->
