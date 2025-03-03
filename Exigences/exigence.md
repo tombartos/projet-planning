@@ -71,7 +71,7 @@ title: Exigences Planning
     -   Consulter emploi du temps d'un module
 
     -   Les utilisateurs connectés doivent pouvoir consulter l'emploi du
-        temps d'une module
+        temps d'un module
 
 -   EX_BASE_FEATURES_006
 
