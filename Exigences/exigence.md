@@ -108,6 +108,12 @@ title: Exigences Planning
     -   Consulter les notes de cours
     -   Les étudiants et les professeurs peuvent consulter les petites notes de cours
 
+-   EX_BASE_FEATURES_012
+    -   Création de notes personnelles
+    -   Visible que par l'auteur
+    -   e.g., un étudiant peut noter ce qu'on fais ce jour la si le prof
+        la pas noté
+
 # Report/annulation de cours
 
 -   EX_REPORT_001
@@ -159,4 +165,4 @@ title: Exigences Planning
     -   Prévenir d'un retard/absence
     -   Les étudiants peuvent prévenir les professeurs si ils ont un retard / absence de prévu
 
-<!-- vim: set ts=4 sw=4 tw=72 et :-->
+<!-- vim: set ts=4 sw=4 tw=72 et spell spelllang=fr :-->
