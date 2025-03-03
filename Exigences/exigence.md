@@ -116,7 +116,7 @@ title: Exigences Planning
 
     -   Les professeurs doivent pouvoir reporter un cours
 
--   EX_REPORT_002m
+-   EX_REPORT_002
 
     -   Annuler un cours
 
