@@ -68,10 +68,10 @@ title: Exigences Planning
 
 -   EX_BASE_FEATURES_005
 
-    -   Consulter emploi du temps d'une matière
+    -   Consulter emploi du temps d'une module
 
     -   Les utilisateurs connectés doivent pouvoir consulter l'emploi du
-        temps d'une matière
+        temps d'une module
 
 -   EX_BASE_FEATURES_006
 
