@@ -165,4 +165,29 @@ title: Exigences Planning
     -   Prévenir d'un retard/absence
     -   Les étudiants peuvent prévenir les professeurs si ils ont un retard / absence de prévu
 
+# Fonctionalités Responsable EDT
+
+-   EX_RESP_001
+
+    -   Ajouter un cours
+    -   Le responsable EDT doit pouvoir insérer un nouveau cours avec les informations qui le concerne dans la base de données de l'application (voir notes interview), il peut en définir les droits de modification, il peut aussi copier coller un cours existant
+
+-   EX_RESP_002
+
+    -   Modifier un cours
+    -   Le responsable EDT doit pouvoir modifier un cours (heure, prof, module, salle) si il a les droits de modification sur ce cours
+    
+-   EX_RESP_003
+
+    -   Supprimer un cours
+    -   Le responsable EDT doit pouvoir supprimer un cours si il a les droits de modification sur ce dernier
+
+-   EX_RESP_004
+
+    -   Accepter demande de modification de cours
+    -   Le responsable EDT doit pouvoir accepter une demande de report de cours effectuée par un professeur
+
+
+
+
 <!-- vim: set ts=4 sw=4 tw=72 et spell spelllang=fr :-->
