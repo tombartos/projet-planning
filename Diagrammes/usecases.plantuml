@@ -1,0 +1,133 @@
+@startuml Planning Nouvelle Génération
+left to right direction
+actor utilisateur
+actor admin 
+actor professeur
+actor étudiant
+actor visiteur
+actor :responsable d'emploi du temps: as ret
+actor secrétaire
+
+utilisateur <|-- professeur
+utilisateur <|-- étudiant
+utilisateur <|-- secrétaire
+utilisateur <|-- ret
+
+package login {
+   usecase "Créer compte" as cc
+   usecase "Se connecter" as sc 
+   usecase "Consulter anonymement" as ca
+
+    admin -- cc
+    visiteur -- sc
+    visiteur -- ca
+}
+
+
+package "Fonctionnalités générales"{
+   usecase "Consulter l'emploi du temps" as cet
+   usecase "Emploi du temps personnel" as etp
+   usecase "Emploi du temps des salles" as ets
+   usecase "Emploi du temps d'un groupe" as etg
+   usecase "Emploi du temps d'un module" as etm
+   cet <|-- etp
+   cet <|-- ets
+   cet <|-- etg
+   cet <|-- etm
+
+   usecase "Télécharger l'emploi du temps" as tet
+   usecase "Exporter en iCal" as export
+   usecase "Télécharger au format pdf" as tfp
+   tet <|-- export
+   tet <|-- tfp
+
+   usecase "Consutler nombre d'heures" as cnh
+   usecase "Nombre d'heures d'un module" as nhp
+   usecase "Nombre d'heures total d'un étudiant" as nhe
+   usecase "Nombre d'heures total d'un grouoe" as nhg
+   cnh <|-- nhp
+   cnh <|-- nhe
+   cnh <|-- nhg
+
+   usecase "Gérer note personelle" as gnp
+   usecase "Ajouter note personelle" as anp
+   usecase "Modifier note personelle" as mnp
+   usecase "Consulter notes" as cnc
+   
+    utilisateur -- cet
+    utilisateur -- tet
+    utilisateur -- cnh
+    utilisateur -- gnp
+    utilisateur -- cnc
+    gnp <|-- anp
+    gnp <|-- mnp
+
+}
+
+
+package "Modification de l'emploi du temps"{
+    usecase "Faire une demande" as fd
+    usecase "Modification d'un créneau d'un cours " as fdmcc
+    usecase "Ajout d'un créneau de cours" as fdacc
+    usecase "Suppression  d'un créneau de cours" as fdscc
+    usecase "Report de cours" as fdrc
+    usecase "Annulation de cours" as fdac
+    usecase "Contacter responsable" as cr
+    usecase "Ajouter note de cours générale" as ancg
+    fd <|-- fdmcc
+    fd <|-- fdacc
+    fd <|-- fdscc
+    fd <|-- fdrc
+    fd <|-- fdac
+    fd <.. cr : << Include >>
+
+    usecase "Ajouter un module" as am
+    ret -- am
+
+    usecase "Modifer un cours" as mc
+    usecase "Modification d'un créneaux d'un cours " as mcmcc
+    usecase "Ajout d'un créneaux de cours" as mcacc
+    usecase "Suppression  d'un créneau de cours" as mcscc
+    usecase "Report de cours" as mcrc
+    usecase "Annulation de cours" as mcac
+    mc <|-- mcmcc
+    mc <|-- mcacc
+    mc <|-- mcscc
+    mc <|-- mcrc
+    mc <|-- mcac
+
+    usecase "Consulter cours reporté/annulé" as ccra
+
+    professeur -- fd
+    ret -- mc
+    utilisateur -- ccra
+    professeur -- ancg
+}
+
+package "Absences"{
+    usecase "Faire l'appel" as fa
+    usecase "Consulter les absences sur un cours" as cac
+    usecase "Consulter ses absences" as csa
+    usecase "Prévenir d'un retard/absence" as pra
+    usecase "Justifier une absence" as ja
+
+    professeur -- fa
+    professeur -- cac
+    étudiant -- csa
+    étudiant -- pra
+    secrétaire -- ja 
+    /' L'étudiant fait la demande mais c'est le secrétaire qui justifie l'absence'/
+    
+}
+
+
+/'
+Qui peut annuler une absence (en cas d'erreur du professeur)?
+L'admin est un responsable d'emploi du temps?
+'/
+
+
+
+
+
+@enduml

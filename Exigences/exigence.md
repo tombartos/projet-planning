@@ -12,7 +12,29 @@ date: 2025-03-01
 title: Exigences Planning
 ---
 
-# Login
+# Exigences Planning
+
+## Vocabulaire Métier
+
+-   **Utilisateur** : Personne utilisant l'application
+-   **Étudiant** : Personne suivant des cours
+-   **Professeur** : Personne enseignant des cours
+-   **Administrateur** : Personne gérant les comptes
+-   **Visiteur** : Personne non connectée
+-   **Secrétaire** : Personne gérant les absences
+-   **Responsable EDT** : Personne gérant l'emploi du temps
+-   **Module** : Ensemble de cours sur un même thème
+-   **Groupe** : Ensemble d'étudiants suivant les mêmes cours
+-   **Salle** : Lieu où se déroulent les cours
+-   **Cours** aussi équivalent à "créneau" ou "séance" : un cours est un moment réservé dans l'emploi du temps pour un module donné
+-   **EDT** : Emploi du temps
+-   **iCal** : Format de fichier pour les calendriers
+-   **PDF** : Format de fichier pour les documents
+-   **Note** : Informations supplémentaires sur un cours
+-   **Note personnelle** : Note ajoutée par un utilisateur sur un cours visible uniquement par lui-même
+-   **Note générale** : Note ajoutée par un professeur sur un cours visible par tous
+
+## Login
 
 -   EX_LOGIN_001
 
@@ -36,7 +58,7 @@ title: Exigences Planning
     -   Les utilisateurs doivent pouvoir accéder anonymement à
         l'application avec des restrictions.
 
-# Fonctionnalités générales
+## Fonctionnalités générales
 
 -   EX_BASE_FEATURES_001
 
@@ -114,7 +136,7 @@ title: Exigences Planning
     -   e.g., un étudiant peut noter ce qu'on fais ce jour la si le prof
         la pas noté
 
-# Report/annulation de cours
+## Report/annulation de cours
 
 -   EX_REPORT_001
 
@@ -143,7 +165,7 @@ title: Exigences Planning
     -   Les utilisateurs connectés peuvent voir la liste des cours
         reportés ou annulés
 
-# Absences
+## Absences
 
 -   EX_ABSENCES_001
 
@@ -165,7 +187,7 @@ title: Exigences Planning
     -   Prévenir d'un retard/absence
     -   Les étudiants peuvent prévenir les professeurs si ils ont un retard / absence de prévu
 
-# Fonctionalités Responsable EDT
+## Fonctionalités Responsable EDT
 
 -   EX_RESP_001
 
