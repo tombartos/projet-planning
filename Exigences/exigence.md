@@ -120,13 +120,13 @@ title: Exigences Planning
 
     -   Reporter un cours
 
-    -   Les professeurs doivent pouvoir reporter un cours
+    -   Les professeurs doivent pouvoir demander au responsable de l'emploi du temps de reporter un cours
 
 -   EX_REPORT_002
 
     -   Annuler un cours
 
-    -   Les professeurs doivent pouvoir annuler un cours
+    -   Les professeurs doivent pouvoir demander au responsable de l'emploi du temps d'annuler un cours
 
 -   EX_REPORT_003
 
@@ -187,6 +187,17 @@ title: Exigences Planning
     -   Accepter demande de modification de cours
     -   Le responsable EDT doit pouvoir accepter une demande de report de cours effectuée par un professeur
 
+-   EX_RESP_005
+
+    -   Reporter un cours
+
+    -   Le responsable EDT doit pouvoir reporter un cours
+
+-   EX_RESP_006
+
+    -   Annuler un cours
+
+    -    Le responsable EDT doit pouvoir annuler un cours
 
 
 
