@@ -71,14 +71,14 @@ package "Modification de l'emploi du temps"{
     usecase "Ajout d'un créneau de cours" as fdacc
     usecase "Suppression  d'un créneau de cours" as fdscc
     usecase "Report de cours" as fdrc
-    usecase "Annulation de cours" as fdac
     usecase "Contacter responsable" as cr
+    usecase "Gérer note de cours générale" as gncg
     usecase "Ajouter note de cours générale" as ancg
+    usecase "Modifier note de cours générale" as mncg
     fd <|-- fdmcc
     fd <|-- fdacc
     fd <|-- fdscc
     fd <|-- fdrc
-    fd <|-- fdac
     fd <.. cr : << Include >>
 
     usecase "Ajouter un module" as am
@@ -89,19 +89,19 @@ package "Modification de l'emploi du temps"{
     usecase "Ajout d'un créneaux de cours" as mcacc
     usecase "Suppression  d'un créneau de cours" as mcscc
     usecase "Report de cours" as mcrc
-    usecase "Annulation de cours" as mcac
     mc <|-- mcmcc
     mc <|-- mcacc
     mc <|-- mcscc
     mc <|-- mcrc
-    mc <|-- mcac
 
     usecase "Consulter cours reporté/annulé" as ccra
 
     professeur -- fd
     ret -- mc
     utilisateur -- ccra
-    professeur -- ancg
+    professeur -- gncg
+    gncg <|-- ancg
+    gncg <|-- mncg 
 }
 
 package "Absences"{

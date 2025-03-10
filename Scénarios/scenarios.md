@@ -128,6 +128,10 @@ Prérequis : L'utilisateur est connecté
 
 TODO : décider comment on gère ça
 
+
+
+
+
 # Package Modification de l'emploi du temps
 ## UC Ajouter un cours
 Prérequis : Le responsable est connecté
@@ -150,9 +154,9 @@ Prérequis : Le responsable est connecté
 15. Le responsable clique sur le bouton "Valider"
 16. Le système affiche le cours ajouté
 
-TODO : alternatifs
+TODO: Alternatifs
 
-## UC Modification d'un créneau d'u'n cours
+## UC Modification d'un créneau d'un cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
 
 ### Scénario nominal
@@ -173,7 +177,9 @@ Prérequis : Le responsable est connecté et un cours est déjà présent
 5. Le responsable clique sur "Oui"
 6. Le système affiche "Cours supprimé"
 
-TODO : Exception
+### Scénario d'exception
+5. a Le responsable clique sur "Non"
+6. a Le système ne supprime pas le cours
 
 ## UC Accepter demande de modification de cours
 Prérequis : Le responsable est connecté et une demande de modification est présente
@@ -186,5 +192,73 @@ Prérequis : Le responsable est connecté et une demande de modification est pr�
 5. Le responsable clique sur le bouton "Accepter"
 6. Le système affiche "Demande acceptée"
 
-TODO : Exception
+### Scénario d'exception
+5. a Le responsable clique sur le bouton "Refuser"
+6. a Le système affiche "Demande refusée"
+
+## UC Ajouter un module
+Prérequis : Le responsable est connecté
+
+### Scénario nominal
+1. Le responsable clique sur le bouton "Ajouter un module"
+2. Le système affiche une fenêtre pour rentrer les informations du module (id, nom, nombre d'heures)
+3. Le responsable clique sur le bouton "Valider"
+4. Le système affiche le module ajouté
+
+### Scénario d'exception
+3. a Le responsable clique sur le bouton "Annuler"
+4. a Le système n'ajoute pas le module
+
+
+## UC Faire une demande de Report de cours
+Prérequis : Le professeur est connecté
+
+### Scénario nominal
+1. Le professeur clique sur le cours qui l'intéresse
+2. Le système affiche les informations du cours (module, professeur, salle, horaires)
+3. Le professeur clique sur le bouton "Reporter"
+4. Le système affiche une fenêtre pour rentrer les informations du report (nouvelle date, nouvelle heure, nouvelle salle)
+5. Le professeur clique sur le bouton "Valider"
+6. Le système affiche "Demande de report envoyée"
+
+### Scénario d'exception
+5. a Le professeur clique sur le bouton "Annuler"
+6. a Le système n'envoie pas la demande de report
+
+### Scénario alternatif
+6. b Les informations du nouveau créneau sont incorrectes (salle occupée ou groupe occupé), le système affiche "Créneau indisponible" avec la raison de l'indisponibilité, l'UC reprend en 4.
+
+
+## UC Ajouter une note de cours générale
+Prérequis : Le professeur est connecté
+
+### Scénario nominal
+1. Le professeur clique sur le cours qui l'intéresse
+2. Le système affiche les informations du cours (module, professeur, salle, horaires)
+3. Le professeur clique sur le bouton "Ajouter une note générale"
+4. Le système affiche une fenêtre pour rentrer la note générale
+5. Le professeur rentre la note
+6. Le professeur clique sur le bouton "Valider"
+7. Le système affiche la note générale sur le cours
+
+### Scénario d'exception
+6. a Le professeur clique sur le bouton "Annuler"
+7. a Le système n'ajoute pas la note
+
+## UC Modifier une note de cours générale
+Prérequis : Le professeur est connecté et une note est déjà présente
+
+### Scénario nominal
+1. Le professeur clique sur le cours qui l'intéresse
+2. Le système affiche les informations du cours (module, professeur, salle, horaires)
+3. Le professeur clique sur le bouton "Modifier la note générale"
+4. Le système affiche la note générale
+5. Le professeur modifie la note
+6. Le professeur clique sur le bouton "Valider"
+7. Le système affiche la note modifiée
+
+### Scénario d'exception
+6. a Le professeur clique sur le bouton "Annuler"
+7. a Le système ne modifie pas la note
+
 

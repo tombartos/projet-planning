@@ -18,7 +18,7 @@ title: Exigences Planning
 
 -   **Utilisateur** : Personne utilisant l'application
 -   **Étudiant** : Personne suivant des cours
--   **Professeur** : Personne enseignant des cours
+-   **Professeur** aussi équivalent à "enseignant": Personne enseignant des cours
 -   **Administrateur** : Personne gérant les comptes
 -   **Visiteur** : Personne non connectée
 -   **Secrétaire** : Personne gérant les absences
