@@ -133,7 +133,7 @@ TODO : décider comment on gère ça
 
 
 # Package Modification de l'emploi du temps
-## UC Ajouter un cours
+## UC11 Ajouter un cours
 Prérequis : Le responsable est connecté
 
 ### Scénario nominal
@@ -165,7 +165,7 @@ Prérequis : Le responsable est connecté
 15. Le responsable clique sur le bouton "Annuler"
 16. Le système ferme la fenêtre
 
-## UC11 Modification d'un créneau d'un cours
+## UC12 Modification d'un créneau d'un cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
 
 ### Scénario nominal
@@ -175,7 +175,7 @@ Prérequis : Le responsable est connecté et un cours est déjà présent
 4. Le responsable clique sur le bouton "Valider"
 5. Le système affiche le cours modifié
 
-## UC12 Annulation de cours
+## UC13 Annulation de cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
 
 ### Scénario nominal
@@ -190,7 +190,7 @@ Prérequis : Le responsable est connecté et un cours est déjà présent
 5. a Le responsable clique sur "Non"
 6. a Le système ne supprime pas le cours
 
-## UC13 Accepter demande de modification de cours
+## UC14 Accepter demande de modification de cours
 Prérequis : Le responsable est connecté et une demande de modification est présente
 
 ### Scénario nominal
@@ -205,7 +205,7 @@ Prérequis : Le responsable est connecté et une demande de modification est pr�
 5. a Le responsable clique sur le bouton "Refuser"
 6. a Le système affiche "Demande refusée"
 
-## UC14 Ajouter un module
+## UC15 Ajouter un module
 Prérequis : Le responsable est connecté
 
 ### Scénario nominal
@@ -219,7 +219,7 @@ Prérequis : Le responsable est connecté
 4. a Le système n'ajoute pas le module
 
 
-## UC15 Faire une demande de Report de cours
+## UC16 Faire une demande de Report de cours
 Prérequis : Le professeur est connecté
 
 ### Scénario nominal
@@ -238,7 +238,7 @@ Prérequis : Le professeur est connecté
 6. b Les informations du nouveau créneau sont incorrectes (salle occupée ou groupe occupé), le système affiche "Créneau indisponible" avec la raison de l'indisponibilité, l'UC reprend en 4.
 
 
-## UC16 Ajouter une note de cours générale
+## UC17 Ajouter une note de cours générale
 Prérequis : Le professeur est connecté
 
 ### Scénario nominal
@@ -254,7 +254,7 @@ Prérequis : Le professeur est connecté
 6. a Le professeur clique sur le bouton "Annuler"
 7. a Le système n'ajoute pas la note
 
-## UC17 Modifier une note de cours générale
+## UC18 Modifier une note de cours générale
 Prérequis : Le professeur est connecté et une note est déjà présente
 
 ### Scénario nominal
