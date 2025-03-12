@@ -3,7 +3,7 @@ title: Scénarios des UC
 ---
 
 # Package Login
-## UC Se connecter
+## UC01 Se connecter
 ### Scénario Nominal
 1. Le visiteur rentre son login et son mot de passe
 2. Le visiteur clique sur le bouton "Connexion"
@@ -15,13 +15,13 @@ title: Scénarios des UC
 4. Le système affiche "Identifiants incorrect", l'UC reprend en 1.
 
 
-## UC Conuslter anonymement
+## UC02 Conuslter anonymement
 ### Scénario nominal
 1. Le visiteur clique sur le bouton "Connexion anonyme"
 2. Le système affiche l'emeploi du temps des salles, voir UC "Emploi du temps des salles"
 
 # Package Fonctionalités générales
-## UC Consulter emploi du temps des salles
+## UC03 Consulter emploi du temps des salles
 ### Scénario nominal
 1. L'utilisateur clique sur le bouton "Salles"
 2. Le système affiche la liste des salles
@@ -39,7 +39,7 @@ title: Scénarios des UC
 3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
 4. a Le système affiche l'EDT de la salle sur la semaine choisie
 
-## UC Consulter emploi du temps personnel
+## UC04 Consulter emploi du temps personnel
 Prérequit : L'utilisateur est connecté
 
 ### Scénario nominal
@@ -51,7 +51,7 @@ Prérequit : L'utilisateur est connecté
 3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
 4. a Le système affiche l'EDT de l'utilisateur sur la semaine choisie
 
-## UC Consulter emploi du temps d'un groupe
+## UC05 Consulter emploi du temps d'un groupe
 Prérequis : L'utilisateur est connecté
 
 ### Scénario nominal
@@ -71,7 +71,7 @@ Prérequis : L'utilisateur est connecté
 3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
 4. a Le système affiche l'EDT du groupe sur la semaine choisie
 
-## UC Consulter emploi du temps d'un module
+## UC06 Consulter emploi du temps d'un module
 Prérequis : L'utilisateur est connecté 
 TODO: Décider qui peut consulter les modules
 
@@ -88,7 +88,7 @@ TODO: Décider qui peut consulter les modules
 5. a L'utilisateur clique sur le nom du module qui l'intéresse
 6. a Le système affiche la liste des cours du module
 
-## UC Ajouter une note personelle
+## UC07 Ajouter une note personelle
 Prérequis : L'utilisateur est connecté
 
 ### Scénario nominal
@@ -102,7 +102,7 @@ Prérequis : L'utilisateur est connecté
 4. a L'utilisateur clique hors de la fenêtre
 5. a Le système ne prend pas en compte la note
 
-## UC Modifier une note personelle
+## UC08 Modifier une note personelle
 Prérequis : L'utilisateur est connecté et une note est déjà présente
 
 ### Scénario nominal
@@ -116,14 +116,14 @@ Prérequis : L'utilisateur est connecté et une note est déjà présente
 3. a L'utilisateur clique hors de la fenêtre
 4. a Le système ne modifie pas la note
 
-## UC Consulter notes
+## UC09 Consulter notes
 Prérequis : L'utilisateur est connecté
 
 ### Scénario nominal
 1. L'utilisateur clique sur le cours qui l'intéresse
 2. Le système affiche la note personnelle de l'utilisateur et la note générale
 
-## UC Consulter nombre d'heures par groupe
+## UC10 Consulter nombre d'heures par groupe
 Prérequis : L'utilisateur est connecté
 
 TODO : décider comment on gère ça
@@ -165,7 +165,7 @@ Prérequis : Le responsable est connecté
 15. Le responsable clique sur le bouton "Annuler"
 16. Le système ferme la fenêtre
 
-## UC Modification d'un créneau d'un cours
+## UC11 Modification d'un créneau d'un cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
 
 ### Scénario nominal
@@ -175,7 +175,7 @@ Prérequis : Le responsable est connecté et un cours est déjà présent
 4. Le responsable clique sur le bouton "Valider"
 5. Le système affiche le cours modifié
 
-## UC Annulation de cours
+## UC12 Annulation de cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
 
 ### Scénario nominal
@@ -190,7 +190,7 @@ Prérequis : Le responsable est connecté et un cours est déjà présent
 5. a Le responsable clique sur "Non"
 6. a Le système ne supprime pas le cours
 
-## UC Accepter demande de modification de cours
+## UC13 Accepter demande de modification de cours
 Prérequis : Le responsable est connecté et une demande de modification est présente
 
 ### Scénario nominal
@@ -205,7 +205,7 @@ Prérequis : Le responsable est connecté et une demande de modification est pr�
 5. a Le responsable clique sur le bouton "Refuser"
 6. a Le système affiche "Demande refusée"
 
-## UC Ajouter un module
+## UC14 Ajouter un module
 Prérequis : Le responsable est connecté
 
 ### Scénario nominal
@@ -219,7 +219,7 @@ Prérequis : Le responsable est connecté
 4. a Le système n'ajoute pas le module
 
 
-## UC Faire une demande de Report de cours
+## UC15 Faire une demande de Report de cours
 Prérequis : Le professeur est connecté
 
 ### Scénario nominal
@@ -238,7 +238,7 @@ Prérequis : Le professeur est connecté
 6. b Les informations du nouveau créneau sont incorrectes (salle occupée ou groupe occupé), le système affiche "Créneau indisponible" avec la raison de l'indisponibilité, l'UC reprend en 4.
 
 
-## UC Ajouter une note de cours générale
+## UC16 Ajouter une note de cours générale
 Prérequis : Le professeur est connecté
 
 ### Scénario nominal
@@ -254,7 +254,7 @@ Prérequis : Le professeur est connecté
 6. a Le professeur clique sur le bouton "Annuler"
 7. a Le système n'ajoute pas la note
 
-## UC Modifier une note de cours générale
+## UC17 Modifier une note de cours générale
 Prérequis : Le professeur est connecté et une note est déjà présente
 
 ### Scénario nominal
