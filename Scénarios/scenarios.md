@@ -145,7 +145,7 @@ Prérequis : Le responsable est connecté
 6. le responsable clique sur le bouton "Professeur"
 7. Le système affiche la liste des professeurs
 8. Le responsable clique sur le professeur du cours
-9. Le responsable clique sur le bouton "heures"
+9. Le responsable clique sur le bouton "Horaire"
 10. Le système affiche la liste des jours et  heures
 11. Le responsable clique sur le jour et l'heure de début et de fin du cours
 12. Le responsable clique sur le bouton "Salle"
@@ -154,7 +154,16 @@ Prérequis : Le responsable est connecté
 15. Le responsable clique sur le bouton "Valider"
 16. Le système affiche le cours ajouté
 
-TODO: Alternatifs
+### Scénario alternatif
+15. Le responsable clique sur le bouton "Propager"
+16. Le système affiche deux menus déroulants de semaine
+17. Le responsable sélectionne la semaine de début et la semaine de fin
+18. Le responsable clique sur le bouton "Valider"
+19. Le système affiches les cours ajoutés
+
+### Scénario d'exception
+15. Le responsable clique sur le bouton "Annuler"
+16. Le système ferme la fenêtre
 
 ## UC Modification d'un créneau d'un cours
 Prérequis : Le responsable est connecté et un cours est déjà présent
