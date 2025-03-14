@@ -36,8 +36,8 @@ title: Scénarios des UC
 6. a Le système affiche l'EDT de la salle sur la semaine
 
 #### Choix semaine
-3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
-4. a Le système affiche l'EDT de la salle sur la semaine choisie
+3. b L'utilisateur clique sur le numéro de la semaine qui l'intéresse
+4. b Le système affiche l'EDT de la salle sur la semaine choisie
 
 ## UC04 Consulter emploi du temps personnel
 Prérequit : L'utilisateur est connecté
