@@ -1,0 +1,75 @@
+@startuml Diagramme de classes du projet PNG
+class Utilisateur
+{
+    - numUtilisateur: UUID /'Uniquement pour notre base de donnée'/ 
+    - nom: String
+    - prenom: String
+    - login: String
+    - email: String
+    - motDePasse: String
+    - dateDeNaissance: Date
+}
+
+class Professeur
+{
+    
+}
+
+class Etudiant
+{
+
+}
+
+Professeur --|> Utilisateur
+Etudiant --|> Utilisateur
+
+class Module
+{
+    - code: String
+    - nom: String
+    - professeurs:
+    - description: String
+    - heuresPrevuesCM: Integer
+    - heuresPrevuesTD: Integer
+    - heuresPrevuesTP: Integer
+}
+Module "0..*" -- "1..*" Professeur : "enseigne"
+
+class Formation
+{
+    - code: String
+    - nom: String
+    - description: String
+}
+
+Formation "1" -- "1..*" Module : "est dans"
+
+class Groupe <<Tree>>
+{
+    - code: String
+    - nom: String
+    - formation: Formation
+    - etudiants: Etudiant
+    - sousGroupes: Tree<Groupe>
+}
+
+Groupe "0..1 groupe parent" -- "0..* sous groupe" Groupe 
+Groupe "0..*" -- "0..1" Formation
+Groupe "1..*" -- "0..*" Etudiant : appartient
+
+class Creneau
+{
+    - id: UUID
+    - date: Date
+    /' gérer l'UTC '/
+    - heureDebut: Time
+    - heureFin: Time
+}
+
+Creneau "0..*"  -- "0..*" Professeur
+Groupe "1..*" -- "1..*" Creneau
+
+note "Un professeur ne peut avoir plusieurs créneaux au même instant t" as n1
+n1 .. Creneau
+
+@enduml
