@@ -51,3 +51,37 @@ buildNumber.properties
 
 # VS Code
 .vscode/
+
+# LaTeX files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.fls
+*.fdb_latexmk
+*.glo
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.acn
+*.acr
+*.alg
+*.dvi
+*.glg
+*.glo
+*.gls
+*.ist
+*.maf
+*.mtc
+*.mtc0
+*.nav
+*.snm
+*.synctex.gz
+*.tdo
+*.thm
+*.xdy
