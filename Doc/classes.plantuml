@@ -35,14 +35,13 @@ class Module
 }
 Module "0..*" -- "1..*" Professeur : "enseigne"
 
-class Formation
+/'class Formation
 {
     - code: String
     - nom: String
     - description: String
-}
+}'/
 
-Formation "1" -- "1..*" Module : "est dans"
 
 class Groupe <<Tree>>
 {
@@ -54,7 +53,7 @@ class Groupe <<Tree>>
 }
 
 Groupe "0..1 groupe parent" -- "0..* sous groupe" Groupe 
-Groupe "0..*" -- "0..1" Formation
+Groupe "1..*" -- "1..*" Module
 Groupe "1..*" -- "0..*" Etudiant : appartient
 
 class Creneau
@@ -68,6 +67,7 @@ class Creneau
 
 Creneau "0..*"  -- "0..*" Professeur
 Groupe "1..*" -- "1..*" Creneau
+Creneau "1..*" -- "1..*" Module : concerne
 
 note "Un professeur ne peut avoir plusieurs créneaux au même instant t" as n1
 n1 .. Creneau
