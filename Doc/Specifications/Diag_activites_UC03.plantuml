@@ -1,0 +1,10 @@
+@startuml
+start
+:Clique sur "salles";
+fork
+    :Change la semaine affichée;
+fork again
+    :Change la salle affichée;
+end fork
+stop
+@enduml
