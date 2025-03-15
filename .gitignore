@@ -85,3 +85,5 @@ buildNumber.properties
 *.tdo
 *.thm
 *.xdy
+
+DB/

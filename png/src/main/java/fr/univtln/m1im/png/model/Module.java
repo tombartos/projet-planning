@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
@@ -22,7 +21,6 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-
 public class Module {
     @Id
     private String code;
@@ -30,15 +28,15 @@ public class Module {
     private String description;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "modules")
     private List<Professeur> professeurs = new ArrayList<Professeur>();
-    
+
     @Builder.Default
-    @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "modules")
     private List<Groupe> groupes = new ArrayList<Groupe>();
-    
+
     @Builder.Default
-    @ManyToMany(mappedBy = "modules", fetch = FetchType.LAZY)
+    @ManyToMany
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 
     private int nbHeuresCM;

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -25,10 +26,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class Creneau {
+    @Id
     @SequenceGenerator(name = "creneau_seq", sequenceName = "creneau_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "creneau_seq")
     private Long id;
-    private Date date;
     private Date heureDebut;
     private Date heureFin;
 

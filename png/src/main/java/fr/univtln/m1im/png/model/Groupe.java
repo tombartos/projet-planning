@@ -1,8 +1,8 @@
 package fr.univtln.m1im.png.model;
 
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -24,6 +24,7 @@ import java.util.List;
 @Getter
 @Setter
 public class Groupe {
+    @Id
     private String code;
     private String nom;
     private String formation;
@@ -32,18 +33,18 @@ public class Groupe {
     private Groupe parent;
 
     @Builder.Default
-    @ManyToMany(mappedBy = "groupes", fetch = FetchType.LAZY)
+    @ManyToMany
     private List<Etudiant> etudiants = new ArrayList<Etudiant>();
-    
+
     @Builder.Default
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
     private List<Groupe> sousGroupes = new ArrayList<Groupe>(); //Sous groupes en structure d'arbre
-    
-    @ManyToMany(mappedBy = "groupes", fetch = FetchType.LAZY)
+
     @Builder.Default
+    @ManyToMany
     private List<Module> modules = new ArrayList<Module>();
 
     @Builder.Default
-    @ManyToMany(mappedBy = "groupes", fetch = FetchType.LAZY)
+    @ManyToMany
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 }
