@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -27,4 +28,8 @@ public class Professeur extends Utilisateur {
     @Builder.Default
     @ManyToMany
     private List<Creneau> creneaux = new ArrayList<Creneau>();
+
+    // public Professeur(Long id, String nom, String prenom, String login, String email, String password, Date dateNaissance) {
+    //     super(id, nom, prenom, login, email, password, dateNaissance);
+    // }
 }

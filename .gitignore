@@ -87,3 +87,4 @@ buildNumber.properties
 *.xdy
 
 DB/
+*.ddl

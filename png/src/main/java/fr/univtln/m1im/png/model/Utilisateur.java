@@ -14,7 +14,7 @@ import java.util.Date;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Table(name="Utilisateurs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,7 +23,7 @@ import jakarta.persistence.InheritanceType;
 public abstract class Utilisateur {
     @Id
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "author_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private Long id;
     private String nom;
     private String prenom;

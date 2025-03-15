@@ -38,89 +38,66 @@ public final class App {
 
     public static void main(String[] args) {
         log.info("Entering main method");
-        //TODO: fix failed to persist professor
 
         // Create entities
         Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
-        Etudiant etudiant = Etudiant.builder().id(0L).nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
+        Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
                 .password("password").dateNaissance(new Date()).build();
-        Professeur professeur = Professeur.builder().id(1L).nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
+        Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
                 .password("password").dateNaissance(new Date()).build();
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
         Date heureDebut = new Date();
         Date heureFin = new Date(heureDebut.getTime() + 2 * 60 * 60 * 1000); // Add 2 hours
-        Creneau creneau = Creneau.builder().id(2L).heureDebut(heureDebut).heureFin(heureFin).build();
-
-        // groupe.getEtudiants().add(etudiant);
-        // etudiant.getGroupes().add(groupe);
-        // module.getProfesseurs().add(professeur);
-        // professeur.getModules().add(module);
-        // module.getGroupes().add(groupe);
-        // groupe.getModules().add(module);
-        // creneau.getModules().add(module);
-        // module.getCreneaux().add(creneau);
-        // creneau.getGroupes().add(groupe);
-        // groupe.getCreneaux().add(creneau);
-        // creneau.getProfesseurs().add(professeur);
-        // professeur.getCreneaux().add(creneau);
+        Creneau creneau = Creneau.builder().heureDebut(heureDebut).heureFin(heureFin).build();
 
         // Persist entities
         try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
-            log.info("Persisting groupe");
-            entityManager.getTransaction().begin();
-            entityManager.persist(groupe);
-            entityManager.getTransaction().commit();
-            log.info("Groupe persisted successfully");
-        } catch (Exception e) {
-            log.error("Failed to persist groupe", e);
-        }
-
-        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
-            log.info("Persisting etudiant");
-            entityManager.getTransaction().begin();
-            entityManager.persist(etudiant);
-            entityManager.getTransaction().commit();
-            log.info("Etudiant persisted successfully");
-        } catch (Exception e) {
-            log.error("Failed to persist etudiant", e);
-        }
-
-        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
-            log.info("Persisting professeur");
+            log.info("Persisting entities");
             entityManager.getTransaction().begin();
             entityManager.persist(professeur);
-            entityManager.getTransaction().commit();
-            log.info("Professeur persisted successfully");
-        } catch (Exception e) {
-            log.error("Failed to persist professeur", e);
-        }
-
-        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
-            log.info("Persisting module");
-            entityManager.getTransaction().begin();
+            
+            entityManager.persist(groupe);
+            entityManager.persist(etudiant);
+            
             entityManager.persist(module);
-            entityManager.getTransaction().commit();
-            log.info("Module persisted successfully");
-        } catch (Exception e) {
-            log.error("Failed to persist module", e);
-        }
-
-        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
-            log.info("Persisting creneau");
-            entityManager.getTransaction().begin();
             entityManager.persist(creneau);
             entityManager.getTransaction().commit();
-            log.info("Creneau persisted successfully");
+            log.info("Entities persisted successfully");
         } catch (Exception e) {
-            log.error("Failed to persist creneau", e);
+            log.error("Failed to persist entities", e);
         }
 
+        // Establish relationships
+        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
+            log.info("Establishing relationships");
+            entityManager.getTransaction().begin();
+            groupe = entityManager.merge(groupe);
+            etudiant = entityManager.merge(etudiant);
+            professeur = entityManager.merge(professeur);
+            module = entityManager.merge(module);
+            creneau = entityManager.merge(creneau);
 
+            groupe.getEtudiants().add(etudiant);
+            etudiant.getGroupes().add(groupe);
+            module.getProfesseurs().add(professeur);
+            professeur.getModules().add(module);
+            module.getGroupes().add(groupe);
+            groupe.getModules().add(module);
+            creneau.getModules().add(module);
+            module.getCreneaux().add(creneau);
+            creneau.getGroupes().add(groupe);
+            groupe.getCreneaux().add(creneau);
+            creneau.getProfesseurs().add(professeur);
+            professeur.getCreneaux().add(creneau);
 
-
+            entityManager.getTransaction().commit();
+            log.info("Relationships persisted successfully");
+        } catch (Exception e) {
+            log.error("Failed to persist relationships", e);
+        }
     }
 
-    private final class DatabaseConfig {
+    private static final class DatabaseConfig {
         private static final String PERSISTENCE_UNIT = "png";
     }
 }
