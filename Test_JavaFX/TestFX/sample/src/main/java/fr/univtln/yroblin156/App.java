@@ -15,13 +15,22 @@ import javafx.stage.Stage;
  */
 public class App extends Application {
 
+
     @Override
     public void start(Stage stage) {
         Group group = new Group();
-        Scene scene = new Scene(group, 1920, 1080);
-        Grille grille = new Grille(group, 1920, 1080);
+        int width = 640;
+        int height = 480;
+        Scene scene = new Scene(group, width, height);
+        Grille grille = new Grille(group, width, height);
+        Creneau cr1 = new Creneau("", 0, "8:00", "1:00", "Maths", 0, "A1", "Prof", 1);
+        //grille.ajouterCreneau(cr1);
+
         // Canvas canvas = new Canvas(640, 480);
         // GraphicsContext gc = canvas.getGraphicsContext2D();
+        // gc.setStroke(Color.BLACK);
+        // gc.strokeRect(100, 100, 100, 5);
+
         // gc.setFill(Color.GRAY);
         // gc.fillRect(0, 0, 640, 480);
         // gc.setStroke(Color.BLACK);
@@ -33,7 +42,7 @@ public class App extends Application {
         // group.getChildren().add(canvas);
 
         stage.setScene(scene);
-        stage.setTitle("Hello World!");
+        stage.setTitle("Hyperplanning");
         stage.show();
     }
 
