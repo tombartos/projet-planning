@@ -7,6 +7,7 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
@@ -15,6 +16,7 @@ public class Grille {
     private int width;
     private int height;
     private Group root;
+    private Pane rootBis;
     private Canvas grille;
     private GraphicsContext gc;
     
@@ -109,6 +111,10 @@ public class Grille {
         return root;
     }
 
+    public Pane getRootBis() {
+        return rootBis;
+    }
+
     public Canvas getGrille() {
         return grille;
     }
@@ -119,6 +125,10 @@ public class Grille {
 
     public void setRoot(Group root) {
         this.root = root;
+    }
+
+    public void setRoot(Pane rootBis) {
+        this.rootBis = rootBis;
     }
 
     public void setGrille(Canvas grille) {
