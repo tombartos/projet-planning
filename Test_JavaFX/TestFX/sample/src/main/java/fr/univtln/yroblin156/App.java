@@ -19,8 +19,8 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         Group group = new Group();
-        int width = 640;
-        int height = 480;
+        int width = 1920;
+        int height = 1000;
         Scene scene = new Scene(group, width, height);
         Grille grille = new Grille(group, width, height);
         Creneau cr1 = new Creneau("", 0, "8:00", "1:00", "Maths", 0, "A1", "Prof", 1);

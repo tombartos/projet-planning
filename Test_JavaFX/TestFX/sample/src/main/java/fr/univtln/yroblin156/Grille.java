@@ -31,10 +31,17 @@ public class Grille {
     private List<Creneau> creneaux;
     private List<Rectangle> cvCreneaux;
 
-    public Grille(Group root,int width, int height) {
+    private Group group;
+
+    
+    
+
+
+    public Grille(Group root, int width, int height) {
         this.width = width;
         this.height = height;
         this.root = root;
+        this.group = new Group();
         this.grille = new Canvas(this.width , this.height);
         this.gc = grille.getGraphicsContext2D();
         this.root.getChildren().add(this.grille);
@@ -48,8 +55,9 @@ public class Grille {
         this.creneaux = new ArrayList<Creneau>();
         this.cvCreneaux = new ArrayList<Rectangle>();
 
-        this.creneaux.add( new Creneau("", 0, "8:00", "1:00", "Maths", 0, "A1", "Prof", 1));
-        this.creneaux.add( new Creneau("", 2, "9:00", "1:00", "Maths", 0, "A1", "Prof", 2));
+        this.creneaux.add( new Creneau("", 0, "8:00", "2:00", "Maths", 0, "A1", "Prof", 1));
+        this.creneaux.add( new Creneau("", 2, "9:00", "3:00", "Maths", 1, "A1", "Prof", 2));
+        this.creneaux.add( new Creneau("", 2, "13:15", "3:00", "Maths", 1, "A1", "Prof", 1));
 
         this.gc.fillRect(this.calendarx, this.calendary, this.calendarwidth, this.calendarheight);
         // Calendrier
@@ -80,16 +88,17 @@ public class Grille {
              this.root.getChildren().add(semaines.get(i));
         }
 
-
+        
+        this.root.getChildren().add(this.group);
     }
 
 
     public void afficherSemaine(int semaine) {
         System.out.println("Semaine : "+semaine);
-
+        this.group.getChildren().clear();
         for(Creneau creneau: creneaux) {
             if(creneau.getSemaine() == semaine) {
-                this.root.getChildren().add(creneau.afficherCreneau(this.calendarx, this.calendary, this.calendarwidth / this.jours, this.calendarheight / this.heures));
+                creneau.afficherCreneau(this.group,this.calendarx, this.calendary, this.calendarwidth / this.jours, this.calendarheight / this.heures);
             }
         }
     }

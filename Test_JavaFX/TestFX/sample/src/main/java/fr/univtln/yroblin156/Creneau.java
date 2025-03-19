@@ -1,8 +1,11 @@
 package fr.univtln.yroblin156;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
-
+import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
 
 public class Creneau {
@@ -15,6 +18,7 @@ public class Creneau {
     private int cour;
 
     private Rectangle cvCreneau;
+    private Label labelCreneau;
 
     //Temporaire
     private int jour;
@@ -29,24 +33,66 @@ public class Creneau {
         this.cour = cour;
         this.salle = salle;
         this.professeur = professeur;
+        this.labelCreneau = new Label();
         
         this.semaine = semaine;
     }
 
-    public int convHeure()
+    public float convHeure()
     {
-        int h = this.heure.charAt(0) - '0'-8;
+        float r;
+        List<Integer> h = new ArrayList<>();
+        for (String part : this.heure.split(":")) {
+            h.add(Integer.parseInt(part));
+        }
+        r = h.get(0)-8;
+        r += h.get(1)/60f;
+        //System.out.println(r);
         //int m = this.heure.charAt(2) - '0';
-        return h;
+        return r;
 
     }
 
-
-
-    public Rectangle afficherCreneau(int x, int y, int width, int height) 
+    public float convDuree()
     {
-        this.cvCreneau = new Rectangle(x+width*this.jour, y+height*convHeure(), width, height);
-        return this.cvCreneau;
+        float r;
+        List<Integer> h = new ArrayList<>();
+        for (String part : this.duree.split(":")) {
+            h.add(Integer.parseInt(part));
+        }
+        r = h.get(0);
+        r += h.get(1)/60f;
+        //System.out.println(r);
+        //int m = this.heure.charAt(2) - '0';
+        return r;
+    }
+
+
+    public void afficherCreneau(Group group,int x, int y, int width, int height) 
+    {
+        this.cvCreneau = new Rectangle(x+width*this.jour, y+height*convHeure(), width, height*convDuree());
+        this.cvCreneau.setOnMousePressed(event -> {this.labelCreneau.setText("Clicked");});
+        this.cvCreneau.setOnMouseReleased(event -> {this.labelCreneau.setText(this.matiere + "\n" + this.heure + "\n" + this.duree + "\n" + this.salle + "\n" + this.professeur);});
+        if(this.cour == 0)
+            this.cvCreneau.setStyle("-fx-fill: #00ff00; -fx-stroke: #000000; -fx-stroke-width: 1;");
+        else
+        if (this.cour == 1)
+            this.cvCreneau.setStyle("-fx-fill: #ffff00; -fx-stroke: #000000; -fx-stroke-width: 1;");
+        else
+        if (this.cour == 2)
+            this.cvCreneau.setStyle("-fx-fill: #ff0000; -fx-stroke: #000000; -fx-stroke-width: 1;");
+        else
+        {
+            this.cvCreneau.setStyle("-fx-fill: #ffffff; -fx-stroke: #000000; -fx-stroke-width: 1;");
+            
+        }
+        
+        this.labelCreneau.setText(this.matiere + "\n" + this.heure + "\n" + this.duree + "\n" + this.salle + "\n" + this.professeur);
+        this.labelCreneau.setLayoutX(x+width*this.jour);
+        this.labelCreneau.setLayoutY(y+height*convHeure());
+        group.getChildren().add(this.cvCreneau);
+        group.getChildren().add(this.labelCreneau);
+ 
     }
 
     public int getSemaine() {
