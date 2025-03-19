@@ -1,6 +1,7 @@
 package fr.univtln.m1im.png.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -9,9 +10,9 @@ import lombok.experimental.SuperBuilder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,16 +21,19 @@ import java.util.List;
 @SuperBuilder
 @Getter
 @Setter
+@ToString
 public class Professeur extends Utilisateur {
+    @ToString.Exclude
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Module> modules = new ArrayList<Module>();
 
+    @ToString.Exclude
     @Builder.Default
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 
-    // public Professeur(Long id, String nom, String prenom, String login, String email, String password, Date dateNaissance) {
+    // public Professeur(Long id, String nom, String prenom, String login, String email, String password, OffsetDateTime dateNaissance) {
     //     super(id, nom, prenom, login, email, password, dateNaissance);
     // }
 }

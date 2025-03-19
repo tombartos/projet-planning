@@ -8,9 +8,12 @@ import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import java.util.Date;
+
+import java.time.OffsetDateTime;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
@@ -20,6 +23,7 @@ import jakarta.persistence.InheritanceType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
+@Getter
 public abstract class Utilisateur {
     @Id
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
@@ -30,7 +34,7 @@ public abstract class Utilisateur {
     private String login; //Username
     private String email;
     private String password; //Hashed password
-    private Date dateNaissance;
+    private OffsetDateTime dateNaissance;
 
 
 }

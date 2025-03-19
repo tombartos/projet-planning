@@ -6,6 +6,6 @@ services:
       - POSTGRES_PASSWORD=mysecretpassword
 
     volumes:
-      - ${PWD}/DB:/var/lib/postgresql/data
+      - ./DB:/var/lib/postgresql/data
     ports:
       - '8080:5432'
