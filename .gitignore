@@ -31,7 +31,6 @@ replay_pid*
 *.synctex.gz
 *.dvi
 
-*.png
 # Maven
 target/
 pom.xml.tag
