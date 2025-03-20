@@ -24,6 +24,7 @@ import jakarta.persistence.InheritanceType;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
+@ToString
 public abstract class Utilisateur {
     @Id
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)

@@ -19,11 +19,16 @@ repeat
         :Clique sur "Ajouter professeur";
         :Clique sur le professeur voulu;
     repeat while (Ajouter un professeur supplémentaire ?) is (yes)
-    :Clique sur "Horraires";
-    :Renseigne les horraires voulues;
+    :Clique sur "Horaires";
+    :Renseigne les horaires voulues;
     :Clique sur "Salles";
     :Clique sur la salle voulue;
     :Clique sur "Valider";
 repeat while (Créneau valide) is (no)
+
+if (Propager le cours ?) then (yes)
+    :Clique sur les semaines où le cours doit être copié;
+    :Clique sur "Valider";
+endif
 stop
 @enduml

@@ -18,11 +18,10 @@
 \end{abstract}
 
 \section{UC "Consulter l'emploi du temps par salles"}
-\subsection{}
 Description : L'utilisateur connecté consulte l'emploi du temps de la salle voulue sur la semaine voulue.\\
-Acteur : Utilisateur 
-Déclencheur : L'utilisateur clique sur "Salle"
-Pré-Condition : L'utilisateur est connecté
+Acteur : Utilisateur \\
+Déclencheur : L'utilisateur clique sur "Salle"\\
+Pré-Condition : L'utilisateur est connecté\\
 Post-Condition : L'emploi du temps de la salle et de la semaine choisie est affiché
 \\
 
@@ -34,31 +33,64 @@ Scénario nominal\\
 
 Scénarios alternatifs\\
 Changer salle affichée\\
-3. a L'utilisateur clique sur le nom de la salle\\
-4. a Le système affiche toutes les salles\\
-5. a L'utilisateur clique sur le nom de la salle qui l'intéresse\\
-6. a Le système affiche l'EDT de la salle sur la semaine\\
+3. L'utilisateur clique sur le nom de la salle\\
+4. Le système affiche toutes les salles\\
+5. L'utilisateur clique sur le nom de la salle qui l'intéresse\\
+6. Le système affiche l'EDT de la salle sur la semaine\\
 
 Choix semaine\\
-3. b L'utilisateur clique sur le numéro de la semaine qui l'intéresse\\
-4. b Le système affiche l'EDT de la salle sur la semaine choisie\\
+3. L'utilisateur clique sur le numéro de la semaine qui l'intéresse\\
+4. Le système affiche l'EDT de la salle sur la semaine choisie\\
 
 
-\begin{figure}[h!]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{Diag_activites_UC03.png}
-    \caption{Description de l'image}
-    \label{fig:emploi_du_temps}
+    \includegraphics[width=0.3\textwidth]{Diag_activites_UC03.png}
+    \caption{Diagramme d'activités UC03}
+    \label{fig:act_03}
 \end{figure}
 
+\section{UC11 "Ajouter un cours"}
+Description : le responsable ajoute un créneau cours dans l'emploi du temps\\
+Acteur : Responsable d'EDT\\
+Déclencheur : Le responsable clique sur un créneau vide ou sur le bouton "Ajouter nouveau cours"\\
+Pré-Condition : Le responsable est connecté et un créneau vide est disponible\\
+Post-Condition : Le créneau de cours a été crée dans l'emploi du temps\\
 
-\section{Spécifications Fonctionnelles}
-Cette section décrit les spécifications fonctionnelles du projet.
+Scénario nominal : \\
+1. Le responsable clique sur le bouton "Ajouter un cours"\\
+2. Le système affiche une fenêtre pour rentrer les informations du cours\\
+3. Le responsable clique sur le bouton "Module"\\
+4. Le système affiche la liste des modules\\
+5. Le responsable clique sur le module du cours\\
+6. Le responsable clique sur le bouton "Professeur"\\
+7. Le système affiche la liste des professeurs\\
+8. Le responsable clique sur le professeur du cours\\
+9. Le responsable clique sur le bouton "Horaire"\\
+10. Le système affiche la liste des jours et heures\\
+11. Le responsable clique sur le jour et l'heure de début et de fin du cours\\
+12. Le responsable clique sur le bouton "Salle"\\
+13. Le système affiche la liste des salles disponibles\\
+14. Le responsable clique sur la salle du cours\\
+15. Le responsable clique sur le bouton "Valider"\\
+16. Le système affiche le cours ajouté\\
 
-\section{Spécifications Techniques}
-Cette section décrit les spécifications techniques du projet.
+Scénario alternatif\\
+15. Le responsable clique sur le bouton "Propager"\\
+16. Le système affiche deux menus déroulants de semaine\\
+17. Le responsable sélectionne la semaine de début et la semaine de fin\\
+18. Le responsable clique sur le bouton "Valider"\\
+19. Le système affiche les cours ajoutés\\
 
-\section{Conclusion}
-Cette section conclut le document de spécifications.
+Scénario d'exception\\
+15. Le responsable clique sur le bouton "Annuler"\\
+16. Le système ferme la fenêtre\\
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.4\textwidth]{Diag_activites_UC11.png}
+    \caption{Diagramme d'activités UC11}
+    \label{fig:act_011}
+\end{figure}
 
 \end{document}
