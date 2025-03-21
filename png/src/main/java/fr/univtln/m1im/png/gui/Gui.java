@@ -41,6 +41,7 @@ public class Gui {
     private EntityManager entityManager;
     private Etudiant etudiant;
     private List<Creneau> creneaux;
+    private List<Creneau> cCreneaux;
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
         this.etudiant = etudiant;
@@ -138,6 +139,7 @@ public class Gui {
                     jourDeLaSemaine = 5;
                     break;
             }
+
             
         }
     }
