@@ -59,6 +59,8 @@ public final class App extends Application{
         OffsetDateTime heureDebut = OffsetDateTime.now(ZoneOffset.UTC);
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).build();
+        
+        Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(23)).heureFin(heureFin.minusDays(23).plusHours(1)).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -73,6 +75,14 @@ public final class App extends Application{
         creneau.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau);
 
+        creneau2.getModules().add(module);
+        module.getCreneaux().add(creneau2);
+        creneau2.getGroupes().add(groupe);
+        groupe.getCreneaux().add(creneau2);
+        creneau2.getProfesseurs().add(professeur);
+        professeur.getCreneaux().add(creneau2);
+
+
         // Persist entities, don't use save method, it's not recommended for the first time
         try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
             log.info("Persisting entities");
@@ -82,6 +92,7 @@ public final class App extends Application{
             entityManager.persist(etudiant);
             entityManager.persist(module);
             entityManager.persist(creneau);
+            entityManager.persist(creneau2);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {
