@@ -28,8 +28,12 @@ import jakarta.persistence.NamedQuery;
 @ToString
 @NamedQueries({
     @NamedQuery(
-      name = "Etudiant.getCreneaux",
+      name = "Etudiant.getAllCreneaux",
       query = "SELECT c FROM Etudiant e JOIN e.groupes g JOIN g.creneaux c WHERE e.id = :etudiantId"
+    ),
+    @NamedQuery(
+      name = "Etudiant.getWeekCrenaux",
+      query = "SELECT c FROM Etudiant e JOIN e.groupes g JOIN g.creneaux c WHERE e.id = :etudiantId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
     )
   })
 public class Etudiant extends Utilisateur {

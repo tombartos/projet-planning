@@ -59,10 +59,11 @@ public class Gui {
     private Canvas cJours;
     private GraphicsContext gcJours;
 
-    private int etatCourant; //0: edt etudiant,1: edt prof, 2: edt salle, 3: edt groupe
+    private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
 
-    public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager) {
-        this.utilisateur = utilisateur;
+    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
+        // this.utilisateur = utilisateur;
+        this.etudiant = etudiant;
         this.group = group;
         this.width = width;
         this.height = height;
@@ -170,6 +171,7 @@ public class Gui {
         .with(weekFields.weekOfWeekBasedYear(),numSemaine)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
         System.out.println("test : "+permierJourSemaine.getDayOfYear());
+        int annee = permierJourSemaine.getYear();
 ;
 
         for(int i = 0; i < this.nbJour; i++){
@@ -179,14 +181,11 @@ public class Gui {
 
         this.gpCreneaux.getChildren().clear();
         EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        this.creneaux = etudiantRepository.getCreneaux(utilisateur.getId(), 0, 100);
+        this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, annee, 0, 100);
         for(Creneau creneau : this.creneaux){
-            System.out.println((int)(creneau.getHeureDebut().getDayOfYear()/7 ));
-            if((int)(creneau.getHeureDebut().getDayOfYear()/7 )== numSemaine)
-            {
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
                 guiCreneau.afficherCreneau();
-            }
+            
             
         }
     }
