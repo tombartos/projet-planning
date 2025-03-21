@@ -60,6 +60,7 @@ public final class App extends Application{
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
         Salle salle = Salle.builder().code("T001").description("Videoproj + PC").capacite(30).build();
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
+        Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.minusDays(3)).heureFin(heureFin.minusDays(3)).salle(salle).build();
         Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(23)).heureFin(heureFin.minusDays(23).plusHours(1)).salle(salle).build();
 
         groupe.getEtudiants().add(etudiant);
@@ -82,6 +83,13 @@ public final class App extends Application{
         creneau2.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau2);
 
+        creneau3.getModules().add(module);
+        module.getCreneaux().add(creneau3);
+        creneau3.getGroupes().add(groupe);
+        groupe.getCreneaux().add(creneau3);
+        creneau3.getProfesseurs().add(professeur);
+        professeur.getCreneaux().add(creneau3);
+
 
         // Persist entities, don't use save method, it's not recommended for the first time
         try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
@@ -94,6 +102,7 @@ public final class App extends Application{
             entityManager.persist(module);
             entityManager.persist(creneau);
             entityManager.persist(creneau2);
+            entityManager.persist(creneau3);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {
