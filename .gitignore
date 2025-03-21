@@ -51,6 +51,12 @@ buildNumber.properties
 # VS Code
 .vscode/
 
+# Eclipse/JDT
+.classpath
+.factorypath
+.project
+.settings/
+
 # LaTeX files
 *.aux
 *.bbl
