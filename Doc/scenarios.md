@@ -15,7 +15,7 @@ title: Scénarios des UC
 4. Le système affiche "Identifiants incorrect", l'UC reprend en 1.
 
 
-## UC02 Conuslter anonymement
+## UC02 Consulter anonymement
 ### Scénario nominal
 1. Le visiteur clique sur le bouton "Connexion anonyme"
 2. Le système affiche l'emeploi du temps des salles, voir UC "Emploi du temps des salles"

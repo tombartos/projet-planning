@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
@@ -51,4 +52,7 @@ public class Creneau {
     @Builder.Default
     @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY)
     private List<Professeur> professeurs = new ArrayList<Professeur>();
+
+    @ManyToOne
+    private Salle salle;
 }
