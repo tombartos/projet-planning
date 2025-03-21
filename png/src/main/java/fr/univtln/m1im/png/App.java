@@ -89,11 +89,11 @@ public final class App extends Application{
         }
 
         //Tests
-        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()){
-            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+        // try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()){
+        //     EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
 
-            log.info(etudiantRepository.getCreneaux(etudiant.getId(), 0, 100).toString());
-        }
+        //     log.info(etudiantRepository.getCreneaux(etudiant.getId(), 0, 100).toString());
+        // }
         launch(args);
        
     }
@@ -114,4 +114,8 @@ public final class App extends Application{
         stage.show();
     }
 }
+//LINUX :
 // mvn exec:java -Dexec.mainClass="fr.univtln.m1im.png.App"
+
+//WINDOWS:
+//mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"
