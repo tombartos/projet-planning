@@ -52,7 +52,8 @@ public final class App {
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
         OffsetDateTime heureDebut = OffsetDateTime.now(ZoneOffset.UTC);
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
-        Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).build();
+        Salle salle = Salle.builder().code("T001").description("Videoproj + PC").capacite(30).build();
+        Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -71,6 +72,7 @@ public final class App {
         try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()) {
             log.info("Persisting entities");
             entityManager.getTransaction().begin();
+            entityManager.persist(salle);
             entityManager.persist(professeur);
             entityManager.persist(groupe);
             entityManager.persist(etudiant);

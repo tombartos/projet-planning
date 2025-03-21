@@ -18,9 +18,32 @@
 \end{abstract}
 
 \section{Maquette}
-Voici la maquette initialement pensée de consulter 
+Voici la maquette initialement pensée de l'interface.
 
-\section{UC "Consulter l'emploi du temps par salles"}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{gui-schema.png}
+    \caption{Maquette initiale}
+    \label{fig:maquette}
+\end{figure}
+
+\section{SPRINT 0 UC04 Consulter emploi du temps personnel}
+Description : L'utilisateur connecté consulte son emploi du temps personnel sur la semaine voulue.\\
+Acteur : Utilisateur \\
+Déclencheur : L'utilisateur arrive sur la page d'accueil ou clique sur "Mon emploi du temps"\\
+Pré-Condition : L'utilisateur est connecté\\
+Post-Condition : L'emploi du temps de l'utilisateur et de la semaine choisie est affiché\\
+
+Scénario nominal
+1. L'utilisateur clique sur le bouton "Mon EDT"
+2. Le système affiche l'emploi du temps de l'utilisateur sur une semaine
+
+Scénarios alternatifs
+Choix semaine
+3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
+4. a Le système affiche l'EDT de l'utilisateur sur la semaine choisie
+
+\section{UC3 "Consulter l'emploi du temps par salles"}
 Description : L'utilisateur connecté consulte l'emploi du temps de la salle voulue sur la semaine voulue.\\
 Acteur : Utilisateur \\
 Déclencheur : L'utilisateur clique sur "Salle"\\
