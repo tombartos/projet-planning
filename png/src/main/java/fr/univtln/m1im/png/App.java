@@ -12,7 +12,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.temporal.WeekFields;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import fr.univtln.m1im.png.gui.Gui;
 import fr.univtln.m1im.png.model.*;
@@ -33,7 +35,11 @@ public final class App extends Application{
 
         try {
             log.info("Initializing EntityManagerFactory");
-            tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT);
+            Map<String, String> properties = new HashMap<>();
+            properties.put("jakarta.persistence.jdbc.user", "postgres");
+            properties.put("jakarta.persistence.jdbc.password", "mysecretpassword");
+            //TODO: Finir credentials + test
+            tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT, properties);
             log.info("EntityManagerFactory initialized successfully");
         } catch (Exception e) {
             log.error("Failed to create EntityManagerFactory", e);
