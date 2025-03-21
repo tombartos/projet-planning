@@ -52,7 +52,7 @@ public final class App {
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
         OffsetDateTime heureDebut = OffsetDateTime.now(ZoneOffset.UTC);
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
-        Creneau creneau = Creneau.builder().heureDebut(heureDebut).heureFin(heureFin).build();
+        Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
