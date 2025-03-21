@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>fr.univtln.m1im.png</groupId>
   <artifactId>png</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>0.0.1-SNAPSHOT</version>
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <logback-classic.version>1.5.16</logback-classic.version>
