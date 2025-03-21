@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,7 +42,10 @@ public class Gui {
     private EntityManager entityManager;
     private Etudiant etudiant;
     private List<Creneau> creneaux;
-    private List<Creneau> cCreneaux;
+    private List<Rectangle> cCreneaux;
+    
+    private Group gpGrille;
+    private Group gpCreneaux;
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
         this.etudiant = etudiant;
@@ -54,6 +58,9 @@ public class Gui {
         this.nbHeure = 12;
         this.nbJour = 6;
         this.nbSemaines = 30;
+        this.cCreneaux = new ArrayList<>();
+        this.gpGrille = new Group();
+        this.gpCreneaux = new Group();
 
         this.gui = new GridPane();
         this.group.getChildren().add(this.gui);
@@ -70,7 +77,9 @@ public class Gui {
         this.grille = new Canvas(this.wGrille,this.hGrille);
         this.heures = new Canvas(width * 1/20, hGrille);
         this.gcHeures = this.heures.getGraphicsContext2D();
-        this.gdSemainesGrille.add(this.grille,1,1);
+        this.gdSemainesGrille.add(this.gpGrille,1,1);
+        this.gpGrille.getChildren().add(this.grille);
+        this.gpGrille.getChildren().add(this.gpCreneaux);
         this.gdSemainesGrille.add(this.gdSemaines,1,0);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
@@ -82,7 +91,7 @@ public class Gui {
         for(int i = 0; i < this.nbSemaines; i++){
             Button semaine = new Button(""+(i+1));
             semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
-            final int index = i;
+            final int index = i+1;
             semaine.setOnMouseClicked(event -> majCreneaux(index));
             this.semaines.add(semaine);
             this.gdSemaines.add(semaine, i, 0);
@@ -106,40 +115,35 @@ public class Gui {
         
     }
 
+    public float convHeure(Creneau c)
+    {
+        float r;
+        r = c.getHeureDebut().getHour()-8;
+        r += c.getHeureDebut().getMinute()/60f;
+        return r;
+
+    }
+
+    public float convDuree(Creneau c)
+    {
+        float r;
+        r = c.getHeureFin().getHour()-c.getHeureDebut().getHour();
+        r += c.getHeureFin().getMinute()/60f-c.getHeureDebut().getMinute()/60f;
+        return r;
+    }
+
+
     public void majCreneaux(int numSemaine){
+        this.gpCreneaux.getChildren().clear();
         EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
         this.creneaux = etudiantRepository.getCreneaux(etudiant.getId(), 0, 100);
-        System.out.println(this.creneaux.getLast().getHeureDebut().getHour());
-        int jourDeLaSemaine = 0;
         for(Creneau creneau : this.creneaux){
-            switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
-                case "MONDAY":
-                    jourDeLaSemaine = 0;
-                    break;
-                case "TUESDAY":
-                    jourDeLaSemaine = 1;
-                    break;
-
-                case "WEDNESDAY":
-                    jourDeLaSemaine = 2;
-                    
-                    break;
-                case "THURSDAY":
-                    jourDeLaSemaine = 3;
-                    
-                    break;
-
-                case "FRIDAY":
-                    jourDeLaSemaine = 4;
-                    
-                    break;
-
-            
-                default:
-                    jourDeLaSemaine = 5;
-                    break;
+            System.out.println((int)(creneau.getHeureDebut().getDayOfYear()/7 ));
+            if((int)(creneau.getHeureDebut().getDayOfYear()/7 )== numSemaine)
+            {
+                GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                guiCreneau.afficherCreneau();
             }
-
             
         }
     }
