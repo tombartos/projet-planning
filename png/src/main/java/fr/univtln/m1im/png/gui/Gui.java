@@ -136,7 +136,7 @@ public class Gui {
     public void majCreneaux(int numSemaine){
         this.gpCreneaux.getChildren().clear();
         EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        this.creneaux = etudiantRepository.getCreneaux(etudiant.getId(), 0, 100);
+        this.creneaux = etudiantRepository.getAllCreneaux(etudiant.getId(), 0, 100);
         for(Creneau creneau : this.creneaux){
             System.out.println((int)(creneau.getHeureDebut().getDayOfYear()/7 ));
             if((int)(creneau.getHeureDebut().getDayOfYear()/7 )== numSemaine)

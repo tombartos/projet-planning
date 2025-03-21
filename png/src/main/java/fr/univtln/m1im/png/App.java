@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 import fr.univtln.m1im.png.gui.Gui;
 import fr.univtln.m1im.png.model.*;
@@ -25,34 +27,34 @@ public final class App extends Application{
     private static final EntityManagerFactory emf;
     private static Etudiant etudiant;
     
-        static {
-            log.info("Starting EntityManagerFactory initialization");
-            EntityManagerFactory tryEmf = null;
-    
-            try {
-                log.info("Initializing EntityManagerFactory");
-                tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT);
-                log.info("EntityManagerFactory initialized successfully");
-            } catch (Exception e) {
-                log.error("Failed to create EntityManagerFactory", e);
-                System.exit(0);
-            }
-            emf = tryEmf;
+    static {
+        log.info("Starting EntityManagerFactory initialization");
+        EntityManagerFactory tryEmf = null;
+
+        try {
+            log.info("Initializing EntityManagerFactory");
+            tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT);
+            log.info("EntityManagerFactory initialized successfully");
+        } catch (Exception e) {
+            log.error("Failed to create EntityManagerFactory", e);
+            System.exit(0);
         }
-    
-        public static EntityManagerFactory getEntityManagerFactory() {
-            return emf;
-        }
-    
-        public static void main(String[] args) {
-            log.info("Entering main method");
-    
-            // Create entities
-            // ids are generated automatically, by default when creating the object it's null, after persisting it's set
-            Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
-            OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-            etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
-                .password("password").dateNaissance(now).build();
+        emf = tryEmf;
+    }
+
+    public static EntityManagerFactory getEntityManagerFactory() {
+        return emf;
+    }
+
+    public static void main(String[] args) {
+        log.info("Entering main method");
+
+        // Create entities
+        // ids are generated automatically, by default when creating the object it's null, after persisting it's set
+        Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
+            .password("password").dateNaissance(now).build();
         Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
                 .password("password").dateNaissance(now).build();
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
@@ -60,7 +62,7 @@ public final class App extends Application{
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
         Salle salle = Salle.builder().code("T001").description("Videoproj + PC").capacite(30).build();
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
-        Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(23)).heureFin(heureFin.minusDays(23).plusHours(1)).salle(salle).build();
+        Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(14)).heureFin(heureFin.minusDays(14).plusHours(1)).salle(salle).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -101,13 +103,22 @@ public final class App extends Application{
         }
 
         //Tests
-        // try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()){
-        //     EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+        try (EntityManager entityManager = getEntityManagerFactory().createEntityManager()){
+            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
 
-        //     log.info(etudiantRepository.getCreneaux(etudiant.getId(), 0, 100).toString());
-        // }
+            //log.info(etudiantRepository.getAllCreneaux(etudiant.getId(), 0, 100).toString());
+            log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 1, 2024, 0, 100).toString());
+            //creneau = week 12 2025
+            //creneau2 = week 10 2025
+            log.info("TEST1");
+            log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 12, 2025, 0, 100).toString());
+            log.info("TEST2");
+            log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 10, 2025, 0, 100).toString());
+            log.info("TEST3");
+            log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 10, 2024, 0, 100).toString());
+        }
         launch(args);
-       
+    
     }
 
     private static final class DatabaseConfig {
