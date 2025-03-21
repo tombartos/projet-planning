@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Module;
+import fr.univtln.m1im.png.model.Salle;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Rectangle;
@@ -118,7 +119,7 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        label.setText("Un cours "+creneau.getType()+"\n"+listModule+listProf);
+        label.setText("Un cours "+creneau.getType()+"\n"+listModule+listProf+"\n"+creneau.getSalle().getCode());
         label.setLayoutX(jourDeLaSemaine*width/nbJour);
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
 
