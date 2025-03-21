@@ -6,6 +6,7 @@
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <logback-classic.version>1.5.16</logback-classic.version>
+    <javafx.version>21</javafx.version>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -48,6 +49,17 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.36</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>${javafx.version}</version>
     </dependency>
 
     <dependency>
@@ -177,6 +189,16 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
       </plugin>
+
+      <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.0.0</version>
+            <configuration>
+                <mainClass>fr.univtln.m1im.png.App</mainClass> <!-- Remplace par ton package et ta classe Main -->
+            </configuration>
+        </plugin>
+
     </plugins>
   </reporting>
 </project>

@@ -3,11 +3,16 @@ package fr.univtln.m1im.png;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+import javafx.application.Application;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
+import fr.univtln.m1im.png.gui.Gui;
 import fr.univtln.m1im.png.model.*;
 import fr.univtln.m1im.png.model.Module;
 import fr.univtln.m1im.png.repositories.*;
@@ -16,36 +21,37 @@ import fr.univtln.m1im.png.repositories.*;
  * Hello world!
  */
 @Slf4j
-public final class App {
+public final class App extends Application{
     private static final EntityManagerFactory emf;
-
-    static {
-        log.info("Starting EntityManagerFactory initialization");
-        EntityManagerFactory tryEmf = null;
-
-        try {
-            log.info("Initializing EntityManagerFactory");
-            tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT);
-            log.info("EntityManagerFactory initialized successfully");
-        } catch (Exception e) {
-            log.error("Failed to create EntityManagerFactory", e);
-            System.exit(0);
+    private static Etudiant etudiant;
+    
+        static {
+            log.info("Starting EntityManagerFactory initialization");
+            EntityManagerFactory tryEmf = null;
+    
+            try {
+                log.info("Initializing EntityManagerFactory");
+                tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT);
+                log.info("EntityManagerFactory initialized successfully");
+            } catch (Exception e) {
+                log.error("Failed to create EntityManagerFactory", e);
+                System.exit(0);
+            }
+            emf = tryEmf;
         }
-        emf = tryEmf;
-    }
-
-    public static EntityManagerFactory getEntityManagerFactory() {
-        return emf;
-    }
-
-    public static void main(String[] args) {
-        log.info("Entering main method");
-
-        // Create entities
-        // ids are generated automatically, by default when creating the object it's null, after persisting it's set
-        Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
-        Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
+    
+        public static EntityManagerFactory getEntityManagerFactory() {
+            return emf;
+        }
+    
+        public static void main(String[] args) {
+            log.info("Entering main method");
+    
+            // Create entities
+            // ids are generated automatically, by default when creating the object it's null, after persisting it's set
+            Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
+            OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+            etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
                 .password("password").dateNaissance(now).build();
         Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
                 .password("password").dateNaissance(now).build();
@@ -88,10 +94,24 @@ public final class App {
 
             log.info(etudiantRepository.getCreneaux(etudiant.getId(), 0, 100).toString());
         }
+        launch(args);
        
     }
 
     private static final class DatabaseConfig {
         private static final String PERSISTENCE_UNIT = "png";
     }
+
+    @Override
+    public void start(Stage stage)  {
+        Group root = new Group();
+        int width = 1200;
+        int height = 800;
+        Scene scene = new Scene(root, width, height);
+        new Gui(etudiant,root, width, height, getEntityManagerFactory().createEntityManager());
+        stage.setScene(scene);
+        stage.setTitle("Hyperplanning");
+        stage.show();
+    }
 }
+// mvn exec:java -Dexec.mainClass="fr.univtln.m1im.png.App"
