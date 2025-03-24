@@ -3,6 +3,7 @@
   <groupId>fr.univtln.m1im.png</groupId>
   <artifactId>png</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+
   <properties>
     <maven.compiler.release>21</maven.compiler.release>
     <logback-classic.version>1.5.16</logback-classic.version>
@@ -23,6 +24,7 @@
     <jacoco.unit-tests.limit.class-complexity>20</jacoco.unit-tests.limit.class-complexity>
     <jacoco.unit-tests.limit.method-complexity>5</jacoco.unit-tests.limit.method-complexity>
   </properties>
+
   <dependencies>
 
     <dependency>
@@ -75,17 +77,18 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-         <groupId>jakarta.persistence</groupId>
-         <artifactId>jakarta.persistence-api</artifactId>
-         <version>3.2.0</version>
-     </dependency>
-     <dependency>
-         <groupId>org.hibernate.orm</groupId>
-         <artifactId>hibernate-core</artifactId>
-         <version>6.6.4.Final</version>
-     </dependency>
-     
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+      <version>3.2.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate.orm</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>6.6.4.Final</version>
+    </dependency>
+
   </dependencies>
+
   <build>
     <plugins>
       <plugin>
@@ -184,8 +187,24 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>fr.univtln.m1im.png.App</mainClass>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
+
   <reporting>
     <plugins>
       <plugin>
@@ -193,16 +212,6 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
       </plugin>
-
-      <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <version>3.0.0</version>
-            <configuration>
-                <mainClass>fr.univtln.m1im.png.App</mainClass> <!-- Remplace par ton package et ta classe Main -->
-            </configuration>
-        </plugin>
-
     </plugins>
   </reporting>
 </project>

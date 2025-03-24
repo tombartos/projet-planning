@@ -23,8 +23,11 @@ public final class App extends Application{
         
     }
 }
-//LINUX :
-// mvn exec:java -Dexec.mainClass="fr.univtln.m1im.png.App"
 
-//WINDOWS:
-//mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"
+// Pour executer cette classe,
+//
+//     mvn exec:java
+//
+// ce qui revient à
+//
+//     mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"
