@@ -14,6 +14,7 @@ import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import jakarta.persistence.EntityManager;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -21,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
 import net.sf.jsqlparser.statement.select.Offset;
@@ -61,8 +63,7 @@ public class Gui {
 
     private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
 
-    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
-        // this.utilisateur = utilisateur;
+    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.etudiant = etudiant;
         this.group = group;
         this.width = width;
@@ -141,6 +142,10 @@ public class Gui {
                 this.gcGrille.strokeRect(i*this.wGrille/this.nbJour, j*this.hGrille/this.nbHeure, this.wGrille/this.nbJour, this.hGrille/this.nbHeure);
             }
         }
+        
+        stage.setScene(scene);
+        stage.setTitle("Planning Nouvelle Génération");
+        stage.show();
         
     }
 

@@ -33,6 +33,7 @@ public class Creneau {
     @Id
     @SequenceGenerator(name = "creneau_seq", sequenceName = "creneau_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "creneau_seq")
+    @Builder.Default
     private Long id = null;
     private OffsetDateTime heureDebut;
     private OffsetDateTime heureFin;

@@ -3,6 +3,8 @@ package fr.univtln.m1im.png.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,12 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NamedQueries({
+    @NamedQuery(
+      name = "Professeur.getByLogin",
+      query = "SELECT p FROM Professeur p WHERE p.login = :login"
+    )
+  })
 public class Professeur extends Utilisateur {
     @ToString.Exclude
     @Builder.Default
@@ -33,7 +41,4 @@ public class Professeur extends Utilisateur {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 
-    // public Professeur(Long id, String nom, String prenom, String login, String email, String password, OffsetDateTime dateNaissance) {
-    //     super(id, nom, prenom, login, email, password, dateNaissance);
-    // }
 }

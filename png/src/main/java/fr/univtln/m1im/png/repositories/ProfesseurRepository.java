@@ -8,4 +8,10 @@ public class ProfesseurRepository extends JpaRepository<Professeur, Long> {
     public ProfesseurRepository(EntityManager entityManager){
         super(Professeur.class, entityManager);
     }
+
+    public Professeur getByLogin(String login){
+        return em.createNamedQuery("Professeur.getByLogin", Professeur.class)
+                .setParameter("login", login)
+                .getSingleResult();
+    }
 }
