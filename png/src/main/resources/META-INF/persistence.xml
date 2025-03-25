@@ -30,7 +30,7 @@
 
   <!-- The test persistence unit
   It uses an in-memory database -->
-  <persistence-unit name="testjpaUnit">
+  <!-- <persistence-unit name="testjpaUnit">
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver" />
@@ -39,6 +39,6 @@
       <property name="jakarta.persistence.jdbc.password" value="yourpassword" />
       <property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />
     </properties>
-  </persistence-unit>
+  </persistence-unit> -->
 
 </persistence>

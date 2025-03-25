@@ -36,7 +36,7 @@ public final class App extends Application{
         try {
             log.info("Initializing EntityManagerFactory");
             Map<String, String> properties = new HashMap<>();
-            properties.put("jakarta.persistence.jdbc.user", "postgres");
+            properties.put("jakarta.persistence.jdbc.user", "postgresssss");
             properties.put("jakarta.persistence.jdbc.password", "mysecretpassword");
             //TODO: Finir credentials + test
             tryEmf = Persistence.createEntityManagerFactory(DatabaseConfig.PERSISTENCE_UNIT, properties);
