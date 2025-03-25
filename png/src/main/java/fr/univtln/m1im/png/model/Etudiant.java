@@ -34,6 +34,10 @@ import jakarta.persistence.NamedQuery;
     @NamedQuery(
       name = "Etudiant.getWeekCrenaux",
       query = "SELECT c FROM Etudiant e JOIN e.groupes g JOIN g.creneaux c WHERE e.id = :etudiantId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+      name = "Etudiant.getByLogin",
+      query = "SELECT e FROM Etudiant e WHERE e.login = :login"
     )
   })
 public class Etudiant extends Utilisateur {

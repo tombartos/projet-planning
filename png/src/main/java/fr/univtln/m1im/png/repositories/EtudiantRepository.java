@@ -2,7 +2,6 @@ package fr.univtln.m1im.png.repositories;
 
 
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import fr.univtln.m1im.png.Utils;
@@ -31,6 +30,11 @@ public class EtudiantRepository extends JpaRepository<Etudiant, Long> {
                .setParameter("lastDay", weekdays.getLast())
                .setFirstResult(0)
                .getResultList();
+    }
 
+    public Etudiant getByLogin(String login){
+        return em.createNamedQuery("Etudiant.getByLogin", Etudiant.class)
+                .setParameter("login", login)
+                .getSingleResult();
     }
 }
