@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="fr.univtln.m1im.png.AppTest" time="0.174" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="fr.univtln.m1im.png.AppTest" time="0.106" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="23"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
@@ -12,7 +12,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="FR"/>
     <property name="sun.boot.library.path" value="/home/emad_70/.sdkman/candidates/java/23-tem/lib"/>
-    <property name="sun.java.command" value="/home/emad_70/M1/Sopra/projet-planning/png/target/surefire/surefirebooter7001094845755091597.jar /home/emad_70/M1/Sopra/projet-planning/png/target/surefire 2025-03-21T10-51-59_399-jvmRun1 surefire4932871240613719779tmp surefire_0411953247107988997tmp"/>
+    <property name="sun.java.command" value="/home/emad_70/M1/Sopra/projet-planning/png/target/surefire/surefirebooter9716137839779410578.jar /home/emad_70/M1/Sopra/projet-planning/png/target/surefire 2025-03-21T15-46-55_744-jvmRun1 surefire2056843510810934403tmp surefire_013001156659261609107tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="/home/emad_70/M1/Sopra/projet-planning/png/target/test-classes:/home/emad_70/M1/Sopra/projet-planning/png/target/classes:/home/emad_70/.m2/repository/org/openjfx/javafx-controls/20.0.2/javafx-controls-20.0.2.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-controls/20.0.2/javafx-controls-20.0.2-linux.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-graphics/20.0.2/javafx-graphics-20.0.2.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-graphics/20.0.2/javafx-graphics-20.0.2-linux.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-base/20.0.2/javafx-base-20.0.2.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-base/20.0.2/javafx-base-20.0.2-linux.jar:/home/emad_70/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.0/junit-jupiter-5.10.0.jar:/home/emad_70/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.0/junit-jupiter-api-5.10.0.jar:/home/emad_70/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/emad_70/.m2/repository/org/junit/platform/junit-platform-commons/1.10.0/junit-platform-commons-1.10.0.jar:/home/emad_70/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/emad_70/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.0/junit-jupiter-params-5.10.0.jar:/home/emad_70/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.0/junit-jupiter-engine-5.10.0.jar:/home/emad_70/.m2/repository/org/junit/platform/junit-platform-engine/1.10.0/junit-platform-engine-1.10.0.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-fxml/20.0.2/javafx-fxml-20.0.2.jar:/home/emad_70/.m2/repository/org/openjfx/javafx-fxml/20.0.2/javafx-fxml-20.0.2-linux.jar:/home/emad_70/.m2/repository/org/projectlombok/lombok/1.18.28/lombok-1.18.28.jar:/home/emad_70/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/emad_70/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/emad_70/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/home/emad_70/.m2/repository/com/github/javafaker/javafaker/1.0.2/javafaker-1.0.2.jar:/home/emad_70/.m2/repository/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar:/home/emad_70/.m2/repository/org/yaml/snakeyaml/1.23/snakeyaml-1.23-android.jar:/home/emad_70/.m2/repository/com/github/mifmif/generex/1.0.2/generex-1.0.2.jar:/home/emad_70/.m2/repository/dk/brics/automaton/automaton/1.11-8/automaton-1.11-8.jar:/home/emad_70/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/home/emad_70/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/home/emad_70/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -27,7 +27,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
-    <property name="surefire.real.class.path" value="/home/emad_70/M1/Sopra/projet-planning/png/target/surefire/surefirebooter7001094845755091597.jar"/>
+    <property name="surefire.real.class.path" value="/home/emad_70/M1/Sopra/projet-planning/png/target/surefire/surefirebooter9716137839779410578.jar"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="23+37"/>
     <property name="user.name" value="emad_70"/>
@@ -54,7 +54,7 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="67.0"/>
   </properties>
-  <testcase name="testLogin" classname="fr.univtln.m1im.png.AppTest" time="0.117">
+  <testcase name="testLogin" classname="fr.univtln.m1im.png.AppTest" time="0.065">
     <system-err><![CDATA[java.lang.instrument.IllegalClassFormatException: Error while instrumenting fr/univtln/m1im/png/AppTest.
 	at org.jacoco.agent.rt.internal_035b120.CoverageTransformer.transform(CoverageTransformer.java:93)
 	at java.instrument/java.lang.instrument.ClassFileTransformer.transform(ClassFileTransformer.java:242)
