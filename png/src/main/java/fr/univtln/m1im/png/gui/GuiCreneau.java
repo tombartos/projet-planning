@@ -96,7 +96,7 @@ public class GuiCreneau {
                 break;
 
             case "TD":
-            rectangle.setFill(Color.LIGHTGREEN);
+            rectangle.setFill(Color.GREEN);
                 
                 break;
 

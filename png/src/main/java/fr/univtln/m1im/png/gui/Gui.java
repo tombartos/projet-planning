@@ -77,7 +77,7 @@ public class Gui {
         this.gdSemainesGrille = new GridPane();
         this.gdSemaines = new GridPane();
 
-        this.gui.add(this.gdHeuresEdt, 0, 0);
+        this.gui.add(this.gdHeuresEdt, 0, 2);
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
         this.wGrille = width * 9/10;
@@ -85,7 +85,7 @@ public class Gui {
         this.grille = new Canvas(this.wGrille,this.hGrille);
         this.heures = new Canvas(width * 1/20, hGrille);
         this.gcHeures = this.heures.getGraphicsContext2D();
-        this.gdSemainesGrille.add(this.gpGrille,1,1);
+        this.gdSemainesGrille.add(this.gpGrille,1,2);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
         this.gdSemainesGrille.add(this.gdSemaines,1,1);
@@ -141,7 +141,6 @@ public class Gui {
             String salleChoisie = this.salleDropdown.getValue();
             if (salleChoisie != null) {
                 afficherCoursSalle(salleChoisie);
-                this.salleDropdown.setVisible(false); // Masquer après sélection
             }
         });
 
@@ -150,7 +149,7 @@ public class Gui {
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
-        this.gdSemainesGrille.add(gpBarreFiltres, 1, 0);
+        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
 
         
     }
@@ -190,9 +189,8 @@ public class Gui {
 
     private void chargerSalles() {
         List<Salle> salles;
-        try (EntityManager em = entityManager) {
-            salles = em.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
-        }
+        salles = entityManager.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
+
 
         for (Salle salle : salles) {
             this.salleDropdown.getItems().add(salle.getCode());
@@ -203,11 +201,10 @@ public class Gui {
         this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
     
         List<Creneau> creneauxSalle;
-        try (EntityManager em = entityManager) {
-            creneauxSalle = em.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
-                              .setParameter("salleCode", salleCode)
-                              .getResultList();
-        }
+        creneauxSalle = entityManager.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
+                      .setParameter("salleCode", salleCode)
+                      .getResultList();
+
     
         for (Creneau creneau : creneauxSalle) {
             GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);

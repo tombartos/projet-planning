@@ -21,7 +21,7 @@ import fr.univtln.m1im.png.repositories.*;
  * Hello world!
  */
 @Slf4j
-public final class AppMain extends Application{
+public final class App extends Application{
     private static final EntityManagerFactory emf;
     private static Etudiant etudiant;
     
