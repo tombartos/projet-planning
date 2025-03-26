@@ -52,7 +52,7 @@ class AppTest {
      * Rigorous Test.
      */
     @Test
-    private static void testApp() {
+    void testApp() {
         //!!!!All this is to initialize the database with a default admin account, this will be removed, this is only until we have the data generator  !!!!
         System.out.println("Hello World!");
         // Initialize EntityManagerFactory
@@ -73,6 +73,7 @@ class AppTest {
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
         Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(14)).heureFin(heureFin.minusDays(14).plusHours(1)).salle(salle).build();
         Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
+        Creneau creneau4 = Creneau.builder().type("EXAM").heureDebut(heureDebut.minusHours(3)).heureFin(heureDebut.minusHours(2)).salle(salle).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -101,6 +102,13 @@ class AppTest {
         creneau3.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau3);
 
+        creneau4.getModules().add(module);
+        module.getCreneaux().add(creneau4);
+        creneau4.getGroupes().add(groupe);
+        groupe.getCreneaux().add(creneau4);
+        creneau4.getProfesseurs().add(professeur);
+        professeur.getCreneaux().add(creneau4);
+
 
 
         // Persist entities, don't use save method, it's not recommended for the first time
@@ -115,6 +123,7 @@ class AppTest {
             entityManager.persist(creneau);
             entityManager.persist(creneau2);
             entityManager.persist(creneau3);
+            entityManager.persist(creneau4);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {
