@@ -1,0 +1,34 @@
+@startuml
+start
+:Clique sur le bouton "Ajouter un cours";
+
+repeat
+    :Clique sur "Groupe";
+    repeat
+        :Clique sur "Ajouter un groupe";
+        :Clique sur le groupe voulu;
+    repeat while (Ajouter un groupe supplémentaire ?) is (yes)
+    :Clique sur "Modules";
+    repeat
+        :Clique sur "Ajouter module";
+        :Clique sur le module voulu;
+    repeat while (Ajouter un module supplémentaire ?) is (yes)
+
+    :Clique sur "Professeurs";
+    repeat
+        :Clique sur "Ajouter professeur";
+        :Clique sur le professeur voulu;
+    repeat while (Ajouter un professeur supplémentaire ?) is (yes)
+    :Clique sur "Horaires";
+    :Renseigne les horaires voulues;
+    :Clique sur "Salles";
+    :Clique sur la salle voulue;
+    :Clique sur "Valider";
+repeat while (Créneau valide) is (no)
+
+if (Propager le cours ?) then (yes)
+    :Clique sur les semaines où le cours doit être copié;
+    :Clique sur "Valider";
+endif
+stop
+@enduml

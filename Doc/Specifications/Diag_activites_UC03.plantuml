@@ -1,0 +1,11 @@
+@startuml Diag_activites_UC03
+start
+:Clique sur "salles";
+if (Changer salle affichée) then (yes)
+    :Clique sur la salle voulue;
+endif
+if (Changer salle affichée) then (yes)
+    :Clique sur la salle voulue;
+endif
+stop
+@enduml
