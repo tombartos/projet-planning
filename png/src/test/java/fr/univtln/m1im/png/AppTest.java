@@ -21,7 +21,7 @@ import java.time.ZoneOffset;
 class AppTest {
     private static final Logger log = LoggerFactory.getLogger(AppTest.class);
 
-    private static void createEtudiantUser(String username, String password){
+    void createEtudiantUser(String username, String password){
 
         //I don't know why it doesnt work, there is just no error but the user is not created
 
@@ -54,7 +54,7 @@ class AppTest {
     @Test
     void testApp() {
         //!!!!All this is to initialize the database with a default admin account, this will be removed, this is only until we have the data generator  !!!!
-        System.out.println("Hello World!");
+        System.err.println("Hello World!");
         // Initialize EntityManagerFactory
         Utils.initconnection("postgres", "mysecretpassword");
 
@@ -132,9 +132,10 @@ class AppTest {
 
         createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
         //Doenst work, no error but the user is not created
-        //CREATE USER et1 WITH PASSWORD 'password'; 
-        //GRANT CONNECT ON DATABASE postgres TO et1;
-        //GRANT USAGE ON SCHEMA public TO et1;
+        // CREATE USER et1 WITH PASSWORD 'password'; 
+        // GRANT CONNECT ON DATABASE postgres TO et1;
+        // GRANT USAGE ON SCHEMA public TO et1;
+        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_user;
         Utils.getEntityManagerFactory().close();
 
         //Tests
