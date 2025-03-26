@@ -30,9 +30,40 @@
   <dependencies>
 
     <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>${logback-classic.version}</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.guicedee.services</groupId>
+      <artifactId>sl4j</artifactId>
+      <version>1.0.13.5-jre14</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>com.ibeetl</groupId>
+      <artifactId>postgres</artifactId>
+      <version>3.22.0-RELEASE</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.36</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>${javafx.version}</version>
+    </dependency>
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>${javafx.version}</version>
     </dependency>
 
     <dependency>
@@ -47,7 +78,19 @@
       <version>${junit.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+         <groupId>jakarta.persistence</groupId>
+         <artifactId>jakarta.persistence-api</artifactId>
+         <version>3.2.0</version>
+     </dependency>
+     <dependency>
+         <groupId>org.hibernate.orm</groupId>
+         <artifactId>hibernate-core</artifactId>
+         <version>6.6.4.Final</version>
+     </dependency>
+     
   </dependencies>
+
   <build>
     <plugins>
       <plugin>

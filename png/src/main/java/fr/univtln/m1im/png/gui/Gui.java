@@ -5,13 +5,16 @@ import java.util.List;
 
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import jakarta.persistence.EntityManager;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
@@ -38,6 +41,7 @@ public class Gui {
     private GraphicsContext gcGrille;
     private int nbHeure;
     private int nbJour;
+     
 
     private EntityManager entityManager;
     private Etudiant etudiant;
@@ -46,6 +50,10 @@ public class Gui {
     
     private Group gpGrille;
     private Group gpCreneaux;
+    private Group gpBarreFiltres;
+
+    private HBox barreFiltres; // une barre de boutons pour filtrer les crene
+    private ComboBox<String> salleDropdown; 
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
         this.etudiant = etudiant;
@@ -80,7 +88,7 @@ public class Gui {
         this.gdSemainesGrille.add(this.gpGrille,1,1);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
-        this.gdSemainesGrille.add(this.gdSemaines,1,0);
+        this.gdSemainesGrille.add(this.gdSemaines,1,1);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
         // this.gdSemainesGrille.add(this.heures,0,1);
@@ -112,6 +120,38 @@ public class Gui {
                 this.gcGrille.strokeRect(i*this.wGrille/this.nbJour, j*this.hGrille/this.nbHeure, this.wGrille/this.nbJour, this.hGrille/this.nbHeure);
             }
         }
+
+        //Ajout de la barre de filtres
+        this.gpBarreFiltres = new Group();
+        this.barreFiltres = new HBox();
+        this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        this.salleDropdown = new ComboBox<>();
+        this.salleDropdown.setPromptText("Salles");
+        Button btnFormation = new Button("Formation");
+        Button btnGroupe = new Button("Groupe");
+        
+        
+
+        // Charger les salles depuis la base de données
+        chargerSalles();
+
+
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            String salleChoisie = this.salleDropdown.getValue();
+            if (salleChoisie != null) {
+                afficherCoursSalle(salleChoisie);
+                this.salleDropdown.setVisible(false); // Masquer après sélection
+            }
+        });
+
+        // Ajouter les boutons dans la barre horizontale
+        this.barreFiltres.getChildren().addAll(this.salleDropdown, btnFormation, btnGroupe);
+        // Ajouter la barre de boutons au groupe
+        this.gpBarreFiltres.getChildren().add(barreFiltres);
+        // Ajouter ce groupe à l'interface
+        this.gdSemainesGrille.add(gpBarreFiltres, 1, 0);
+
         
     }
 
@@ -147,6 +187,35 @@ public class Gui {
             
         }
     }
+
+    private void chargerSalles() {
+        List<Salle> salles;
+        try (EntityManager em = entityManager) {
+            salles = em.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
+        }
+
+        for (Salle salle : salles) {
+            this.salleDropdown.getItems().add(salle.getCode());
+        }
+    }
+
+    private void afficherCoursSalle(String salleCode) {
+        this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
+    
+        List<Creneau> creneauxSalle;
+        try (EntityManager em = entityManager) {
+            creneauxSalle = em.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
+                              .setParameter("salleCode", salleCode)
+                              .getResultList();
+        }
+    
+        for (Creneau creneau : creneauxSalle) {
+            GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+            guiCreneau.afficherCreneau();
+        }
+    }
+    
+
         
         
     
