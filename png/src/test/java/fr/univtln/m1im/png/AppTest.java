@@ -146,7 +146,7 @@ class AppTest {
             log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
 
         }
-
+        
         createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
         
         // CREATE USER et1 WITH PASSWORD 'password'; 

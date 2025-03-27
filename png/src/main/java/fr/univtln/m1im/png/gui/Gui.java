@@ -173,7 +173,7 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            //TODO : récupérer les créneaux de l'étudiant
+            //TODO : récupérer les créneaux du groupe
         }
         else if(this.etatCourant == 1)
         {
@@ -183,10 +183,7 @@ public class Gui {
         {
             //TODO : récupérer les créneaux de la salle
         }
-        else if(this.etatCourant == 3)
-        {
-            //TODO : récupérer les créneaux du groupe
-        } 
+
         majCreneaux(this.numSemaine);
     }
 
