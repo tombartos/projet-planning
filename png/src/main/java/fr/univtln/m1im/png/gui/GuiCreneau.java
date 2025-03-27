@@ -100,8 +100,13 @@ public class GuiCreneau {
                 
                 break;
 
-            case "TP":
+                case "TP":
                 rectangle.setFill(Color.RED);
+                
+                break;
+
+            case "EXAM":
+                rectangle.setFill(Color.MAGENTA);
                 
                 break;
         
@@ -111,6 +116,7 @@ public class GuiCreneau {
         }
         
         label = new Label();
+        label.setPrefSize(width/nbJour, height/nbHeure*convDuree(creneau));
         // label.setStyle("-fx-font-size: "+10+"px");
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listModule = new String();
