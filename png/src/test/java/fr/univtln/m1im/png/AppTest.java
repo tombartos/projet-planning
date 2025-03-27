@@ -150,7 +150,19 @@ class AppTest {
 
         }
         
-        createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
+            String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", etudiant.getLogin());
+            //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
+            log.info(checkUserQuery);
+            int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
+            if (userExists == 0) {
+            createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
+            } else {
+            log.info("User already exists: {}", etudiant.getLogin());
+            }
+        } catch (Exception e) {
+            log.error("Failed to check or create user", e);
+        }
         
         // CREATE USER et1 WITH PASSWORD 'password'; 
         // GRANT CONNECT ON DATABASE postgres TO et1;
