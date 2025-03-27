@@ -42,6 +42,7 @@ public class Gui {
     private int nbSemaines; // Nombre de semaines
     private GridPane gdSemaines; // Les semaines
     private List<Button> semaines;
+    private int numSemaine;
     private Canvas grille;
     private int wGrille;
     private int hGrille;
@@ -74,6 +75,7 @@ public class Gui {
         this.nbHeure = 12;
         this.nbJour = 6;
         this.nbSemaines = 30;
+        this.etatCourant = 0;
         this.cCreneaux = new ArrayList<>();
         this.gpGrille = new Group();
         this.gpCreneaux = new Group();
@@ -122,7 +124,8 @@ public class Gui {
             Button semaine = new Button(""+(i+1));
             semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
             final int index = i+1;
-            semaine.setOnMouseClicked(event -> majCreneaux(index));
+            // semaine.setOnMouseClicked(event -> majCreneaux(index));
+            semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
             this.semaines.add(semaine);
             this.gdSemaines.add(semaine, i, 0);
         }
@@ -166,7 +169,26 @@ public class Gui {
         return r;
     }
 
-    
+    public void genererCreneaux()
+    {
+        if(this.etatCourant == 0)
+        {
+            //TODO : récupérer les créneaux de l'étudiant
+        }
+        else if(this.etatCourant == 1)
+        {
+            //TODO : récupérer les créneaux du professeur
+        }
+        else if(this.etatCourant == 2)
+        {
+            //TODO : récupérer les créneaux de la salle
+        }
+        else if(this.etatCourant == 3)
+        {
+            //TODO : récupérer les créneaux du groupe
+        } 
+        majCreneaux(this.numSemaine);
+    }
 
     public void majCreneaux(int numSemaine){
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -184,9 +206,12 @@ public class Gui {
         }
 
 
+        
         this.gpCreneaux.getChildren().clear();
+        // Les 2 prochaines lignes sont à supprimer à long terme
         EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
         this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, annee, 0, 100);
+        // genererCreneaux();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
                 guiCreneau.afficherCreneau();

@@ -111,6 +111,8 @@ public class GuiCreneau {
         }
         
         label = new Label();
+        // label.setStyle("-fx-font-size: "+10+"px");
+        label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listModule = new String();
         for(Module module : creneau.getModules()){
             listModule += module.getNom()+"\n";
@@ -119,7 +121,7 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        label.setText("Un cours "+creneau.getType()+"\n"+listModule+listProf+"\n"+creneau.getSalle().getCode());
+        label.setText("Un cours "+creneau.getType()+"\n"+listModule+listProf+creneau.getSalle().getCode());
         label.setLayoutX(jourDeLaSemaine*width/nbJour);
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
 

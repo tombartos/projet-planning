@@ -135,7 +135,7 @@ class AppTest {
         // CREATE USER et1 WITH PASSWORD 'password'; 
         // GRANT CONNECT ON DATABASE postgres TO et1;
         // GRANT USAGE ON SCHEMA public TO et1;
-        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_user;
+        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
         Utils.getEntityManagerFactory().close();
 
         //Tests
