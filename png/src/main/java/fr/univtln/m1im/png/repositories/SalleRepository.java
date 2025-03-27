@@ -22,4 +22,11 @@ public class SalleRepository extends JpaRepository<Salle, Long> {
                 .setParameter("lastDay", weekdays.getLast())
                 .getResultList();
     }
+
+    public List<Salle> getAll(int pageNumber, int pageSize){
+        return em.createNamedQuery("Salle.getAll", Salle.class)
+                .setFirstResult(pageNumber * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
 }

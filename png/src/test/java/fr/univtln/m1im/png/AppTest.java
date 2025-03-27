@@ -66,13 +66,15 @@ class AppTest {
         Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
                 .password("password").dateNaissance(now).build();
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
-        OffsetDateTime heureDebut = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime heureDebut = OffsetDateTime.of(2025, 3, 27, 9, 0, 0, 0, ZoneOffset.UTC);
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
         Salle salle = Salle.builder().code("T001").description("Videoproj + PC").capacite(30).build();
+        Salle salle2 = Salle.builder().code("T002").description("Videoproj").capacite(20).build();
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
         Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(14)).heureFin(heureFin.minusDays(14).plusHours(1)).salle(salle).build();
         Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
-        Creneau creneau4 = Creneau.builder().type("EXAM").heureDebut(heureDebut.minusHours(3)).heureFin(heureDebut.minusHours(2)).salle(salle).build();
+        Creneau creneau4 = Creneau.builder().type("EXAM").heureDebut(heureDebut.plusHours(3)).heureFin(heureFin.plusHours(3)).salle(salle2).build();
+
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -115,6 +117,7 @@ class AppTest {
             log.info("Persisting entities");
             entityManager.getTransaction().begin();
             entityManager.persist(salle);
+            entityManager.persist(salle2);
             entityManager.persist(professeur);
             entityManager.persist(groupe);
             entityManager.persist(etudiant);

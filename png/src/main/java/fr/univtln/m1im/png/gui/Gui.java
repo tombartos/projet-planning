@@ -7,28 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ch.qos.logback.classic.pattern.Util;
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
+import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.control.ComboBox;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
-import net.sf.jsqlparser.statement.select.Offset;
 
 @Getter @Setter
 public class Gui {
+    private static final Logger log = LoggerFactory.getLogger(Gui.class);
     //La fenêtre de l'application
     private Group group;
     private GridPane gui;
@@ -58,11 +64,15 @@ public class Gui {
     
     private Group gpGrille;
     private Group gpCreneaux;
+    private Group gpBarreFiltres;
     private Group gpJour;
     private Canvas cJours;
     private GraphicsContext gcJours;
-
-    private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    
+    private HBox barreFiltres; // une barre de boutons pour filtrer les crene
+    private ComboBox<String> salleDropdown; 
+    private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    private String salleChoisie;
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.etudiant = etudiant;
@@ -89,7 +99,7 @@ public class Gui {
         this.gdSemainesGrille.setVgap(20);
         this.gdSemaines = new GridPane();
 
-        this.gui.add(this.gdHeuresEdt, 0, 0);
+        this.gui.add(this.gdHeuresEdt, 0, 2);
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
 
@@ -112,7 +122,7 @@ public class Gui {
         this.gdSemainesGrille.add(this.gpGrille,1,2);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
-        this.gdSemainesGrille.add(this.gdSemaines,1,0);
+        this.gdSemainesGrille.add(this.gdSemaines,1,1);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
         // this.gdSemainesGrille.add(this.heures,0,1);
@@ -145,6 +155,38 @@ public class Gui {
                 this.gcGrille.strokeRect(i*this.wGrille/this.nbJour, j*this.hGrille/this.nbHeure, this.wGrille/this.nbJour, this.hGrille/this.nbHeure);
             }
         }
+
+        //Ajout de la barre de filtres
+        this.gpBarreFiltres = new Group();
+        this.barreFiltres = new HBox();
+        this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        this.salleDropdown = new ComboBox<>();
+        this.salleDropdown.setPromptText("Salles");
+        Button btnFormation = new Button("Formation");
+        Button btnGroupe = new Button("Groupe");
+        
+        
+
+        // Charger les salles depuis la base de données
+        chargerSalles();
+
+
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            salleChoisie = this.salleDropdown.getValue();
+            if (salleChoisie != null) {
+                //afficherCoursSalle(salleChoisie);
+                etatCourant = 2;
+                genererCreneaux();
+            }
+        });
+
+        // Ajouter les boutons dans la barre horizontale
+        this.barreFiltres.getChildren().addAll(this.salleDropdown, btnFormation, btnGroupe);
+        // Ajouter la barre de boutons au groupe
+        this.gpBarreFiltres.getChildren().add(barreFiltres);
+        // Ajouter ce groupe à l'interface
+        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
         
         stage.setScene(scene);
         stage.setTitle("Planning Nouvelle Génération");
@@ -173,15 +215,25 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            //TODO : récupérer les créneaux du groupe
+            //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
+            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), this.numSemaine, 2025, 0, 100);
         }
         else if(this.etatCourant == 1)
         {
-            //TODO : récupérer les créneaux du professeur
+            int idProf = 1; //TODO : récupérer l'id du professeur + annee
+            ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            creneaux = professeurRepository.getWeekCrenaux(idProf, this.numSemaine, 2025, 0, 100);
+
         }
         else if(this.etatCourant == 2)
         {
-            //TODO : récupérer les créneaux de la salle
+            SalleRepository salleRepository = new SalleRepository(entityManager);
+            creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+        }
+        else if(this.etatCourant == 3)
+        {
+            //TODO : récupérer l'emploi du temps du groupe
         }
 
         majCreneaux(this.numSemaine);
@@ -206,8 +258,8 @@ public class Gui {
         
         this.gpCreneaux.getChildren().clear();
         // Les 2 prochaines lignes sont à supprimer à long terme
-        EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, annee, 0, 100);
+        // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+        // this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, annee, 0, 100);
         // genererCreneaux();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
@@ -216,6 +268,30 @@ public class Gui {
             
         }
     }
+    private void chargerSalles() {
+        List<Salle> salles;
+        SalleRepository salleRepository = new SalleRepository(entityManager);
+        salles = salleRepository.getAll(0, 100);
+
+        for (Salle salle : salles) {
+            this.salleDropdown.getItems().add(salle.getCode());
+        }
+    }
+
+    // private void afficherCoursSalle(String salleCode) {
+    //     this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
+    
+    //     List<Creneau> creneauxSalle;
+    //     creneauxSalle = entityManager.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
+    //                   .setParameter("salleCode", salleCode)
+    //                   .getResultList();
+
+    
+    //     for (Creneau creneau : creneauxSalle) {
+    //         GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+    //         guiCreneau.afficherCreneau();
+    //     }
+    // }
         
         
     

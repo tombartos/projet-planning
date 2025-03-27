@@ -25,6 +25,10 @@ import lombok.ToString;
     @NamedQuery(
       name = "Salle.getWeekCrenaux",
       query = "SELECT c FROM Creneau c WHERE c.salle.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+      name = "Salle.getAll",
+      query = "SELECT s FROM Salle s"
     )
   })
 public class Salle {
