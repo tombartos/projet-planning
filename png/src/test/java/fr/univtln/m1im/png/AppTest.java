@@ -7,6 +7,8 @@ import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
@@ -21,30 +23,27 @@ import java.time.ZoneOffset;
 class AppTest {
     private static final Logger log = LoggerFactory.getLogger(AppTest.class);
 
-    void createEtudiantUser(String username, String password){
-
-        //I don't know why it doesnt work, there is just no error but the user is not created
-
-        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()){
-            entityManager.createNativeQuery("CREATE USER :username WITH PASSWORD ':password'")
-            .setParameter("username", username)
-            .setParameter("password", password)
-            .executeUpdate();
-
-            entityManager.createNativeQuery("GRANT CONNECT ON DATABASE postgres TO :username")
-            .setParameter("username", username)
-            .executeUpdate();
-
-            entityManager.createNativeQuery("GRANT USAGE ON SCHEMA public TO :username")
-            .setParameter("username", username)
-            .executeUpdate();
-
-            entityManager.createNativeQuery("GRANT SELECT ON ALL TABLES IN SCHEMA public TO :username")
-            .setParameter("username", username)
-            .executeUpdate();
-            System.out.println("User created successfully");
-        }
-        catch (Exception e) {
+    void createEtudiantUser(String username, String password) {
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+    
+            // We can't use the classic JPA way to create a user because it's not supported by the JPA standard
+            String createUserQuery = String.format("CREATE USER %s WITH PASSWORD '%s';", username, password);
+            entityManager.createNativeQuery(createUserQuery).executeUpdate();
+    
+            // Grant privileges
+            String grantConnectQuery = String.format("GRANT CONNECT ON DATABASE postgres TO %s;", username);
+            entityManager.createNativeQuery(grantConnectQuery).executeUpdate();
+    
+            String grantUsageQuery = String.format("GRANT USAGE ON SCHEMA public TO %s;", username);
+            entityManager.createNativeQuery(grantUsageQuery).executeUpdate();
+    
+            String grantSelectQuery = String.format("GRANT SELECT ON ALL TABLES IN SCHEMA public TO %s;", username);
+            entityManager.createNativeQuery(grantSelectQuery).executeUpdate();
+    
+            entityManager.getTransaction().commit();
+            log.info("User created successfully: {}", username);
+        } catch (Exception e) {
             log.error("Failed to create user", e);
         }
     }
@@ -130,28 +129,31 @@ class AppTest {
             log.error("Failed to persist entities", e);
         }
 
+        //TESTS
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()){
+            ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            log.info("TEST1");
+            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 9, 2025, 0, 100).toString());
+            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 10, 2025, 0, 100).toString());
+            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 11, 2025, 0, 100).toString());
+            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 12, 2025, 0, 100).toString());
+            //creneau = week 12 2025
+            //creneau2 = week 10 2025
+            log.info("TEST2");
+            SalleRepository salleRepository = new SalleRepository(entityManager);
+            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 10, 2025, 0, 100).toString());
+            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 11, 2025, 0, 100).toString());
+            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
+
+        }
+
         createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
-        //Doenst work, no error but the user is not created
+        
         // CREATE USER et1 WITH PASSWORD 'password'; 
         // GRANT CONNECT ON DATABASE postgres TO et1;
         // GRANT USAGE ON SCHEMA public TO et1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO readonly_user;
         Utils.getEntityManagerFactory().close();
 
-        //Tests
-        // try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()){
-        //     EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-
-        //     //log.info(etudiantRepository.getAllCreneaux(etudiant.getId(), 0, 100).toString());
-        //     log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 1, 2024, 0, 100).toString());
-        //     //creneau = week 12 2025
-        //     //creneau2 = week 10 2025
-        //     log.info("TEST1");
-        //     log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 12, 2025, 0, 100).toString());
-        //     log.info("TEST2");
-        //     log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 10, 2025, 0, 100).toString());
-        //     log.info("TEST3");
-        //     log.info(etudiantRepository.getWeekCreneaux(etudiant.getId(), 10, 2024, 0, 100).toString());
-        // }
     }
 }
