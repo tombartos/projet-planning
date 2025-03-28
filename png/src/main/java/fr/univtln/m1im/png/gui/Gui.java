@@ -53,7 +53,9 @@ public class Gui {
     private Group gpBarreFiltres;
 
     private HBox barreFiltres; // une barre de boutons pour filtrer les crene
-    private ComboBox<String> salleDropdown; 
+    private ComboBox<String> salleDropdown;
+    private ComboBox<String> groupesDropdown;
+    private ComboBox<String> profDropdown; 
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
         this.etudiant = etudiant;
@@ -125,10 +127,13 @@ public class Gui {
         this.gpBarreFiltres = new Group();
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        Button btnEdt = new Button("Mon EDT");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
-        Button btnFormation = new Button("Formation");
-        Button btnGroupe = new Button("Groupe");
+        this.groupesDropdown = new ComboBox<>();
+        this.groupesDropdown.setPromptText("Groupes");
+        this.profDropdown = new ComboBox<>();
+        this.profDropdown.setPromptText("Professeurs");
         
         
 
@@ -145,7 +150,7 @@ public class Gui {
         });
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(this.salleDropdown, btnFormation, btnGroupe);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
