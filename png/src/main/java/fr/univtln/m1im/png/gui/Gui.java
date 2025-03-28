@@ -24,8 +24,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -49,6 +47,8 @@ public class Gui {
     private GridPane gdSemaines; // Les semaines
     private List<Button> semaines;
     private int numSemaine;
+    private int premierSemaine;
+    private int derniereSemaine;
     private Canvas grille;
     private int wGrille;
     private int hGrille;
@@ -74,6 +74,17 @@ public class Gui {
     private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private String salleChoisie;
 
+    private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    private int anneeDebut;
+
+    //Barre de filtres
+    private Group gpBarreFiltres;
+    private HBox barreFiltres;
+    private ComboBox<String> filtreDropdown;
+    private ComboBox<String> salleDropdown;
+    private ComboBox<String> groupesDropdown;
+    private ComboBox<String> profDropdown;
+
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.etudiant = etudiant;
         this.group = group;
@@ -84,11 +95,12 @@ public class Gui {
         //variables
         this.nbHeure = 12;
         this.nbJour = 6;
-        this.nbSemaines = 30;
+        this.nbSemaines = 48;
         this.etatCourant = 0;
         this.cCreneaux = new ArrayList<>();
         this.gpGrille = new Group();
         this.gpCreneaux = new Group();
+        this.anneeDebut = 2024;
 
         this.gui = new GridPane();
         this.group.getChildren().add(this.gui);
@@ -104,10 +116,10 @@ public class Gui {
         this.semaines = new ArrayList<>();
 
         this.wGrille = width * 9/10;
-        this.hGrille = height * 8/10;
+        this.hGrille = height * 7/10;
 
         this.grille = new Canvas(this.wGrille,this.hGrille);
-        this.heures = new Canvas(width * 1/20, hGrille);
+        this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
 
         this.gpJour = new Group();
@@ -117,9 +129,9 @@ public class Gui {
         this.gcJours.setFill(Color.YELLOW);
         this.gcJours.fillRect(50, 50, 200, 50);
 
-        this.gdSemainesGrille.add(this.gpJour,1,1);
+        this.gdSemainesGrille.add(this.gpJour,1,2);
         //this.gdSemainesGrille.add(this.gpJour,1,1);
-        this.gdSemainesGrille.add(this.gpGrille,1,2);
+        this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
         this.gdSemainesGrille.add(this.gdSemaines,1,1);
@@ -130,20 +142,44 @@ public class Gui {
         this.gdHeuresEdt.add(this.gdSemainesGrille,1,0);
 
         //Ajout des semaines
-        for(int i = 0; i < this.nbSemaines; i++){
-            Button semaine = new Button(""+(i+1));
-            semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
-            final int index = i+1;
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        OffsetDateTime premierJourAnnee = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(9).withDayOfMonth(1);
+        OffsetDateTime tmpJour = premierJourAnnee;
+        this.premierSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+        this.derniereSemaine = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(7).withDayOfMonth(31).get(weekFields.weekOfWeekBasedYear());
+        int tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+        int indexSemaine = 0;
+        while(tmpSemaine != derniereSemaine)
+        {
+            Button semaine = new Button(""+(tmpSemaine));
+            semaine.setStyle("-fx-font-size: 8px;");
+            semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
+            final int index = tmpSemaine;
             // semaine.setOnMouseClicked(event -> majCreneaux(index));
             semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
             this.semaines.add(semaine);
-            this.gdSemaines.add(semaine, i, 0);
+            this.gdSemaines.add(semaine, indexSemaine, 0);
+
+            tmpJour = tmpJour.plusDays(7);
+            tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+            indexSemaine++;
+            // System.out.println("Semaine : "+tmpSemaine);
         }
+        // System.out.println("Nombre de semaines : "+indexSemaine);
+        // for(int i = 0; i < this.nbSemaines; i++){
+        //     Button semaine = new Button(""+(i+1));
+        //     semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
+        //     final int index = i+1;
+        //     // semaine.setOnMouseClicked(event -> majCreneaux(index));
+        //     semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
+        //     this.semaines.add(semaine);
+        //     this.gdSemaines.add(semaine, i, 0);
+        // }
 
         //Initialisation de la grille
         //Ajout des heures
         for (int i = 0; i < this.nbHeure; i++) {
-            this.gcHeures.strokeText((i+8)+":00", 0, i * this.hGrille/this.nbHeure+20);
+            this.gcHeures.strokeText((i+8)+":00", this.heures.getWidth() / 2 - this.gcHeures.getFont().getSize(), i * this.hGrille / this.nbHeure + this.hGrille / this.nbHeure * 2.5);
         }
         //fond de la grille
         this.gcGrille.setFill(Color.LIGHTGRAY);
@@ -155,39 +191,83 @@ public class Gui {
                 this.gcGrille.strokeRect(i*this.wGrille/this.nbJour, j*this.hGrille/this.nbHeure, this.wGrille/this.nbJour, this.hGrille/this.nbHeure);
             }
         }
+        
 
         //Ajout de la barre de filtres
         this.gpBarreFiltres = new Group();
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        Button btnEdt = new Button("Mon EDT");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
-        Button btnFormation = new Button("Formation");
-        Button btnGroupe = new Button("Groupe");
+        this.salleDropdown.setVisible(false); 
+        this.groupesDropdown = new ComboBox<>();
+        this.groupesDropdown.setPromptText("Groupes");
+        this.groupesDropdown.setVisible(false);
+        this.profDropdown = new ComboBox<>();
+        this.profDropdown.setPromptText("Professeurs");
+        this.profDropdown.setVisible(false);
+
+        this.filtreDropdown = new ComboBox<>();
+        this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
+        this.filtreDropdown.setPromptText("Filtrer par");
         
-        
-
-        // Charger les salles depuis la base de données
-        chargerSalles();
-
-
-        // Gérer la sélection d'une salle
-        this.salleDropdown.setOnAction(event -> {
-            salleChoisie = this.salleDropdown.getValue();
-            if (salleChoisie != null) {
-                //afficherCoursSalle(salleChoisie);
-                etatCourant = 2;
-                genererCreneaux();
+        filtreDropdown.setOnAction(event -> {
+            String choix = filtreDropdown.getValue();
+            switch (choix) {
+                case "Salles":
+                    //this.filtreDropdown.setVisible(false);
+                    this.salleDropdown.setVisible(true); 
+                    this.groupesDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    break;
+                case "Groupes":
+                    //this.filtreDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    break;
+                case "Professeurs":
+                    //this.filtreDropdown.setVisible(false);
+                    this.profDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(false);
+                    break;
             }
         });
 
+        // Gérer la sélection d'un groupe
+        btnEdt.setOnAction(event -> {
+            this.etatCourant = 0;
+            this.salleDropdown.setVisible(false);
+            this.groupesDropdown.setVisible(false); 
+            this.profDropdown.setVisible(false);
+            //this.filtreDropdown.setVisible(true);
+        });
+        // Gérer la sélection d'un professeur
+        this.profDropdown.setOnAction(event -> {
+            this.etatCourant = 1;
+        });
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            chargerSalles();
+            this.etatCourant = 2;
+        });
+        // Gérer la sélection d'un groupe
+        this.groupesDropdown.setOnAction(event -> {
+            this.etatCourant = 3;
+        });
+        
+
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(this.salleDropdown, btnFormation, btnGroupe);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
         this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
-        
+
+
+
         stage.setScene(scene);
         stage.setTitle("Planning Nouvelle Génération");
         stage.show();
@@ -243,13 +323,21 @@ public class Gui {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         //this.gpJour.getChildren().clear();
         this.gcJours.clearRect(0, 0, this.cJours.getWidth(), this.cJours.getHeight());
+        int annee = 0;
+        if (numSemaine >= this.premierSemaine){
+            annee = this.anneeDebut;
+        }
+        else{
+            annee = this.anneeDebut + 1;
+        }
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
-        .with(weekFields.weekOfWeekBasedYear(),numSemaine)
+        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        System.out.println("test : "+permierJourSemaine.getDayOfYear());
-        int annee = permierJourSemaine.getYear();
-;
+        // System.out.println("test : "+permierJourSemaine.getDayOfYear());
+        int anneeTest = permierJourSemaine.getYear();
 
+        OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
+        // System.out.println("Semaine de l'année pour le premier jour : " + permierJourAnnee.get(weekFields.weekOfWeekBasedYear()));
         for(int i = 0; i < this.nbJour; i++){
             this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
         }
