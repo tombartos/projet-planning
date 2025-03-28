@@ -93,8 +93,15 @@ public class Gui {
     private String codeGroupeChoisi;
 
 
-    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
-        this.etudiant = etudiant;
+    private List<ProfesseurDTO> professeurs;
+    private long idProfChoisi;
+
+    private String codeGroupeChoisi;
+
+
+    public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
+        this.utilisateur = utilisateur;
+        //this.etudiant = etudiant;
         this.group = group;
         this.width = width;
         this.height = height;
@@ -311,7 +318,7 @@ public class Gui {
         {
             //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
             EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), this.numSemaine, 2025, 0, 100);
+            creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
         }
         else if(this.etatCourant == 1)
         {
@@ -361,16 +368,45 @@ public class Gui {
         
         this.gpCreneaux.getChildren().clear();
         // Les 2 prochaines lignes sont à supprimer à long terme
-        // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        // this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, annee, 0, 100);
-        // genererCreneaux();
+        //if (utilisateur instanceof Etudiant) {
+        
+            // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
+            // genererCreneaux();
+        List<GuiCreneau> guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                gestionCollision(guiCreneau, guiCreneaux);
+                guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
             
             
         }
+        // }
     }
+
+    public void gestionCollision(GuiCreneau guiCreneau, List<GuiCreneau> guiCreneaux){
+        for(GuiCreneau gc : guiCreneaux){
+            if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
+             || 
+             ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureFin())))){
+                
+                gc.setCollision(gc.getCollision() + 1);
+                guiCreneau.setCollision(guiCreneau.getCollision() + 1);
+                guiCreneau.setPosCollision(gc.getPosCollision() + 1);
+                //gc.afficherCreneau();
+                gc.majAffichage();
+                System.out.println("Collision");
+            }
+            else
+            {
+                System.out.println("Pas de collision");
+            }
+        }
+    }
+
     private void chargerSalles() {
         List<Salle> salles;
         SalleRepository salleRepository = new SalleRepository(entityManager);

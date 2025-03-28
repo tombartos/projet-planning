@@ -27,6 +27,9 @@ public class GuiCreneau {
     private int nbJour;
     private int jourDeLaSemaine;
 
+    private int collision;
+    private int posCollision;
+
     private Creneau creneau;
 
     private OffsetDateTime premierJour; // Premier jour de l'année
@@ -39,6 +42,9 @@ public class GuiCreneau {
         this.height = height;
         this.nbHeure = nbHeure;
         this.nbJour = nbJour;
+
+        this.collision = 1;
+        this.posCollision = 0;
     }
 
     public float convHeure(Creneau c)
@@ -88,7 +94,12 @@ public class GuiCreneau {
                 jourDeLaSemaine = 5;
                 break;
         }
-        rectangle = new Rectangle(jourDeLaSemaine*width/nbJour,convHeure(creneau)*height/nbHeure,width/nbJour,convDuree(creneau)*height/nbHeure);
+        rectangle = new Rectangle(jourDeLaSemaine*width/nbJour + (width/nbJour * posCollision/collision),
+        convHeure(creneau)*height/nbHeure, 
+        width/nbJour /collision,
+        convDuree(creneau)*height/nbHeure);
+        rectangle.setStroke(Color.BLACK);
+        rectangle.setStrokeWidth(1);
         switch (creneau.getType()) {
             case "CM":
                 rectangle.setFill(Color.YELLOW);
@@ -116,7 +127,9 @@ public class GuiCreneau {
         }
         
         label = new Label();
-        label.setPrefSize(width/nbJour, height/nbHeure*convDuree(creneau));
+        label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
+        label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
+        label.setLayoutY(convHeure(creneau)*height/nbHeure);
         // label.setStyle("-fx-font-size: "+10+"px");
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listModule = new String();
@@ -127,12 +140,21 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        label.setText("Un cours "+creneau.getType()+"\n"+listModule+listProf+creneau.getSalle().getCode());
-        label.setLayoutX(jourDeLaSemaine*width/nbJour);
-        label.setLayoutY(convHeure(creneau)*height/nbHeure);
+        label.setText(creneau.getSalle().getCode()+"\n"+creneau.getGroupes().getFirst().getCode()+"\n"+listModule+creneau.getType()+"\n"+listProf);
 
         group.getChildren().add(rectangle);
         group.getChildren().add(label);
+    }
+
+    public void majAffichage()
+    {
+        rectangle.setX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
+        //rectangle.setLayoutY(convHeure(creneau)*height/nbHeure);
+        rectangle.setWidth(width/nbJour /collision);
+        rectangle.setHeight(height/nbHeure*convDuree(creneau));
+        label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
+        label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
+        label.setLayoutY(convHeure(creneau)*height/nbHeure);
     }
 
 }
