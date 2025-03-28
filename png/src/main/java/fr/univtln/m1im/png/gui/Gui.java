@@ -27,6 +27,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -64,17 +66,13 @@ public class Gui {
     
     private Group gpGrille;
     private Group gpCreneaux;
-    private Group gpBarreFiltres;
     private Group gpJour;
     private Canvas cJours;
     private GraphicsContext gcJours;
     
-    private HBox barreFiltres; // une barre de boutons pour filtrer les crene
-    private ComboBox<String> salleDropdown; 
     private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private String salleChoisie;
 
-    private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private int anneeDebut;
 
     //Barre de filtres
