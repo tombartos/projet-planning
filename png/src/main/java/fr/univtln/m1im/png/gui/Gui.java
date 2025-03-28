@@ -296,7 +296,7 @@ public class Gui {
         {
             //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
             EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), this.numSemaine, 2025, 0, 100);
+            creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
         }
         else if(this.etatCourant == 1)
         {
@@ -347,8 +347,8 @@ public class Gui {
         // Les 2 prochaines lignes sont à supprimer à long terme
         //if (utilisateur instanceof Etudiant) {
         
-            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
+            // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
             // genererCreneaux();
             for(Creneau creneau : this.creneaux){
                     GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
