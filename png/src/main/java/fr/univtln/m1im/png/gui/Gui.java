@@ -164,7 +164,6 @@ public class Gui {
             semaine.setStyle("-fx-font-size: 8px;");
             semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
             final int index = tmpSemaine;
-            // semaine.setOnMouseClicked(event -> majCreneaux(index));
             semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
             this.semaines.add(semaine);
             this.gdSemaines.add(semaine, indexSemaine, 0);
@@ -172,18 +171,7 @@ public class Gui {
             tmpJour = tmpJour.plusDays(7);
             tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
             indexSemaine++;
-            // System.out.println("Semaine : "+tmpSemaine);
         }
-        // System.out.println("Nombre de semaines : "+indexSemaine);
-        // for(int i = 0; i < this.nbSemaines; i++){
-        //     Button semaine = new Button(""+(i+1));
-        //     semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
-        //     final int index = i+1;
-        //     // semaine.setOnMouseClicked(event -> majCreneaux(index));
-        //     semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
-        //     this.semaines.add(semaine);
-        //     this.gdSemaines.add(semaine, i, 0);
-        // }
 
         //Initialisation de la grille
         //Ajout des heures
@@ -352,11 +340,9 @@ public class Gui {
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        // System.out.println("test : "+permierJourSemaine.getDayOfYear());
         int anneeTest = permierJourSemaine.getYear();
 
         OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
-        // System.out.println("Semaine de l'année pour le premier jour : " + permierJourAnnee.get(weekFields.weekOfWeekBasedYear()));
         for(int i = 0; i < this.nbJour; i++){
             this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
         }
@@ -395,11 +381,6 @@ public class Gui {
                 guiCreneau.setPosCollision(gc.getPosCollision() + 1);
                 //gc.afficherCreneau();
                 gc.majAffichage();
-                System.out.println("Collision");
-            }
-            else
-            {
-                System.out.println("Pas de collision");
             }
         }
     }
@@ -431,25 +412,6 @@ public class Gui {
         for (ProfesseurDTO professeur : professeurs) {
             this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
         }
-    }
-
-
-    // private void afficherCoursSalle(String salleCode) {
-    //     this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
-    
-    //     List<Creneau> creneauxSalle;
-    //     creneauxSalle = entityManager.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
-    //                   .setParameter("salleCode", salleCode)
-    //                   .getResultList();
-
-    
-    //     for (Creneau creneau : creneauxSalle) {
-    //         GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-    //         guiCreneau.afficherCreneau();
-    //     }
-    // }
-        
-        
-    
+    }    
 
 }
