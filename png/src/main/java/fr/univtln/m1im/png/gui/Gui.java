@@ -226,6 +226,10 @@ public class Gui {
         // Gérer la sélection d'un groupe
         btnEdt.setOnAction(event -> {
             this.etatCourant = 0;
+            this.salleDropdown.setVisible(false);
+            this.groupesDropdown.setVisible(false); 
+            this.profDropdown.setVisible(false);
+            this.filtreDropdown.setVisible(true);
         });
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
