@@ -78,8 +78,9 @@ public class Gui {
     private ComboBox<String> groupesDropdown;
     private ComboBox<String> profDropdown;
 
-    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
-        this.etudiant = etudiant;
+    public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
+        this.utilisateur = utilisateur;
+        //this.etudiant = etudiant;
         this.group = group;
         this.width = width;
         this.height = height;
@@ -332,15 +333,18 @@ public class Gui {
         
         this.gpCreneaux.getChildren().clear();
         // Les 2 prochaines lignes sont à supprimer à long terme
-        EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        this.creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), numSemaine, anneeTest, 0, 100);
-        // genererCreneaux();
-        for(Creneau creneau : this.creneaux){
-                GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-                guiCreneau.afficherCreneau();
-            
-            
-        }
+        //if (utilisateur instanceof Etudiant) {
+        
+            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
+            // genererCreneaux();
+            for(Creneau creneau : this.creneaux){
+                    GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                    guiCreneau.afficherCreneau();
+                
+                
+            }
+        //}
     }
         
     // methode pour la barre de filtres
