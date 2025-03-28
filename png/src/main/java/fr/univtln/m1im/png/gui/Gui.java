@@ -10,11 +10,15 @@ import java.util.Locale;
 import org.slf4j.LoggerFactory;
 
 import org.slf4j.Logger;
+
+import fr.univtln.m1im.png.dto.GroupeDTO;
+import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
+import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
@@ -82,6 +86,12 @@ public class Gui {
     private ComboBox<String> salleDropdown;
     private ComboBox<String> groupesDropdown;
     private ComboBox<String> profDropdown;
+
+    private List<ProfesseurDTO> professeurs;
+    private long idProfChoisi;
+
+    private String codeGroupeChoisi;
+
 
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.etudiant = etudiant;
@@ -218,18 +228,21 @@ public class Gui {
                     this.salleDropdown.setVisible(true); 
                     this.groupesDropdown.setVisible(false);
                     this.profDropdown.setVisible(false);
+                    chargerSalles();
                     break;
                 case "Groupes":
                     //this.filtreDropdown.setVisible(false);
                     this.groupesDropdown.setVisible(true);
                     this.salleDropdown.setVisible(false);
                     this.profDropdown.setVisible(false);
+                    chargerGroupes();
                     break;
                 case "Professeurs":
                     //this.filtreDropdown.setVisible(false);
                     this.profDropdown.setVisible(true);
                     this.salleDropdown.setVisible(false);
                     this.groupesDropdown.setVisible(false);
+                    chargerProfesseurs();
                     break;
             }
         });
@@ -245,15 +258,18 @@ public class Gui {
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
             this.etatCourant = 1;
+            idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
         });
         // Gérer la sélection d'une salle
         this.salleDropdown.setOnAction(event -> {
-            chargerSalles();
             this.etatCourant = 2;
+            this.salleChoisie = salleDropdown.getValue();
         });
         // Gérer la sélection d'un groupe
         this.groupesDropdown.setOnAction(event -> {
             this.etatCourant = 3;
+            codeGroupeChoisi = groupesDropdown.getValue();
+
         });
         
 
@@ -299,9 +315,8 @@ public class Gui {
         }
         else if(this.etatCourant == 1)
         {
-            int idProf = 1; //TODO : récupérer l'id du professeur + annee
             ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-            creneaux = professeurRepository.getWeekCrenaux(idProf, this.numSemaine, 2025, 0, 100);
+            creneaux = professeurRepository.getWeekCrenaux(idProfChoisi, this.numSemaine, 2025, 0, 100);
 
         }
         else if(this.etatCourant == 2)
@@ -311,7 +326,9 @@ public class Gui {
         }
         else if(this.etatCourant == 3)
         {
-            //TODO : récupérer l'emploi du temps du groupe
+            GroupeRepository groupeRepository = new GroupeRepository(entityManager);
+            creneaux = groupeRepository.getWeekCreneaux(codeGroupeChoisi, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+
         }
 
         majCreneaux(this.numSemaine);
@@ -358,11 +375,31 @@ public class Gui {
         List<Salle> salles;
         SalleRepository salleRepository = new SalleRepository(entityManager);
         salles = salleRepository.getAll(0, 100);
-
+        this.salleDropdown.getItems().clear();
         for (Salle salle : salles) {
             this.salleDropdown.getItems().add(salle.getCode());
         }
     }
+
+    private void chargerGroupes(){
+        List<GroupeDTO> groupes;
+        GroupeRepository groupeRepository = new GroupeRepository(entityManager);
+        groupes = groupeRepository.getAllDTO(0, 100);
+        this.groupesDropdown.getItems().clear();
+        for (GroupeDTO groupe : groupes) {
+            this.groupesDropdown.getItems().add(groupe.getCode());
+        }
+    }
+
+    private void chargerProfesseurs(){
+        ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+        professeurs = professeurRepository.getAllDTO(0, 100);
+        this.profDropdown.getItems().clear();
+        for (ProfesseurDTO professeur : professeurs) {
+            this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
+        }
+    }
+
 
     // private void afficherCoursSalle(String salleCode) {
     //     this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels

@@ -5,6 +5,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 import fr.univtln.m1im.png.Utils;
+import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
@@ -27,5 +28,18 @@ public class ProfesseurRepository extends JpaRepository<Professeur, Long> {
                 .setParameter("firstDay", weekdays.getFirst())
                 .setParameter("lastDay", weekdays.getLast())
                 .getResultList();
+    }
+
+    public List<Professeur> getAll(int pageNumber, int pageSize){
+        return em.createNamedQuery("Professeur.getAll", Professeur.class)
+                 .setFirstResult(pageSize*pageNumber)
+                 .setMaxResults(pageSize)
+                 .getResultList();
+    }
+    public List<ProfesseurDTO> getAllDTO(int pageNumber, int pageSize){
+        return em.createNamedQuery("ProfesseurDTO.getAllDTO", ProfesseurDTO.class)
+                 .setFirstResult(pageSize*pageNumber)
+                 .setMaxResults(pageSize)
+                 .getResultList();
     }
 }

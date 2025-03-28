@@ -32,6 +32,10 @@ import java.util.List;
     @NamedQuery(
       name = "Professeur.getWeekCrenaux",
       query = "SELECT c FROM Professeur p JOIN p.creneaux c WHERE p.id = :professeurId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+        name = "ProfesseurDTO.getAllDTO",
+        query = "SELECT new fr.univtln.m1im.png.dto.ProfesseurDTO(p.id, p.nom, p.prenom) FROM Professeur p"
     )
   })
 public class Professeur extends Utilisateur {

@@ -5,6 +5,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,19 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NamedQueries({
+    @NamedQuery(
+        name = "Groupe.getAll", 
+        query = "SELECT g FROM Groupe g"),
+    @NamedQuery(
+        name = "Groupe.getAllDTO",
+        query = "SELECT new fr.univtln.m1im.png.dto.GroupeDTO(g.code, g.nom, g.formation) FROM Groupe g"
+    ),
+    @NamedQuery(
+    name = "Groupe.getWeekCreneaux",
+    query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    )
+})
 public class Groupe {
     @Id
     private String code;
