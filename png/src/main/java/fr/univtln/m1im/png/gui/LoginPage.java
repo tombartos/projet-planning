@@ -75,8 +75,7 @@ public class LoginPage {
                         Professeur professeur = professeurRepository.getByLogin(username);
                         Group root = new Group();
                         Scene scene = new Scene(root, width, height);
-                        //TODO:update
-                        //new Gui(professeur,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
+                        new Gui(professeur,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
                     }
                     catch (Exception ex_pr) {
                         log.info("Not a professeur");

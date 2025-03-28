@@ -93,12 +93,6 @@ public class Gui {
     private String codeGroupeChoisi;
 
 
-    private List<ProfesseurDTO> professeurs;
-    private long idProfChoisi;
-
-    private String codeGroupeChoisi;
-
-
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.utilisateur = utilisateur;
         //this.etudiant = etudiant;
@@ -260,22 +254,25 @@ public class Gui {
             this.salleDropdown.setVisible(false);
             this.groupesDropdown.setVisible(false); 
             this.profDropdown.setVisible(false);
-            //this.filtreDropdown.setVisible(true);
+            genererCreneaux();
         });
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
             this.etatCourant = 1;
             idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
+            genererCreneaux();
         });
         // Gérer la sélection d'une salle
         this.salleDropdown.setOnAction(event -> {
             this.etatCourant = 2;
             this.salleChoisie = salleDropdown.getValue();
+            genererCreneaux();
         });
         // Gérer la sélection d'un groupe
         this.groupesDropdown.setOnAction(event -> {
             this.etatCourant = 3;
             codeGroupeChoisi = groupesDropdown.getValue();
+            genererCreneaux();
 
         });
         
