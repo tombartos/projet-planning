@@ -53,6 +53,7 @@ public class Gui {
     private Group gpBarreFiltres;
 
     private HBox barreFiltres; // une barre de boutons pour filtrer les crene
+    private ComboBox<String> filtreDropdown; // un menu déroulant pour choisir le filtre
     private ComboBox<String> salleDropdown;
     private ComboBox<String> groupesDropdown;
     private ComboBox<String> profDropdown; 
@@ -123,6 +124,7 @@ public class Gui {
             }
         }
 
+        
         //Ajout de la barre de filtres
         this.gpBarreFiltres = new Group();
         this.barreFiltres = new HBox();
@@ -130,10 +132,35 @@ public class Gui {
         Button btnEdt = new Button("Mon EDT");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
+        this.salleDropdown.setVisible(false); 
         this.groupesDropdown = new ComboBox<>();
         this.groupesDropdown.setPromptText("Groupes");
+        this.groupesDropdown.setVisible(false);
         this.profDropdown = new ComboBox<>();
         this.profDropdown.setPromptText("Professeurs");
+        this.profDropdown.setVisible(false);
+
+        this.filtreDropdown = new ComboBox<>();
+        this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
+        this.filtreDropdown.setPromptText("Filtrer par");
+        
+        this.filtreDropdown.setOnAction(event -> {
+            String choix = filtreDropdown.getValue();
+            switch (choix) {
+                case "Salles":
+                    this.filtreDropdown.setVisible(false);
+                    this.salleDropdown.setVisible(true); 
+                    break;
+                case "Groupes":
+                    this.filtreDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(true);
+                    break;
+                case "Professeurs":
+                    this.filtreDropdown.setVisible(false);
+                    this.profDropdown.setVisible(true);
+                    break;
+            }
+        });
         
         
 
@@ -150,7 +177,7 @@ public class Gui {
         });
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
