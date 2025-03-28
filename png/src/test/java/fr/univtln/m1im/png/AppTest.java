@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import fr.univtln.m1im.png.model.Module;
 import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 
 /**
@@ -26,21 +27,21 @@ class AppTest {
     void createEtudiantUser(String username, String password) {
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             entityManager.getTransaction().begin();
-    
+
             // We can't use the classic JPA way to create a user because it's not supported by the JPA standard
             String createUserQuery = String.format("CREATE USER %s WITH PASSWORD '%s';", username, password);
             entityManager.createNativeQuery(createUserQuery).executeUpdate();
-    
+
             // Grant privileges
             String grantConnectQuery = String.format("GRANT CONNECT ON DATABASE postgres TO %s;", username);
             entityManager.createNativeQuery(grantConnectQuery).executeUpdate();
-    
+
             String grantUsageQuery = String.format("GRANT USAGE ON SCHEMA public TO %s;", username);
             entityManager.createNativeQuery(grantUsageQuery).executeUpdate();
-    
+
             String grantSelectQuery = String.format("GRANT SELECT ON ALL TABLES IN SCHEMA public TO %s;", username);
             entityManager.createNativeQuery(grantSelectQuery).executeUpdate();
-    
+
             entityManager.getTransaction().commit();
             log.info("User created successfully: {}", username);
         } catch (Exception e) {
@@ -60,7 +61,7 @@ class AppTest {
         // Create entities
         // ids are generated automatically, by default when creating the object it's null, after persisting it's set
         Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        LocalDate now = LocalDate.now();
         Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
             .password("password").dateNaissance(now).build();
         Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
@@ -149,7 +150,7 @@ class AppTest {
             log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
 
         }
-        
+
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", etudiant.getLogin());
             //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
@@ -163,8 +164,8 @@ class AppTest {
         } catch (Exception e) {
             log.error("Failed to check or create user", e);
         }
-        
-        // CREATE USER et1 WITH PASSWORD 'password'; 
+
+        // CREATE USER et1 WITH PASSWORD 'password';
         // GRANT CONNECT ON DATABASE postgres TO et1;
         // GRANT USAGE ON SCHEMA public TO et1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
