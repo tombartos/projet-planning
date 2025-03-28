@@ -209,16 +209,22 @@ public class Gui {
             String choix = filtreDropdown.getValue();
             switch (choix) {
                 case "Salles":
-                    this.filtreDropdown.setVisible(false);
+                    //this.filtreDropdown.setVisible(false);
                     this.salleDropdown.setVisible(true); 
+                    this.groupesDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
                     break;
                 case "Groupes":
-                    this.filtreDropdown.setVisible(false);
+                    //this.filtreDropdown.setVisible(false);
                     this.groupesDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
                     break;
                 case "Professeurs":
-                    this.filtreDropdown.setVisible(false);
+                    //this.filtreDropdown.setVisible(false);
                     this.profDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(false);
                     break;
             }
         });
@@ -229,7 +235,7 @@ public class Gui {
             this.salleDropdown.setVisible(false);
             this.groupesDropdown.setVisible(false); 
             this.profDropdown.setVisible(false);
-            this.filtreDropdown.setVisible(true);
+            //this.filtreDropdown.setVisible(true);
         });
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
