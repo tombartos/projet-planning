@@ -10,6 +10,7 @@ import java.util.Locale;
 import ch.qos.logback.classic.pattern.Util;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import jakarta.persistence.EntityManager;
@@ -20,6 +21,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
@@ -67,6 +70,14 @@ public class Gui {
     private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private int anneeDebut;
 
+    //Barre de filtres
+    private Group gpBarreFiltres;
+    private HBox barreFiltres;
+    private ComboBox<String> filtreDropdown;
+    private ComboBox<String> salleDropdown;
+    private ComboBox<String> groupesDropdown;
+    private ComboBox<String> profDropdown;
+
     public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.etudiant = etudiant;
         this.group = group;
@@ -111,12 +122,12 @@ public class Gui {
         this.gcJours.setFill(Color.YELLOW);
         this.gcJours.fillRect(50, 50, 200, 50);
 
-        this.gdSemainesGrille.add(this.gpJour,1,1);
+        this.gdSemainesGrille.add(this.gpJour,1,2);
         //this.gdSemainesGrille.add(this.gpJour,1,1);
-        this.gdSemainesGrille.add(this.gpGrille,1,2);
+        this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
-        this.gdSemainesGrille.add(this.gdSemaines,1,0);
+        this.gdSemainesGrille.add(this.gdSemaines,1,1);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
         // this.gdSemainesGrille.add(this.heures,0,1);
@@ -174,6 +185,72 @@ public class Gui {
             }
         }
         
+
+        //Ajout de la barre de filtres
+        this.gpBarreFiltres = new Group();
+        this.barreFiltres = new HBox();
+        this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        Button btnEdt = new Button("Mon EDT");
+        this.salleDropdown = new ComboBox<>();
+        this.salleDropdown.setPromptText("Salles");
+        this.salleDropdown.setVisible(false); 
+        this.groupesDropdown = new ComboBox<>();
+        this.groupesDropdown.setPromptText("Groupes");
+        this.groupesDropdown.setVisible(false);
+        this.profDropdown = new ComboBox<>();
+        this.profDropdown.setPromptText("Professeurs");
+        this.profDropdown.setVisible(false);
+
+        this.filtreDropdown = new ComboBox<>();
+        this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
+        this.filtreDropdown.setPromptText("Filtrer par");
+        
+        filtreDropdown.setOnAction(event -> {
+            String choix = filtreDropdown.getValue();
+            switch (choix) {
+                case "Salles":
+                    this.filtreDropdown.setVisible(false);
+                    this.salleDropdown.setVisible(true); 
+                    break;
+                case "Groupes":
+                    this.filtreDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(true);
+                    break;
+                case "Professeurs":
+                    this.filtreDropdown.setVisible(false);
+                    this.profDropdown.setVisible(true);
+                    break;
+            }
+        });
+
+        // Gérer la sélection d'un groupe
+        btnEdt.setOnAction(event -> {
+            this.etatCourant = 0;
+        });
+        // Gérer la sélection d'un professeur
+        this.profDropdown.setOnAction(event -> {
+            this.etatCourant = 1;
+        });
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            chargerSalles();
+            this.etatCourant = 2;
+        });
+        // Gérer la sélection d'un groupe
+        this.groupesDropdown.setOnAction(event -> {
+            this.etatCourant = 3;
+        });
+        
+
+        // Ajouter les boutons dans la barre horizontale
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
+        // Ajouter la barre de boutons au groupe
+        this.gpBarreFiltres.getChildren().add(barreFiltres);
+        // Ajouter ce groupe à l'interface
+        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
+
+
+
         stage.setScene(scene);
         stage.setTitle("Planning Nouvelle Génération");
         stage.show();
@@ -256,6 +333,19 @@ public class Gui {
         }
     }
         
+    // methode pour la barre de filtres
+
+    private void chargerSalles() {
+        List<Salle> salles;
+        salles = entityManager.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
+
+
+        for (Salle salle : salles) {
+            this.salleDropdown.getItems().add(salle.getCode());
+        }
+    }
+
+
         
     
 
