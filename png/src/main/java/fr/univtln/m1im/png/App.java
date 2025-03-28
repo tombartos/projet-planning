@@ -20,11 +20,13 @@ public final class App extends Application{
         int width = 1200;
         int height = 800;
         LoginPage.showLoginPage(stage, width, height);
-        
     }
 }
-//LINUX :
-// mvn exec:java -Dexec.mainClass="fr.univtln.m1im.png.App"
 
-//WINDOWS:
-//mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"
+// Pour executer cette classe,
+//
+//     mvn exec:java
+//
+// ce qui revient à
+//
+//     mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"

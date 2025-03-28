@@ -15,7 +15,7 @@ import jakarta.persistence.Persistence;
 public class Utils {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static EntityManagerFactory emf;
-    
+
     static public void initconnection(String user, String password){
         log.info("Starting EntityManagerFactory initialization");
         EntityManagerFactory tryEmf = null;
@@ -66,5 +66,4 @@ public class Utils {
         res.add(lastDayOfWeek);
         return res;
     }
-    
 }

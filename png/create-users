@@ -1,0 +1,8 @@
+#!/bin/sh
+
+psql 'postgres://postgres:mysecretpassword@localhost:8080/' <<EOF
+CREATE USER et1 WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO et1;
+GRANT USAGE ON SCHEMA public TO et1;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
+EOF
