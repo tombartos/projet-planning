@@ -67,6 +67,7 @@ public class Gui {
     private Utilisateur utilisateur;
     private List<Creneau> creneaux;
     private List<Rectangle> cCreneaux;
+    private List<GuiCreneau> guiCreneaux;
     
     private Group gpGrille;
     private Group gpCreneaux;
@@ -124,10 +125,13 @@ public class Gui {
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
 
+        this.guiCreneaux = new ArrayList<>();
+
         this.wGrille = width * 9/10;
         this.hGrille = height * 7/10;
 
         this.grille = new Canvas(this.wGrille,this.hGrille);
+        this.grille.setOnMouseClicked(e->{for(GuiCreneau gc : guiCreneaux){gc.getRectangle().setStrokeWidth(1);;gc.getRectangle().setStroke(Color.BLACK);}});
         this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
 
@@ -356,10 +360,10 @@ public class Gui {
             // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
             // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
             // genererCreneaux();
-        List<GuiCreneau> guiCreneaux = new ArrayList<>();
+        guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-                gestionCollision(guiCreneau, guiCreneaux);
+                gestionCollision(guiCreneau);
                 guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
             
@@ -368,7 +372,7 @@ public class Gui {
         // }
     }
 
-    public void gestionCollision(GuiCreneau guiCreneau, List<GuiCreneau> guiCreneaux){
+    public void gestionCollision(GuiCreneau guiCreneau){
         for(GuiCreneau gc : guiCreneaux){
             if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
              && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))

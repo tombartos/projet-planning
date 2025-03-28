@@ -2,6 +2,7 @@ package fr.univtln.m1im.png.gui;
 
 import javafx.scene.paint.Color;
 
+import java.nio.Buffer;
 import java.time.OffsetDateTime;
 
 import fr.univtln.m1im.png.model.Creneau;
@@ -9,8 +10,13 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Module;
 import fr.univtln.m1im.png.model.Salle;
 import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -130,6 +136,14 @@ public class GuiCreneau {
         label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
         label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
+        label.setOnMouseClicked(e -> {
+            
+            rectangle.setStroke(Color.BLUE);
+            rectangle.setStrokeWidth(4);
+            System.out.println("Rectangle clicked: " + creneau.toString());
+            afficherInformation();
+
+        });
         // label.setStyle("-fx-font-size: "+10+"px");
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listModule = new String();
@@ -155,6 +169,28 @@ public class GuiCreneau {
         label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
         label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
+    }
+
+    public void afficherInformation()
+    {
+        Stage popup = new Stage();
+        //Désélectionner le rectangle lors de la fermeture de la fenêtre
+        popup.onCloseRequestProperty().set(e -> {
+            rectangle.setStroke(Color.BLACK);
+            rectangle.setStrokeWidth(1);
+        });
+        Group infoGroup = new Group();
+        Scene infoScene = new Scene(infoGroup);
+        Label infoLabel = new Label();
+        infoLabel.setText(this.label.getText());
+
+        infoGroup.getChildren().add(infoLabel);
+        popup.setTitle("Information du créneau");
+        popup.setWidth(300);
+        popup.setHeight(200);
+        popup.setScene(infoScene);
+        popup.initStyle(StageStyle.UTILITY);
+        popup.show();
     }
 
 }
