@@ -74,7 +74,8 @@ class AppTest {
         Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(14)).heureFin(heureFin.minusDays(14).plusHours(1)).salle(salle).build();
         Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
         Creneau creneau4 = Creneau.builder().type("EXAM").heureDebut(heureDebut.plusHours(3)).heureFin(heureFin.plusHours(3)).salle(salle2).build();
-
+        Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
+        Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
@@ -110,6 +111,20 @@ class AppTest {
         creneau4.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau4);
 
+        creneau5.getModules().add(module);
+        module.getCreneaux().add(creneau5);
+        creneau5.getGroupes().add(groupe);
+        groupe.getCreneaux().add(creneau5);
+        creneau5.getProfesseurs().add(professeur);
+        professeur.getCreneaux().add(creneau5);
+
+        creneau6.getModules().add(module);
+        module.getCreneaux().add(creneau6);
+        creneau6.getGroupes().add(groupe);
+        groupe.getCreneaux().add(creneau6);
+        creneau6.getProfesseurs().add(professeur);
+        professeur.getCreneaux().add(creneau6);
+
 
 
         // Persist entities, don't use save method, it's not recommended for the first time
@@ -126,6 +141,8 @@ class AppTest {
             entityManager.persist(creneau2);
             entityManager.persist(creneau3);
             entityManager.persist(creneau4);
+            entityManager.persist(creneau5);
+            entityManager.persist(creneau6);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {

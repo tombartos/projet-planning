@@ -350,14 +350,40 @@ public class Gui {
             // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
             // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
             // genererCreneaux();
-            for(Creneau creneau : this.creneaux){
-                    GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-                    guiCreneau.afficherCreneau();
-                
-                
-            }
-        //}
+        List<GuiCreneau> guiCreneaux = new ArrayList<>();
+        for(Creneau creneau : this.creneaux){
+                GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                gestionCollision(guiCreneau, guiCreneaux);
+                guiCreneaux.add(guiCreneau);
+                guiCreneau.afficherCreneau();
+            
+            
+        }
+        // }
     }
+
+    public void gestionCollision(GuiCreneau guiCreneau, List<GuiCreneau> guiCreneaux){
+        for(GuiCreneau gc : guiCreneaux){
+            if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
+             || 
+             ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureFin())))){
+                
+                gc.setCollision(gc.getCollision() + 1);
+                guiCreneau.setCollision(guiCreneau.getCollision() + 1);
+                guiCreneau.setPosCollision(gc.getPosCollision() + 1);
+                //gc.afficherCreneau();
+                gc.majAffichage();
+                System.out.println("Collision");
+            }
+            else
+            {
+                System.out.println("Pas de collision");
+            }
+        }
+    }
+
     private void chargerSalles() {
         List<Salle> salles;
         SalleRepository salleRepository = new SalleRepository(entityManager);
