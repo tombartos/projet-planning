@@ -77,6 +77,8 @@ class AppTest {
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
+        //TODO:Ajouter sous groupe et tester conflit créneau
+
         groupe.getEtudiants().add(etudiant);
         etudiant.getGroupes().add(groupe);
         module.getProfesseurs().add(professeur);
