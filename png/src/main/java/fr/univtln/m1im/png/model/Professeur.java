@@ -28,6 +28,10 @@ import java.util.List;
     @NamedQuery(
       name = "Professeur.getByLogin",
       query = "SELECT p FROM Professeur p WHERE p.login = :login"
+    ),
+    @NamedQuery(
+      name = "Professeur.getWeekCrenaux",
+      query = "SELECT c FROM Professeur p JOIN p.creneaux c WHERE p.id = :professeurId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
     )
   })
 public class Professeur extends Utilisateur {

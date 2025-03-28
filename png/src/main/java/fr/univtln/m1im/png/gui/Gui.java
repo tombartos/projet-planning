@@ -7,31 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import ch.qos.logback.classic.pattern.Util;
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
+import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
 import lombok.Getter;
 import lombok.Setter;
-import net.sf.jsqlparser.statement.select.Offset;
 
 @Getter @Setter
 public class Gui {
+    private static final Logger log = LoggerFactory.getLogger(Gui.class);
     //La fenêtre de l'application
     private Group group;
     private GridPane gui;
@@ -66,8 +69,10 @@ public class Gui {
     private Group gpJour;
     private Canvas cJours;
     private GraphicsContext gcJours;
+    
+    private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    private String salleChoisie;
 
-    private int etatCourant; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private int anneeDebut;
 
     //Barre de filtres
@@ -105,7 +110,7 @@ public class Gui {
         this.gdSemainesGrille.setVgap(20);
         this.gdSemaines = new GridPane();
 
-        this.gui.add(this.gdHeuresEdt, 0, 0);
+        this.gui.add(this.gdHeuresEdt, 0, 2);
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
 
@@ -289,20 +294,27 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            //TODO : récupérer les créneaux de l'étudiant
+            //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
+            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            creneaux = etudiantRepository.getWeekCreneaux(etudiant.getId(), this.numSemaine, 2025, 0, 100);
         }
         else if(this.etatCourant == 1)
         {
-            //TODO : récupérer les créneaux du professeur
+            int idProf = 1; //TODO : récupérer l'id du professeur + annee
+            ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            creneaux = professeurRepository.getWeekCrenaux(idProf, this.numSemaine, 2025, 0, 100);
+
         }
         else if(this.etatCourant == 2)
         {
-            //TODO : récupérer les créneaux de la salle
+            SalleRepository salleRepository = new SalleRepository(entityManager);
+            creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
         }
         else if(this.etatCourant == 3)
         {
-            //TODO : récupérer les créneaux du groupe
-        } 
+            //TODO : récupérer l'emploi du temps du groupe
+        }
+
         majCreneaux(this.numSemaine);
     }
 
@@ -346,20 +358,31 @@ public class Gui {
             }
         //}
     }
-        
-    // methode pour la barre de filtres
-
     private void chargerSalles() {
         List<Salle> salles;
-        salles = entityManager.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
-
+        SalleRepository salleRepository = new SalleRepository(entityManager);
+        salles = salleRepository.getAll(0, 100);
 
         for (Salle salle : salles) {
             this.salleDropdown.getItems().add(salle.getCode());
         }
     }
 
+    // private void afficherCoursSalle(String salleCode) {
+    //     this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
+    
+    //     List<Creneau> creneauxSalle;
+    //     creneauxSalle = entityManager.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
+    //                   .setParameter("salleCode", salleCode)
+    //                   .getResultList();
 
+    
+    //     for (Creneau creneau : creneauxSalle) {
+    //         GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+    //         guiCreneau.afficherCreneau();
+    //     }
+    // }
+        
         
     
 
