@@ -172,7 +172,7 @@ public class Gui {
         //Initialisation de la grille
         //Ajout des heures
         for (int i = 0; i < this.nbHeure; i++) {
-            this.gcHeures.strokeText((i+8)+":00", this.width/40, i * this.hGrille/this.nbHeure+this.hGrille/this.nbHeure*2);
+            this.gcHeures.strokeText((i+8)+":00", this.heures.getWidth() / 2 - this.gcHeures.getFont().getSize(), i * this.hGrille / this.nbHeure + this.hGrille / this.nbHeure * 2.5);
         }
         //fond de la grille
         this.gcGrille.setFill(Color.LIGHTGRAY);
