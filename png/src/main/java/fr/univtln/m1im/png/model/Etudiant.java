@@ -45,4 +45,5 @@ public class Etudiant extends Utilisateur {
     @Builder.Default
     @ManyToMany(mappedBy = "etudiants", fetch = FetchType.LAZY)
     private List<Groupe> groupes = new ArrayList<Groupe>();
+
 }

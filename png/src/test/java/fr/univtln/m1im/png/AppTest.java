@@ -60,7 +60,8 @@ class AppTest {
 
         // Create entities
         // ids are generated automatically, by default when creating the object it's null, after persisting it's set
-        Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
+        Groupe groupe = Groupe.builder().code("TD1").nom("Groupe TD1").formation("Formation1").build();
+        Groupe groupe2 = Groupe.builder().code("TD1_TP1").nom("Groupe TD1_TP1").formation("Formation1").parent(groupe).build();
         LocalDate now = LocalDate.now();
         Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
             .password("password").dateNaissance(now).build();
@@ -80,8 +81,9 @@ class AppTest {
 
         //TODO:Ajouter sous groupe et tester conflit créneau
 
-        groupe.getEtudiants().add(etudiant);
-        etudiant.getGroupes().add(groupe);
+        
+        groupe.getSousGroupes().add(groupe2);
+        groupe2.addEtudiant(etudiant);  // Add etudiant to groupe2, add groupe2 to etudiant, and same for groupe
         module.getProfesseurs().add(professeur);
         professeur.getModules().add(module);
         module.getGroupes().add(groupe);
