@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -79,7 +81,16 @@ public class LoginPage {
                     }
                     catch (Exception ex_pr) {
                         log.info("Not a professeur");
-                        //Ajouter Responsable ici
+                        try {
+                            ResponsableRepository responsableRepository = new ResponsableRepository(Utils.getEntityManagerFactory().createEntityManager());
+                            Responsable responsable = responsableRepository.getByLogin(username);
+                            Group root = new Group();
+                            Scene scene = new Scene(root, width, height);
+                            new Gui(responsable,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
+                        }
+                        catch (Exception ex_res) {
+                            log.info("Not a responsable, problem in the database ?");
+                        }
                     }
                 }
             }

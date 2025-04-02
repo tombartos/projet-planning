@@ -6,10 +6,12 @@ import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
-import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.SalleRepository;
+import fr.univtln.m1im.png.repositories.ModuleRepository;
+// import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+// import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
@@ -50,14 +52,14 @@ class AppTest {
         }
     }
 
-    void tryCreateUser(Utilisateur user){
+    void tryCreateUser(Utilisateur user, String password){
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", user.getLogin());
             //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
             log.info(checkUserQuery);
             int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
             if (userExists == 0) {
-            createUser(user.getLogin(), user.getPassword());
+            createUser(user.getLogin(), password);
             } else {
             log.info("User already exists: {}", user.getLogin());
             }
@@ -81,10 +83,8 @@ class AppTest {
         Groupe groupe2 = Groupe.builder().code("TD1_TP1").nom("Groupe TD1_TP1").formation("Formation1").parent(groupe).build();
         Groupe groupe3 = Groupe.builder().code("TD1_TP2").nom("Groupe TD1_TP2").formation("Formation1").parent(groupe).build();
         LocalDate now = LocalDate.now();
-        Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
-            .password("password").dateNaissance(now).build();
-        Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com")
-                .password("password").dateNaissance(now).build();
+        Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com").dateNaissance(now).build();
+        Professeur professeur = Professeur.builder().nom("Nom2").prenom("Prenom2").login("pr1").email("pr1@email.com").dateNaissance(now).build();
         Module module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
         OffsetDateTime heureDebut = OffsetDateTime.of(2025, 3, 27, 9, 0, 0, 0, ZoneOffset.UTC);
         OffsetDateTime heureFin = heureDebut.plusHours(2); // Add 2 hours
@@ -97,6 +97,7 @@ class AppTest {
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
+        Responsable responsable = Responsable.builder().nom("Nom3").prenom("Prenom3").login("resp1").email("resp1@email.com").dateNaissance(now).build();
         
         groupe.getSousGroupes().add(groupe2); // Add groupe2 and groupe3 to groupe
         groupe.getSousGroupes().add(groupe3); // Add groupe2 and groupe3 to groupe
@@ -170,6 +171,7 @@ class AppTest {
             entityManager.persist(creneau4);
             entityManager.persist(creneau5);
             entityManager.persist(creneau6);
+            entityManager.persist(responsable);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {
@@ -178,24 +180,30 @@ class AppTest {
 
         //TESTS
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()){
-            ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            // ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            // log.info("TEST1");
+            // log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 9, 2025, 0, 100).toString());
+            // log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 10, 2025, 0, 100).toString());
+            // log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 11, 2025, 0, 100).toString());
+            // log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 12, 2025, 0, 100).toString());
+            // //creneau = week 12 2025
+            // //creneau2 = week 10 2025
+            // log.info("TEST2");
+            // SalleRepository salleRepository = new SalleRepository(entityManager);
+            // log.info(salleRepository.getWeekCrenaux(salle.getCode(), 10, 2025, 0, 100).toString());
+            // log.info(salleRepository.getWeekCrenaux(salle.getCode(), 11, 2025, 0, 100).toString());
+            // log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
             log.info("TEST1");
-            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 9, 2025, 0, 100).toString());
-            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 10, 2025, 0, 100).toString());
-            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 11, 2025, 0, 100).toString());
-            log.info(professeurRepository.getWeekCrenaux(professeur.getId(), 12, 2025, 0, 100).toString());
-            //creneau = week 12 2025
-            //creneau2 = week 10 2025
-            log.info("TEST2");
-            SalleRepository salleRepository = new SalleRepository(entityManager);
-            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 10, 2025, 0, 100).toString());
-            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 11, 2025, 0, 100).toString());
-            log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
+            ModuleRepository moduleRepository = new ModuleRepository(entityManager);
+            log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
+            
 
         }
 
-        tryCreateUser(etudiant);
-        tryCreateUser(professeur);
+        //Create postgres users
+        tryCreateUser(etudiant, "password");
+        tryCreateUser(professeur, "password");
+        tryCreateUser(responsable, "password");
 
         // CREATE USER et1 WITH PASSWORD 'password';
         // GRANT CONNECT ON DATABASE postgres TO et1;

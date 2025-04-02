@@ -34,6 +34,5 @@ public abstract class Utilisateur {
     private String prenom;
     private String login; //Username
     private String email;
-    private String password; //Hashed password
     private LocalDate dateNaissance;
 }
