@@ -203,8 +203,9 @@ public class GuiCreneau {
             for(int i = 0; i < 3; i++){
                 info = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 info += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
-                info += listCreneaux.get(i).getHeureDebut().getHour()+":"+listCreneaux.get(i).getHeureDebut().getMinute()+" ";
-                info += listCreneaux.get(i).getHeureFin().getHour()+":"+listCreneaux.get(i).getHeureFin().getMinute()+"\n";
+                info += listCreneaux.get(i).getHeureDebut().getHour() + ":"+listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
+                info += listCreneaux.get(i).getHeureFin().getHour() + ":"+listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
+                info += listCreneaux.get(i).getType() + "\n";
                 infoModules.add(new Label(info));
                 if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
                     infoModules.get(i).setTextFill(Color.RED);
@@ -240,8 +241,9 @@ public class GuiCreneau {
             for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + 3; i++){
                 infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
-                infoSc += listCreneaux.get(i).getHeureDebut().getHour()+":"+listCreneaux.get(i).getHeureDebut().getMinute()+" ";
-                infoSc += listCreneaux.get(i).getHeureFin().getHour()+":"+listCreneaux.get(i).getHeureFin().getMinute()+"\n";
+                infoSc += listCreneaux.get(i).getHeureDebut().getHour() + ":" + listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
+                infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":" + listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
+                infoSc += listCreneaux.get(i).getType() + "\n";
                 infoModules.get(j).setText(infoSc);
 
                 if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
@@ -272,7 +274,7 @@ public class GuiCreneau {
         grid.add(scrollBar, 1, 1);
 
         popup.setTitle("Information du créneau");
-        popup.setWidth(300);
+        popup.setWidth(400);
         popup.setHeight(300);
         popup.setScene(infoScene);
         popup.initStyle(StageStyle.UTILITY);
