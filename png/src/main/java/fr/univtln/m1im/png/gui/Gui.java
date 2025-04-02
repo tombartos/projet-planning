@@ -210,7 +210,7 @@ public class Gui {
         this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
         this.filtreDropdown.setPromptText("Filtrer par");
         
-        filtreDropdown.setOnAction(event -> {
+        this.filtreDropdown.setOnAction(event -> {
             String choix = filtreDropdown.getValue();
             switch (choix) {
                 case "Salles":
