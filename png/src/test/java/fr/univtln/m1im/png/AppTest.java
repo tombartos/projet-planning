@@ -62,6 +62,7 @@ class AppTest {
         // ids are generated automatically, by default when creating the object it's null, after persisting it's set
         Groupe groupe = Groupe.builder().code("TD1").nom("Groupe TD1").formation("Formation1").build();
         Groupe groupe2 = Groupe.builder().code("TD1_TP1").nom("Groupe TD1_TP1").formation("Formation1").parent(groupe).build();
+        Groupe groupe3 = Groupe.builder().code("TD1_TP2").nom("Groupe TD1_TP2").formation("Formation1").parent(groupe).build();
         LocalDate now = LocalDate.now();
         Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
             .password("password").dateNaissance(now).build();
@@ -79,15 +80,17 @@ class AppTest {
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
-        //TODO:Continuer tests groupes
-
         
-        groupe.getSousGroupes().add(groupe2);
+        groupe.getSousGroupes().add(groupe2); // Add groupe2 and groupe3 to groupe
+        groupe.getSousGroupes().add(groupe3); // Add groupe2 and groupe3 to groupe
         groupe2.addEtudiant(etudiant);  // Add etudiant to groupe2, add groupe2 to etudiant, and same for groupe
+
         module.getProfesseurs().add(professeur);
         professeur.getModules().add(module);
         module.getGroupes().add(groupe);
+        module.getGroupes().add(groupe2);
         groupe.getModules().add(module);
+        
         creneau.getModules().add(module);
         module.getCreneaux().add(creneau);
         creneau.getGroupes().add(groupe);
@@ -97,8 +100,8 @@ class AppTest {
 
         creneau2.getModules().add(module);
         module.getCreneaux().add(creneau2);
-        creneau2.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau2);
+        creneau2.getGroupes().add(groupe2);
+        groupe2.getCreneaux().add(creneau2);
         creneau2.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau2);
 
@@ -118,15 +121,15 @@ class AppTest {
 
         creneau5.getModules().add(module);
         module.getCreneaux().add(creneau5);
-        creneau5.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau5);
+        creneau5.getGroupes().add(groupe2);
+        groupe2.getCreneaux().add(creneau5);
         creneau5.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau5);
 
         creneau6.getModules().add(module);
         module.getCreneaux().add(creneau6);
-        creneau6.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau6);
+        creneau6.getGroupes().add(groupe3);
+        groupe3.getCreneaux().add(creneau6);
         creneau6.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau6);
 
@@ -140,6 +143,8 @@ class AppTest {
             entityManager.persist(salle2);
             entityManager.persist(professeur);
             entityManager.persist(groupe);
+            entityManager.persist(groupe2);
+            entityManager.persist(groupe3);
             entityManager.persist(etudiant);
             entityManager.persist(module);
             entityManager.persist(creneau);

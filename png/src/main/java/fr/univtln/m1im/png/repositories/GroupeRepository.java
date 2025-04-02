@@ -30,6 +30,7 @@ public class GroupeRepository extends JpaRepository<Groupe, Long> {
     }
 
     public List<Creneau> getWeekCreneaux(String code, int weeknumber, int year, int pageNumber, int pageSize){
+        //TODO: Recuperer aussi les creneaux des sous groupes
         List<OffsetDateTime> weekdays = Utils.getFirstLastDayOfWeek(weeknumber, year);
         return em.createNamedQuery("Groupe.getWeekCreneaux", Creneau.class)
                 .setParameter("code", code)
