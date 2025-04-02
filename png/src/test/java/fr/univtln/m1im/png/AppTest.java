@@ -7,6 +7,7 @@ import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
@@ -24,7 +25,7 @@ import java.time.ZoneOffset;
 class AppTest {
     private static final Logger log = LoggerFactory.getLogger(AppTest.class);
 
-    void createEtudiantUser(String username, String password) {
+    void createUser(String username, String password) {
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             entityManager.getTransaction().begin();
 
@@ -48,6 +49,22 @@ class AppTest {
             log.error("Failed to create user", e);
         }
     }
+
+    void tryCreateUser(Utilisateur user){
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
+            String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", user.getLogin());
+            //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
+            log.info(checkUserQuery);
+            int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
+            if (userExists == 0) {
+            createUser(user.getLogin(), user.getPassword());
+            } else {
+            log.info("User already exists: {}", user.getLogin());
+            }
+        } catch (Exception e) {
+            log.error("Failed to check or create user", e);
+        }
+    }
     /**
      * Rigorous Test.
      */
@@ -60,7 +77,9 @@ class AppTest {
 
         // Create entities
         // ids are generated automatically, by default when creating the object it's null, after persisting it's set
-        Groupe groupe = Groupe.builder().code("G1").nom("Groupe1").formation("Formation1").build();
+        Groupe groupe = Groupe.builder().code("TD1").nom("Groupe TD1").formation("Formation1").build();
+        Groupe groupe2 = Groupe.builder().code("TD1_TP1").nom("Groupe TD1_TP1").formation("Formation1").parent(groupe).build();
+        Groupe groupe3 = Groupe.builder().code("TD1_TP2").nom("Groupe TD1_TP2").formation("Formation1").parent(groupe).build();
         LocalDate now = LocalDate.now();
         Etudiant etudiant = Etudiant.builder().nom("Nom1").prenom("Prenom1").login("et1").email("et1@email.com")
             .password("password").dateNaissance(now).build();
@@ -78,14 +97,17 @@ class AppTest {
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
-        //TODO:Ajouter sous groupe et tester conflit créneau
+        
+        groupe.getSousGroupes().add(groupe2); // Add groupe2 and groupe3 to groupe
+        groupe.getSousGroupes().add(groupe3); // Add groupe2 and groupe3 to groupe
+        groupe2.addEtudiant(etudiant);  // Add etudiant to groupe2, add groupe2 to etudiant, and same for groupe
 
-        groupe.getEtudiants().add(etudiant);
-        etudiant.getGroupes().add(groupe);
         module.getProfesseurs().add(professeur);
         professeur.getModules().add(module);
         module.getGroupes().add(groupe);
+        module.getGroupes().add(groupe2);
         groupe.getModules().add(module);
+        
         creneau.getModules().add(module);
         module.getCreneaux().add(creneau);
         creneau.getGroupes().add(groupe);
@@ -95,8 +117,8 @@ class AppTest {
 
         creneau2.getModules().add(module);
         module.getCreneaux().add(creneau2);
-        creneau2.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau2);
+        creneau2.getGroupes().add(groupe2);
+        groupe2.getCreneaux().add(creneau2);
         creneau2.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau2);
 
@@ -116,15 +138,15 @@ class AppTest {
 
         creneau5.getModules().add(module);
         module.getCreneaux().add(creneau5);
-        creneau5.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau5);
+        creneau5.getGroupes().add(groupe2);
+        groupe2.getCreneaux().add(creneau5);
         creneau5.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau5);
 
         creneau6.getModules().add(module);
         module.getCreneaux().add(creneau6);
-        creneau6.getGroupes().add(groupe);
-        groupe.getCreneaux().add(creneau6);
+        creneau6.getGroupes().add(groupe3);
+        groupe3.getCreneaux().add(creneau6);
         creneau6.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau6);
 
@@ -138,6 +160,8 @@ class AppTest {
             entityManager.persist(salle2);
             entityManager.persist(professeur);
             entityManager.persist(groupe);
+            entityManager.persist(groupe2);
+            entityManager.persist(groupe3);
             entityManager.persist(etudiant);
             entityManager.persist(module);
             entityManager.persist(creneau);
@@ -170,24 +194,18 @@ class AppTest {
 
         }
 
-        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
-            String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", etudiant.getLogin());
-            //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
-            log.info(checkUserQuery);
-            int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
-            if (userExists == 0) {
-            createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
-            } else {
-            log.info("User already exists: {}", etudiant.getLogin());
-            }
-        } catch (Exception e) {
-            log.error("Failed to check or create user", e);
-        }
+        tryCreateUser(etudiant);
+        tryCreateUser(professeur);
 
         // CREATE USER et1 WITH PASSWORD 'password';
         // GRANT CONNECT ON DATABASE postgres TO et1;
         // GRANT USAGE ON SCHEMA public TO et1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
+
+        // CREATE USER pr1 WITH PASSWORD 'password';
+        // GRANT CONNECT ON DATABASE postgres TO pr1;
+        // GRANT USAGE ON SCHEMA public TO pr1;
+        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO pr1;
         Utils.getEntityManagerFactory().close();
 
     }

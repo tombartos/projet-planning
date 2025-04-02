@@ -1,7 +1,5 @@
 package fr.univtln.m1im.png.dto;
 
-import jakarta.persistence.NamedQueries;
-import jakarta.persistence.NamedQuery;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
