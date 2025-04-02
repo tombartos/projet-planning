@@ -68,4 +68,30 @@ public class Groupe {
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
+
+    /**
+     * Adds a student to the current group and propagates the addition to the parent group if it exists, add the group to etudiant too.
+     *
+     * @param etudiant the student to be added to the group
+     */
+    public void addEtudiant(Etudiant etudiant) {
+        this.etudiants.add(etudiant);
+        etudiant.getGroupes().add(this);
+        if (parent != null) {
+            parent.addEtudiant(etudiant);
+        }
+    }
+
+    /**
+     * Adds a Creneau (time slot) to the current group and propagates the addition
+     * to the parent group if it exists. WARNING: this method does not add the Groupe to the Creneau object.
+     *
+     * @param creneau the Creneau object to be added to the group
+     */
+    // public void addCreneau(Creneau creneau) {
+    //     this.creneaux.add(creneau);
+    //     if (parent != null) {
+    //         parent.addCreneau(creneau);
+    //     }
+    // }
 }

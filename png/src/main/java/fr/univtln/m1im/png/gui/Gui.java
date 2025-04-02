@@ -92,6 +92,7 @@ public class Gui {
     private long idProfChoisi;
 
     private String codeGroupeChoisi;
+    private Button btnEdt;
 
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
@@ -198,7 +199,7 @@ public class Gui {
         this.gpBarreFiltres = new Group();
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
-        Button btnEdt = new Button("Mon EDT");
+        this.btnEdt = new Button("Mon EDT");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
         this.salleDropdown.setVisible(false); 
@@ -305,9 +306,25 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
-            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+            switch (this.utilisateur.getClass().getSimpleName()) {
+                case "Etudiant":
+                    EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+                    creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    break;
+                case "Professeur":
+                    ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+                    creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    break;
+                case "Responsable":
+                    SalleRepository salleRepository = new SalleRepository(entityManager);
+                    salleChoisie = salleRepository.getAll(0, 1).getFirst().getCode();
+                    creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100);
+                    this.btnEdt.setVisible(false);
+                    break;
+                default:
+                    log.error("Erreur : utilisateur non reconnu");
+                    break;
+            }
         }
         else if(this.etatCourant == 1)
         {

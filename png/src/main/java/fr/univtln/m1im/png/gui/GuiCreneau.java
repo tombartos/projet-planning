@@ -8,7 +8,6 @@ import java.time.OffsetDateTime;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Module;
-import fr.univtln.m1im.png.model.Salle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
