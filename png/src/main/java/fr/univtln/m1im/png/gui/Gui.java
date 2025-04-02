@@ -15,6 +15,7 @@ import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
@@ -301,9 +302,19 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            //TODO : récupérer MONEDT, A gerer avec les instanceof plus tard
-            EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+            if (this.utilisateur instanceof Etudiant){
+                EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+                creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+            }
+            else{
+                if (this.utilisateur instanceof Professeur){
+                    ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+                    creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                }
+                else{
+                    log.error("Erreur : utilisateur non reconnu");
+                }
+            }
         }
         else if(this.etatCourant == 1)
         {

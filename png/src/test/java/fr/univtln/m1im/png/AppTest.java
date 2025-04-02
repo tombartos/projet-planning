@@ -7,6 +7,7 @@ import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
@@ -24,7 +25,7 @@ import java.time.ZoneOffset;
 class AppTest {
     private static final Logger log = LoggerFactory.getLogger(AppTest.class);
 
-    void createEtudiantUser(String username, String password) {
+    void createUser(String username, String password) {
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             entityManager.getTransaction().begin();
 
@@ -46,6 +47,22 @@ class AppTest {
             log.info("User created successfully: {}", username);
         } catch (Exception e) {
             log.error("Failed to create user", e);
+        }
+    }
+
+    void tryCreateUser(Utilisateur user){
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
+            String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", user.getLogin());
+            //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
+            log.info(checkUserQuery);
+            int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
+            if (userExists == 0) {
+            createUser(user.getLogin(), user.getPassword());
+            } else {
+            log.info("User already exists: {}", user.getLogin());
+            }
+        } catch (Exception e) {
+            log.error("Failed to check or create user", e);
         }
     }
     /**
@@ -177,24 +194,18 @@ class AppTest {
 
         }
 
-        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
-            String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", etudiant.getLogin());
-            //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
-            log.info(checkUserQuery);
-            int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
-            if (userExists == 0) {
-            createEtudiantUser(etudiant.getLogin(), etudiant.getPassword());
-            } else {
-            log.info("User already exists: {}", etudiant.getLogin());
-            }
-        } catch (Exception e) {
-            log.error("Failed to check or create user", e);
-        }
+        tryCreateUser(etudiant);
+        tryCreateUser(professeur);
 
         // CREATE USER et1 WITH PASSWORD 'password';
         // GRANT CONNECT ON DATABASE postgres TO et1;
         // GRANT USAGE ON SCHEMA public TO et1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
+
+        // CREATE USER pr1 WITH PASSWORD 'password';
+        // GRANT CONNECT ON DATABASE postgres TO pr1;
+        // GRANT USAGE ON SCHEMA public TO pr1;
+        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO pr1;
         Utils.getEntityManagerFactory().close();
 
     }
