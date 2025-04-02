@@ -130,6 +130,10 @@ public class Gui {
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         Button btnEdt = new Button("Mon EDT");
+        btnEdt.setOnAction(event -> {
+            AjouterCours ac = new AjouterCours( this.width, this.height);
+            ac.afficherFenetreAjoutCours();
+        });
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
         this.salleDropdown.setVisible(false); 

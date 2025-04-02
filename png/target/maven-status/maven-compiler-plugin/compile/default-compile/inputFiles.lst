@@ -1,6 +1,7 @@
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/App.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/LoginPage.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/MainApp.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/AjouterCours.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/Gui.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/GuiCreneau.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Creneau.java
