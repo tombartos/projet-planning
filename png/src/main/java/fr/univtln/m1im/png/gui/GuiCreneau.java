@@ -194,13 +194,17 @@ public class GuiCreneau {
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
+        Label noteProfLabel = new Label("Aucune note");
+        noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
         List<Label> infoModules = new ArrayList<>();
+        int nbAffichage = 3;
         //Label infoLabel2 = new Label();
         List<Creneau> listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
             .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
+            // .filter()
             .toList();
         String info = new String();
-            for(int i = 0; i < 3; i++){
+            for(int i = 0; i < nbAffichage; i++){
                 info = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 info += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
                 info += listCreneaux.get(i).getHeureDebut().getHour() + ":"+listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
@@ -231,14 +235,14 @@ public class GuiCreneau {
         // scrollBar.setLayoutX(200);
         
         scrollBar.setMin(0);
-        scrollBar.setMax(listCreneaux.size()-3);
+        scrollBar.setMax(listCreneaux.size()-nbAffichage);
         scrollBar.setValue(0);
         scrollBar.setBlockIncrement(1);
         scrollBar.setUnitIncrement(1);
         scrollBar.valueProperty().addListener((obs, oldValue, newValue) -> {
             String infoSc = new String();
             int j = 0;
-            for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + 3; i++){
+            for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + nbAffichage; i++){
                 infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
                 infoSc += listCreneaux.get(i).getHeureDebut().getHour() + ":" + listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
@@ -270,8 +274,9 @@ public class GuiCreneau {
 
         //infoGroup.getChildren().add(infoLabel);
         grid.add(infoLabel, 0, 0);
-        grid.add(gridModules, 0, 1);
-        grid.add(scrollBar, 1, 1);
+        grid.add(noteProfLabel, 0, 1);
+        grid.add(gridModules, 0, 2);
+        grid.add(scrollBar, 1, 2);
 
         popup.setTitle("Information du créneau");
         popup.setWidth(400);
