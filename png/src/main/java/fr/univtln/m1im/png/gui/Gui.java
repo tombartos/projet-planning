@@ -130,7 +130,8 @@ public class Gui {
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         Button btnEdt = new Button("Mon EDT");
-        btnEdt.setOnAction(event -> {
+        Button btnAjouteCours = new Button("Ajouter Cours");
+        btnAjouteCours.setOnAction(event -> {
             AjouterCours ac = new AjouterCours( this.width, this.height);
             ac.afficherFenetreAjoutCours();
         });
@@ -181,7 +182,7 @@ public class Gui {
         });
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown,btnAjouteCours);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
