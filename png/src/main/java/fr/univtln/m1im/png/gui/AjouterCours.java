@@ -10,6 +10,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
@@ -56,6 +58,12 @@ public class AjouterCours {
         TextField semaineDebutField = new TextField();
         TextField semaineFinField = new TextField();
 
+        // Label pour afficher les erreurs
+        Label errorLabel = new Label("Exemple d'erreur affichée ici");
+        errorLabel.setTextFill(Color.RED);
+        errorLabel.setFont(new Font(12));
+        errorLabel.setVisible(true); // Visible par défaut
+
         // Boutons
         Button annulerButton = new Button("Annuler");
         Button validerButton = new Button("Valider");
@@ -92,7 +100,8 @@ public class AjouterCours {
         grid.add(semaineDebutField, 0, row);
         grid.add(semaineFinField, 1, row++);
 
-        grid.add(buttonBox, 0, row, 6, 1);
+        grid.add(buttonBox, 0, row++, 6, 1);
+        grid.add(errorLabel, 2, row++, 6, 1);
 
         // Actions des boutons
         annulerButton.setOnAction(e -> stage.close());
