@@ -15,7 +15,6 @@ import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
-import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
@@ -92,6 +91,7 @@ public class Gui {
     private long idProfChoisi;
 
     private String codeGroupeChoisi;
+    private Button btnEdt;
 
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
@@ -195,7 +195,7 @@ public class Gui {
         this.gpBarreFiltres = new Group();
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
-        Button btnEdt = new Button("Mon EDT");
+        this.btnEdt = new Button("Mon EDT");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
         this.salleDropdown.setVisible(false); 
@@ -302,18 +302,24 @@ public class Gui {
     {
         if(this.etatCourant == 0)
         {
-            if (this.utilisateur instanceof Etudiant){
-                EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-                creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
-            }
-            else{
-                if (this.utilisateur instanceof Professeur){
+            switch (this.utilisateur.getClass().getSimpleName()) {
+                case "Etudiant":
+                    EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+                    creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    break;
+                case "Professeur":
                     ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
                     creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
-                }
-                else{
+                    break;
+                case "Responsable":
+                    SalleRepository salleRepository = new SalleRepository(entityManager);
+                    salleChoisie = salleRepository.getAll(0, 1).getFirst().getCode();
+                    creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100);
+                    this.btnEdt.setVisible(false);
+                    break;
+                default:
                     log.error("Erreur : utilisateur non reconnu");
-                }
+                    break;
             }
         }
         else if(this.etatCourant == 1)
