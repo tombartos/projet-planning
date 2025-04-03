@@ -122,5 +122,6 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
         em.getTransaction().commit();
         return ("Le créneau a été inséré");
     }
+    //TODO: Etendre plusieurs semaines
         
 }
