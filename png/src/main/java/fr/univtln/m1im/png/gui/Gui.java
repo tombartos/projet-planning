@@ -92,6 +92,7 @@ public class Gui {
 
     private String codeGroupeChoisi;
     private Button btnEdt;
+    private Button ajoutCours;
 
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
@@ -196,6 +197,7 @@ public class Gui {
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         this.btnEdt = new Button("Mon EDT");
+        this.ajoutCours = new Button("Ajouter cours");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
         this.salleDropdown.setVisible(false); 
@@ -238,12 +240,16 @@ public class Gui {
         });
 
         // Gérer la sélection d'un groupe
-        btnEdt.setOnAction(event -> {
+        this.btnEdt.setOnAction(event -> {
             this.etatCourant = 0;
             this.salleDropdown.setVisible(false);
             this.groupesDropdown.setVisible(false); 
             this.profDropdown.setVisible(false);
             genererCreneaux();
+        });
+        this.ajoutCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height);
+            cours.afficherFenetreAjoutCours();
         });
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
@@ -267,7 +273,7 @@ public class Gui {
         
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
