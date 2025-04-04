@@ -39,12 +39,11 @@ public class AjouterCours {
     private int height;
     private EntityManager entityManager;
     private int anneeDebut;
+    private String role;
 
-    public AjouterCours( int width, int height, int anneeDebut ,EntityManager entityManager) {
+    public AjouterCours( int width, int height) {
         this.width = width;
         this.height = height;
-        this.entityManager = entityManager;
-        this.anneeDebut = anneeDebut;
     }   
 
     public void afficherFenetreAjoutCours() {
@@ -97,16 +96,15 @@ public class AjouterCours {
         // Sélection de date et heure
         ComboBox<String> anneeField =new ComboBox<>();
         anneeField.setPromptText("Sélectionner une année");
+        anneeField.setPrefWidth(200);
         anneeField.getItems().addAll(String.valueOf(anneeDebut), String.valueOf(anneeDebut + 1));
         
         ComboBox<String> moisField = new ComboBox<>();
         moisField.setPromptText("Sélectionner un mois");
-        
-        ComboBox<String> jourField = new ComboBox<>();
-        jourField.setPromptText("Sélectionner un jour");
-        
+        TextField jourField = new TextField();
         ComboBox<String> heureField = new ComboBox<>();
         heureField.setPromptText("Sélectionner une heure");
+        heureField.setPrefWidth(200);
         ArrayList<String> heures = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             heures.add(String.format("%02d", i)); 
@@ -159,9 +157,8 @@ public class AjouterCours {
         // Label pour afficher les erreurs
         Label errorLabel = new Label("Exemple d'erreur affichée ici");
         errorLabel.setTextFill(Color.RED);
-        errorLabel.setFont(new Font(12));
-        errorLabel.setVisible(true); // Visible par défaut
-
+        errorLabel.setFont(new Font(13));
+        errorLabel.setVisible(true); 
         // Boutons
         Button annulerButton = new Button("Annuler");
         Button validerButton = new Button("Valider");
@@ -199,7 +196,7 @@ public class AjouterCours {
         grid.add(semaineFinField, 1, row++);
 
         grid.add(buttonBox, 0, row++, 6, 1);
-        grid.add(errorLabel, 2, row++, 6, 1);
+        grid.add(errorLabel, 1, row++, 6, 1);
 
         // Actions des boutons
         annulerButton.setOnAction(e -> stage.close());
@@ -217,14 +214,53 @@ public class AjouterCours {
             }
             System.out.println("Cours ajouté !");
             stage.close();
+            if (this.role.equals("Ajouter")) {
+                System.out.println("Cours ajouté !");
+                stage.close();
+            }
+            else if (this.role.equals("Demander")) {
+                System.out.println("Demande de cours envoyée !");
+                stage.close();
+            }
+            
         });
 
-
         //  Ajout de la scène et affichage de la fenêtre
-        Scene scene = new Scene(grid, this.width/1.5, this.height/1.45);
+        Scene scene = new Scene(grid, this.width/1.2, this.height/1.45);
         stage.setScene(scene);
         stage.show();
 
+        // les methodes pour remplir les ComboBox
+        moduleField.setOnAction(event -> {
+
+        });
+        profField.setOnAction(event -> {
+
+        });
+        groupeField.setOnAction(event -> {
+
+        });
+        salleField.setOnAction(event -> {
+
+        });
+        anneeField.setOnAction(event -> {
+
+        });
+        moisField.setOnAction(event -> {
+
+        });
+        heureField.setOnAction(event -> {
+
+        });
+        minuteField.setOnAction(event -> {
+
+        });
+        semaineDebutField.setOnAction(event -> {
+
+        });
+        semaineFinField.setOnAction(event -> {
+
+        });
         
 
         

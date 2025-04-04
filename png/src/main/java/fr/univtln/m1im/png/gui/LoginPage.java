@@ -95,7 +95,7 @@ public class LoginPage {
                 }
             }
             catch (Exception ex) {
-                message.setText("❌ Erreur de connexion à la base de données !");
+                message.setText(" Erreur de connexion à la base de données !");
                 message.setStyle("-fx-text-fill: red;");
             }
         });
