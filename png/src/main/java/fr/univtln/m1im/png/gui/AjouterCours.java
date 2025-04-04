@@ -41,22 +41,34 @@ public class AjouterCours {
         grid.setAlignment(Pos.CENTER);
 
         // Champs de saisie
-        TextField moduleField = new TextField();
-        TextField profField = new TextField();
-        TextField groupeField = new TextField();
-        TextField typeField = new TextField();
-        TextField salleField = new TextField();
+        ComboBox<String> moduleField = new ComboBox<>();
+        moduleField.setPromptText("Sélectionner un module");
+        ComboBox<String> profField = new ComboBox<>();
+        profField.setPromptText("Sélectionner un professeur");
+        ComboBox<String> groupeField = new ComboBox<>();
+        groupeField.setPromptText("Sélectionner un groupe");
+        ComboBox<String> typeField = new ComboBox<>();
+        typeField.setPromptText("Sélectionner un type de cours");
+        typeField.getItems().addAll("CM", "TD", "TP", "Examen");
+        ComboBox<String> salleField = new ComboBox<>();
+        salleField.setPromptText("Sélectionner une salle");
 
         // Sélection de date et heure
-        TextField anneeField = new TextField();
-        TextField moisField = new TextField();
+        ComboBox<String> anneeField =new ComboBox<>();
+        anneeField.setPromptText("Sélectionner une année");
+        ComboBox<String> moisField = new ComboBox<>();
+        moisField.setPromptText("Sélectionner un mois");
         TextField jourField = new TextField();
-        TextField heureField = new TextField();
-        TextField minuteField = new TextField();
+        ComboBox<String> heureField = new ComboBox<>();
+        heureField.setPromptText("Sélectionner une heure");
+        ComboBox<String> minuteField = new ComboBox<>();
+        minuteField.setPromptText("Sélectionner une minute");
 
         // Étendre les semaines
-        TextField semaineDebutField = new TextField();
-        TextField semaineFinField = new TextField();
+        ComboBox<String> semaineDebutField = new ComboBox<>();
+        semaineDebutField.setPromptText("Sélectionner la semaine de début");
+        ComboBox<String> semaineFinField = new ComboBox<>();
+        semaineFinField.setPromptText("Sélectionner la semaine de fin");
 
         // Label pour afficher les erreurs
         Label errorLabel = new Label("Exemple d'erreur affichée ici");
@@ -114,6 +126,39 @@ public class AjouterCours {
         Scene scene = new Scene(grid, this.width/1.5, this.height/1.45);
         stage.setScene(scene);
         stage.show();
+
+        // les methodes pour remplir les ComboBox
+        moduleField.setOnAction(event -> {
+
+        });
+        profField.setOnAction(event -> {
+
+        });
+        groupeField.setOnAction(event -> {
+
+        });
+        salleField.setOnAction(event -> {
+
+        });
+        anneeField.setOnAction(event -> {
+
+        });
+        moisField.setOnAction(event -> {
+
+        });
+        heureField.setOnAction(event -> {
+
+        });
+        minuteField.setOnAction(event -> {
+
+        });
+        semaineDebutField.setOnAction(event -> {
+
+        });
+        semaineFinField.setOnAction(event -> {
+
+        });
+        
 
         
     }
