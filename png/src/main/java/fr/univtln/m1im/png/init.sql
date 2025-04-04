@@ -1,7 +1,3 @@
-#!/bin/sh
-
-psql 'postgres://postgres:mysecretpassword@localhost:8080/' <<EOF
-
 CREATE USER et1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO et1;
 GRANT USAGE ON SCHEMA public TO et1;
@@ -16,7 +12,7 @@ GRANT UPDATE ON ALL TABLES IN SCHEMA public TO pr1;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO pr1;
 
 
-DO \$\$
+DO $$
 BEGIN
     EXECUTE (
         SELECT string_agg(
@@ -26,7 +22,7 @@ BEGIN
         FROM pg_sequences
         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
     );
-END \$\$;
+END $$;
 
 CREATE USER resp1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO resp1;
@@ -35,7 +31,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
-DO \$\$
+DO $$
 BEGIN
     EXECUTE (
         SELECT string_agg(
@@ -45,6 +41,4 @@ BEGIN
         FROM pg_sequences
         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
     );
-END \$\$;
-
-EOF
+END $$;
