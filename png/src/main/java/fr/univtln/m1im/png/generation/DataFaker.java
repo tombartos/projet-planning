@@ -16,14 +16,14 @@ public class DataFaker {
         final var rand = new java.util.Random(123);
         final var faker = new com.github.javafaker.Faker(java.util.Locale.FRANCE, rand);
 
+        var salles = SalleFaker.with(rand).asList();
         var groupFaker = GroupFaker.with(rand).createGroups();
         try (var em = emf.createEntityManager()) {
             try {
                 em.getTransaction().begin();
 
-                for (var module : groupFaker.getModules()) {
-                    em.persist(module);
-                }
+                salles.forEach(em::persist);
+                groupFaker.getModules().forEach(em::persist);
 
                 for (var group : groupFaker.getAllGroupe()) {
                     em.persist(group);
