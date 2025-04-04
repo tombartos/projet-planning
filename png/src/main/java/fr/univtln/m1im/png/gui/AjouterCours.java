@@ -116,7 +116,7 @@ public class AjouterCours {
         heureField.setPromptText("Sélectionner une heure");
         heureField.setPrefWidth(200);
         ArrayList<String> heures = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
+        for (int i = 8; i < 19; i++) {
             heures.add(String.format("%02d", i)); 
         }
         heureField.getItems().addAll(heures);
@@ -158,12 +158,16 @@ public class AjouterCours {
             }
         });
         minuteField.setPrefWidth(200);
+        
         ComboBox<String> heurefin = new ComboBox<>();
         heurefin.setPromptText("Sélectionner une heure fin");
         heurefin.setPrefWidth(200);
+        heurefin.getItems().addAll(heures);
+        
         ComboBox<String> minutefin = new ComboBox<>();
         minutefin.setPromptText("Sélectionner une minute");
         minutefin.setPrefWidth(200);
+        minutefin.getItems().addAll(minutes);
 
         // Étendre les semaines
         ComboBox<String> semaineDebutField = new ComboBox<>();
@@ -245,15 +249,11 @@ public class AjouterCours {
             if (moduleField.getValue() == null || profField.getValue() == null || groupeField.getValue() == null ||
                 typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
                 moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
-                minuteField.getValue() == null) {
+                minuteField.getValue() == null || heurefin.getValue() == null || minutefin.getValue() == null) {
                 errorLabel.setText("Veuillez remplir tous les champs !");
                 errorLabel.setVisible(true);
                 return;
             } else {
-                Module module = moduleRepository.getModuleByCode(moduleField.getValue());
-                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
-                Professeur professeur = professeurlist.get(profField.getSelectionModel().getSelectedIndex());
-                Groupe groupe = groupeRepository.getByCode(groupeField.getValue());
                 OffsetDateTime heureDebut = OffsetDateTime.of(
                     Integer.parseInt(anneeField.getValue()),
                     moisMap.get(moisField.getValue()),
@@ -263,6 +263,26 @@ public class AjouterCours {
                     0, 0,
                     OffsetDateTime.now().getOffset()
                 );
+                OffsetDateTime heureFin = OffsetDateTime.of(
+                    Integer.parseInt(anneeField.getValue()),
+                    moisMap.get(moisField.getValue()),
+                    Integer.parseInt(jourField.getValue()),
+                    Integer.parseInt(heurefin.getValue()),
+                    Integer.parseInt(minutefin.getValue()),
+                    0, 0,
+                    OffsetDateTime.now().getOffset()
+                );
+
+                if (!heureDebut.isBefore(heureFin)) {
+                    errorLabel.setText("L'heure de début doit être avant l'heure de fin !");
+                    errorLabel.setVisible(true);
+                    return;
+                }
+                Module module = moduleRepository.getModuleByCode(moduleField.getValue());
+                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
+                Professeur professeur = professeurlist.get(profField.getSelectionModel().getSelectedIndex());
+                Groupe groupe = groupeRepository.getByCode(groupeField.getValue());
+                //TODO; finir creation creneau
                     
                 errorLabel.setVisible(false);
             }
