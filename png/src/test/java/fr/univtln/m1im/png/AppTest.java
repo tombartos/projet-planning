@@ -233,7 +233,20 @@ class AppTest {
         // GRANT CONNECT ON DATABASE postgres TO resp1;
         // GRANT USAGE ON SCHEMA public TO resp1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
-
+        // GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
+        // GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
+        // GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
+        // DO $$
+        // BEGIN
+        //     EXECUTE (
+        //         SELECT string_agg(
+        //             format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO resp1;', schemaname, sequencename),
+        //             ' '
+        //         )
+        //         FROM pg_sequences
+        //         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+        //     );
+        // END $$;
 
         Utils.getEntityManagerFactory().close();
 

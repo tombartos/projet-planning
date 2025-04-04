@@ -72,7 +72,10 @@ public class GuiCreneau {
 
     public void afficherCreneau()
     {
-        System.out.println(creneau.getHeureDebut().getDayOfYear());
+        System.out.println("TEST");
+        System.out.println(convHeure(creneau));
+        System.out.println(creneau.getHeureDebut().getHour());
+        //System.out.println(creneau.getHeureDebut().getDayOfYear());
         switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
             case "MONDAY":
                 jourDeLaSemaine = 0;

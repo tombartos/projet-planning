@@ -2,6 +2,7 @@ package fr.univtln.m1im.png.gui;
 
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,17 +17,15 @@ import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
@@ -46,13 +45,15 @@ public class AjouterCours {
     private EntityManager entityManager;
     private int anneeDebut;
     private String role;
+    private Gui gui;
 
-    public AjouterCours( int width, int height, EntityManager entityManager, int anneeDebut, String role) {
+    public AjouterCours( int width, int height, EntityManager entityManager, int anneeDebut, String role, Gui gui) {
         this.entityManager = entityManager;
         this.width = width;
         this.height = height;
         this.anneeDebut = anneeDebut;
         this.role = role;
+        this.gui = gui;
     }   
 
     public void afficherFenetreAjoutCours() {
@@ -116,7 +117,7 @@ public class AjouterCours {
         heureField.setPromptText("Sélectionner une heure");
         heureField.setPrefWidth(200);
         ArrayList<String> heures = new ArrayList<>();
-        for (int i = 8; i < 19; i++) {
+        for (int i = 8; i < 20; i++) {
             heures.add(String.format("%02d", i)); 
         }
         heureField.getItems().addAll(heures);
@@ -258,10 +259,10 @@ public class AjouterCours {
                     Integer.parseInt(anneeField.getValue()),
                     moisMap.get(moisField.getValue()),
                     Integer.parseInt(jourField.getValue()),
-                    Integer.parseInt(heureField.getValue()),
+                    Integer.parseInt(heureField.getValue()),  
                     Integer.parseInt(minuteField.getValue()),
                     0, 0,
-                    OffsetDateTime.now().getOffset()
+                    ZoneOffset.UTC
                 );
                 OffsetDateTime heureFin = OffsetDateTime.of(
                     Integer.parseInt(anneeField.getValue()),
@@ -270,7 +271,7 @@ public class AjouterCours {
                     Integer.parseInt(heurefin.getValue()),
                     Integer.parseInt(minutefin.getValue()),
                     0, 0,
-                    OffsetDateTime.now().getOffset()
+                    ZoneOffset.UTC
                 );
 
                 if (!heureDebut.isBefore(heureFin)) {
@@ -281,19 +282,39 @@ public class AjouterCours {
                 Module module = moduleRepository.getModuleByCode(moduleField.getValue());
                 List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
                 Professeur professeur = professeurlist.get(profField.getSelectionModel().getSelectedIndex());
+                //TODO: Ajout de plusieurs professeurs, groupes, modules
                 Groupe groupe = groupeRepository.getByCode(groupeField.getValue());
-                //TODO; finir creation creneau
-                    
-                errorLabel.setVisible(false);
+                Salle salle = salleRepository.getByCode(salleField.getValue());
+                Creneau creneau = Creneau.builder()
+                                    .type(typeField.getValue())
+                                    .heureDebut(heureDebut)
+                                    .heureFin(heureFin)
+                                    .salle(salle)
+                                    .build();
+                creneau.getGroupes().add(groupe);
+                creneau.getProfesseurs().add(professeur);
+                creneau.getModules().add(module);
+                if (this.role.equals("Ajouter")) {
+                    ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
+                    String res = responsableRepository.addCreneau(creneau);
+                    if (res == "Le créneau a été inséré") {
+                        errorLabel.setText("Créneau ajouté !");
+                        gui.genererCreneaux();
+
+                    } else {
+                        errorLabel.setText(res);
+                    }
+                    errorLabel.setText(res);
+                
+                }
+                else if (this.role.equals("Demander")) {
+                    //TODO:Demandes
+                    System.out.println("Demande de cours envoyée !");
+                }
+                
+                
             }
-            if (this.role.equals("Ajouter")) {
-                System.out.println("Cours ajouté !");
-                stage.close();
-            }
-            else if (this.role.equals("Demander")) {
-                System.out.println("Demande de cours envoyée !");
-                stage.close();
-            }
+            
             
         });
 
