@@ -236,6 +236,13 @@ public class GuiCreneau {
             TextField noteProfField = new TextField();
             Button noteProfButton = new Button("Modifier");
             noteProfField.setPromptText("Aucune note de cours");
+            if (creneau.getNoteProf() != "") {
+                noteProfField.setText(creneau.getNoteProf());
+            }
+            else{
+                noteProfField.setText("Aucune note de cours");
+            }
+            noteProfField.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
             noteProfField.setOnKeyReleased(e -> {
                 noteProfButton.setStyle("-fx-text-fill: red;");
             });
@@ -257,7 +264,7 @@ public class GuiCreneau {
         else {
             Label noteProfLabel = new Label("Aucune note de cours");
             // TODO Remplacer la ligne du dessus par le commentaire du dessous
-                if (creneau.getNoteProf() != "") {
+            if (creneau.getNoteProf() != "") {
                 noteProfLabel.setText(creneau.getNoteProf());
             }
             else{
