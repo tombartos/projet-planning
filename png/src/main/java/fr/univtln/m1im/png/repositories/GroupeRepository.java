@@ -40,4 +40,10 @@ public class GroupeRepository extends JpaRepository<Groupe, Long> {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public Groupe getByCode(String code){
+        return em.createNamedQuery("Groupe.getByCode", Groupe.class)
+                .setParameter("code", code)
+                .getSingleResult();
+    }
 }

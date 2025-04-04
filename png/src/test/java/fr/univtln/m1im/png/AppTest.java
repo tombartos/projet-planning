@@ -9,7 +9,7 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
-import fr.univtln.m1im.png.repositories.ModuleRepository;
+import fr.univtln.m1im.png.repositories.ResponsableRepository;
 // import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 // import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
@@ -34,8 +34,10 @@ class AppTest {
             // We can't use the classic JPA way to create a user because it's not supported by the JPA standard
             String createUserQuery = String.format("CREATE USER %s WITH PASSWORD '%s';", username, password);
             entityManager.createNativeQuery(createUserQuery).executeUpdate();
+            entityManager.getTransaction().commit();
 
             // Grant privileges
+            entityManager.getTransaction().begin();
             String grantConnectQuery = String.format("GRANT CONNECT ON DATABASE postgres TO %s;", username);
             entityManager.createNativeQuery(grantConnectQuery).executeUpdate();
 
@@ -56,12 +58,13 @@ class AppTest {
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
             String checkUserQuery = String.format("SELECT COUNT(*) FROM pg_roles WHERE rolname='%s';", user.getLogin());
             //String checkUserQuery = "SELECT COUNT(*) FROM pg_roles";
-            log.info(checkUserQuery);
+            //log.info(checkUserQuery);
             int userExists = ((Number) entityManager.createNativeQuery(checkUserQuery).getSingleResult()).intValue();
             if (userExists == 0) {
-            createUser(user.getLogin(), password);
-            } else {
-            log.info("User already exists: {}", user.getLogin());
+                createUser(user.getLogin(), password);
+            } 
+            else {
+                log.info("User already exists: {}", user.getLogin());
             }
         } catch (Exception e) {
             log.error("Failed to check or create user", e);
@@ -92,7 +95,7 @@ class AppTest {
         Salle salle2 = Salle.builder().code("T002").description("Videoproj").capacite(20).build();
         Creneau creneau = Creneau.builder().type("CM").heureDebut(heureDebut).heureFin(heureFin).salle(salle).build();
         Creneau creneau2 = Creneau.builder().type("TP").heureDebut(heureDebut.minusDays(14)).heureFin(heureFin.minusDays(14).plusHours(1)).salle(salle).build();
-        Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
+        Creneau creneau3 = Creneau.builder().type("TD").heureDebut(heureDebut.plusDays(6)).heureFin(heureFin.plusDays(6)).salle(salle).build();
         Creneau creneau4 = Creneau.builder().type("EXAM").heureDebut(heureDebut.plusHours(3)).heureFin(heureFin.plusHours(3)).salle(salle2).build();
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
@@ -194,9 +197,20 @@ class AppTest {
             // log.info(salleRepository.getWeekCrenaux(salle.getCode(), 11, 2025, 0, 100).toString());
             // log.info(salleRepository.getWeekCrenaux(salle.getCode(), 12, 2025, 0, 100).toString());
             log.info("TEST1");
-            ModuleRepository moduleRepository = new ModuleRepository(entityManager);
-            log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
-            
+            // ModuleRepository moduleRepository = new ModuleRepository(entityManager);
+            // log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
+            ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
+            log.info(responsableRepository.addCreneau(creneau)); //Excepted : error
+            Creneau creneau7 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 8, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 11, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
+            creneau7.getModules().add(module);
+            creneau7.getGroupes().add(groupe);
+            creneau7.getProfesseurs().add(professeur);
+            log.info(responsableRepository.addCreneau(creneau7)); //Excepted : success
+            Creneau creneau8 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 9, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 10, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
+            creneau8.getModules().add(module);
+            creneau8.getGroupes().add(groupe);
+            creneau8.getProfesseurs().add(professeur);
+            log.info(responsableRepository.addCreneau(creneau8)); //Excepted : error
 
         }
 
@@ -214,6 +228,26 @@ class AppTest {
         // GRANT CONNECT ON DATABASE postgres TO pr1;
         // GRANT USAGE ON SCHEMA public TO pr1;
         // GRANT SELECT ON ALL TABLES IN SCHEMA public TO pr1;
+
+        // CREATE USER resp1 WITH PASSWORD 'password';
+        // GRANT CONNECT ON DATABASE postgres TO resp1;
+        // GRANT USAGE ON SCHEMA public TO resp1;
+        // GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
+        // GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
+        // GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
+        // GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
+        // DO $$
+        // BEGIN
+        //     EXECUTE (
+        //         SELECT string_agg(
+        //             format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO resp1;', schemaname, sequencename),
+        //             ' '
+        //         )
+        //         FROM pg_sequences
+        //         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+        //     );
+        // END $$;
+
         Utils.getEntityManagerFactory().close();
 
     }

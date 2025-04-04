@@ -263,11 +263,11 @@ public class Gui {
             genererCreneaux();
         });
         this.ajoutCours.setOnAction(event -> {
-            AjouterCours cours = new AjouterCours( this.width, this.height, "Ajouter");
+            AjouterCours cours = new AjouterCours( this.width, this.height, entityManager, anneeDebut, "Ajouter", this);
             cours.afficherFenetreAjoutCours();
         });
         this.demandeCours.setOnAction(event -> {
-            AjouterCours cours = new AjouterCours( this.width, this.height, "Demander");
+            AjouterCours cours = new AjouterCours(this.width, this.height, entityManager, anneeDebut, "Demander", this);
             cours.afficherFenetreAjoutCours();
         });
         // Gérer la sélection d'un professeur
@@ -324,22 +324,29 @@ public class Gui {
     }
 
     public void genererCreneaux()
-    {
+    {   
+        int annee;
+        if (numSemaine >= this.premierSemaine){
+            annee = this.anneeDebut;
+        }
+        else{
+            annee = this.anneeDebut + 1;
+        }
         if(this.etatCourant == 0)
         {
             switch (this.utilisateur.getClass().getSimpleName()) {
                 case "Etudiant":
                     EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-                    creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, annee, 0, 100);
                     break;
                 case "Professeur":
                     ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-                    creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, annee, 0, 100);
                     break;
                 case "Responsable":
                     SalleRepository salleRepository = new SalleRepository(entityManager);
                     salleChoisie = salleRepository.getAll(0, 1).getFirst().getCode();
-                    creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100);
+                    creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, annee, 0, 100);
                     this.btnEdt.setVisible(false);
                     break;
                 default:
@@ -350,18 +357,18 @@ public class Gui {
         else if(this.etatCourant == 1)
         {
             ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-            creneaux = professeurRepository.getWeekCrenaux(idProfChoisi, this.numSemaine, 2025, 0, 100);
+            creneaux = professeurRepository.getWeekCrenaux(idProfChoisi, this.numSemaine, annee, 0, 100);
 
         }
         else if(this.etatCourant == 2)
         {
             SalleRepository salleRepository = new SalleRepository(entityManager);
-            creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+            creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, annee, 0, 100); 
         }
         else if(this.etatCourant == 3)
         {
             GroupeRepository groupeRepository = new GroupeRepository(entityManager);
-            creneaux = groupeRepository.getWeekCreneaux(codeGroupeChoisi, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+            creneaux = groupeRepository.getWeekCreneaux(codeGroupeChoisi, this.numSemaine, annee, 0, 100);
 
         }
 

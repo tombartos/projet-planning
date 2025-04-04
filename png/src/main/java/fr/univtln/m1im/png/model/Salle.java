@@ -29,6 +29,10 @@ import lombok.ToString;
     @NamedQuery(
       name = "Salle.getAll",
       query = "SELECT s FROM Salle s"
+    ),
+    @NamedQuery(
+      name = "Salle.getByCode",
+      query = "SELECT s FROM Salle s WHERE s.code = :code"
     )
   })
 public class Salle {

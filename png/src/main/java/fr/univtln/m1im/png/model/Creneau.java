@@ -4,6 +4,7 @@ import java.util.List;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,6 +32,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+@NamedQueries({
+    @NamedQuery(
+        name = "Creneau.getCreneauxDay",
+        query = "SELECT c FROM Creneau c WHERE c.heureDebut BETWEEN :firstHour AND :lastHour"
+    )
+})
 public class Creneau {
     @Id
     @SequenceGenerator(name = "creneau_seq", sequenceName = "creneau_sequence", allocationSize = 1)
@@ -43,17 +50,17 @@ public class Creneau {
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     private List<Module> modules = new ArrayList<Module>();
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade ={CascadeType.MERGE})
     private List<Groupe> groupes = new ArrayList<Groupe>();
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     private List<Professeur> professeurs = new ArrayList<Professeur>();
 
     @ManyToOne

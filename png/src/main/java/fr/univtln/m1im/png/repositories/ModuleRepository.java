@@ -19,4 +19,17 @@ public class ModuleRepository extends JpaRepository<Module, Long> {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public List<String> getAllModulesCodes(int pageNumber, int pageSize){
+        return em.createNamedQuery("Module.getAllModulesCodes", String.class)
+                .setFirstResult(pageNumber * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+    }
+
+    public Module getModuleByCode(String moduleCode){
+        return em.createNamedQuery("Module.getModuleByCode", Module.class)
+                .setParameter("codeModule", moduleCode)
+                .getSingleResult();
+    }
 }
