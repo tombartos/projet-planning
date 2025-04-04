@@ -58,13 +58,19 @@ public class AjouterCours {
         // Sélection de date et heure
         ComboBox<String> anneeField =new ComboBox<>();
         anneeField.setPromptText("Sélectionner une année");
+        anneeField.setPrefWidth(200);
         ComboBox<String> moisField = new ComboBox<>();
         moisField.setPromptText("Sélectionner un mois");
-        TextField jourField = new TextField();
+        moisField.setPrefWidth(250);
+        ComboBox<String> jourField = new ComboBox<>();
+        jourField.setPromptText("Sélectionner un jour");
+        jourField.setPrefWidth(250);
         ComboBox<String> heureField = new ComboBox<>();
         heureField.setPromptText("Sélectionner une heure");
+        heureField.setPrefWidth(200);
         ComboBox<String> minuteField = new ComboBox<>();
         minuteField.setPromptText("Sélectionner une minute");
+        minuteField.setPrefWidth(200);
 
         // Étendre les semaines
         ComboBox<String> semaineDebutField = new ComboBox<>();
@@ -130,8 +136,8 @@ public class AjouterCours {
             
         });
 
-        // 🚀 Ajout de la scène et affichage de la fenêtre
-        Scene scene = new Scene(grid, this.width/1.5, this.height/1.45);
+        //  Ajout de la scène et affichage de la fenêtre
+        Scene scene = new Scene(grid, this.width/1.2, this.height/1.45);
         stage.setScene(scene);
         stage.show();
 
