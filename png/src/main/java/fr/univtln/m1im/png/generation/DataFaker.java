@@ -2,6 +2,7 @@ package fr.univtln.m1im.png.generation;
 
 import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManagerFactory;
 
 public class DataFaker {
@@ -18,6 +19,8 @@ public class DataFaker {
 
         var salles = SalleFaker.with(rand).asList();
         var groupFaker = GroupFaker.with(rand).createGroups();
+        var creneauFaker = CreneauFaker
+            .with(rand, faker, groupFaker.getAllGroupe().iterator().next(), salles);
         try (var em = emf.createEntityManager()) {
             try {
                 em.getTransaction().begin();
@@ -25,12 +28,23 @@ public class DataFaker {
                 salles.forEach(em::persist);
                 groupFaker.getModules().forEach(em::persist);
 
+                for (int i = 0; i < 100; ++i) {
+                    var prof = FakeUser.with(faker, rand)
+                        .withProfEmail()
+                        .configure(Professeur.builder()).build();
+                    em.persist(prof);
+                }
+
+                em.getTransaction().commit();
+                em.getTransaction().begin();
+
                 for (var group : groupFaker.getAllGroupe()) {
                     em.persist(group);
 
                     if (group.getSousGroupes().isEmpty()) {
-                        for (int i = 0; i < 1000; ++i) {
-                            var etudiant = FakeUser.with(faker, rand).withStudentEmail()
+                        for (int i = 0; i < 50; ++i) {
+                            var etudiant = FakeUser.with(faker, rand)
+                                .withStudentEmail()
                                 .configure(Etudiant.builder()).build();
                             em.persist(etudiant);
                         }
@@ -38,6 +52,14 @@ public class DataFaker {
                 }
 
                 em.getTransaction().commit();
+                em.getTransaction().begin();
+
+                for (var creneau : creneauFaker) {
+                    em.persist(creneau);
+                }
+
+                em.getTransaction().commit();
+
             } catch (Throwable e) {
                 em.getTransaction().rollback();
                 throw e;

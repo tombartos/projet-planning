@@ -35,6 +35,7 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
                 .getSingleResult();
     }
 
+    // FIXME NullPointerException quand il y a des creneaux où salle == null.
     public String addCreneau(Creneau creneau, Creneau oldCreneau) {
         //All the verifications are done in this method
         //oldCreneau is the creneau to modify, if it is null we are adding a new creneau

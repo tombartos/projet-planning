@@ -18,7 +18,9 @@ import lombok.Setter;
 import lombok.ToString;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Entity
 @Table(name="Groupes")
@@ -101,4 +103,14 @@ public class Groupe {
     //         parent.addCreneau(creneau);
     //     }
     // }
+
+    public void forEachFeuil(Consumer<Groupe> consumer) {
+        if (sousGroupes.isEmpty()) {
+            consumer.accept(this);
+        } else {
+            for (var enfant : sousGroupes) {
+                enfant.forEachFeuil(consumer);
+            }
+        }
+    }
 }

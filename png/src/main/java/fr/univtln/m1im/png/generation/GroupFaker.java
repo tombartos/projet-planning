@@ -37,18 +37,22 @@ class GroupFaker {
     };
 
     private final java.util.Random rand;
-    private HashCacheFn<FakeModule, Module> moduleGetter =
-        HashCacheFn.of(module -> Module.builder()
-                .code(module.code())
-                .nom(module.nom())
-                .description(module.description())
-                .build());
+    private HashCacheFn<FakeModule, Module> moduleGetter;
     private java.util.List<Groupe> racines;
     private java.util.List<Groupe> feuilles;
     private java.util.List<Groupe> toutes;
 
     private GroupFaker(java.util.Random rand) {
         this.rand = rand;
+        this.moduleGetter =
+            HashCacheFn.of(module -> Module.builder()
+                    .code(module.code())
+                    .nom(module.nom())
+                    .description(module.description())
+                    .nbHeuresTP(rand.nextInt(20))
+                    .nbHeuresTD(rand.nextInt(30))
+                    .nbHeuresCM(rand.nextInt(40))
+                    .build());
         this.racines = new java.util.ArrayList<>();
         this.feuilles = new java.util.ArrayList<>();
         this.toutes = new java.util.ArrayList<>();

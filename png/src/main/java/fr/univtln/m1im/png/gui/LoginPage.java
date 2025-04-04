@@ -10,6 +10,7 @@ import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.ResponsableRepository;
+import jakarta.persistence.NoResultException;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -69,18 +70,16 @@ public class LoginPage {
                     Group root = new Group();
                     Scene scene = new Scene(root, width, height);
                     new Gui(etudiant,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
-                }
-                catch (Exception ex_et) {
-                    log.info("Not an etudiant");
+                } catch (NoResultException ex_et) {
+                    log.debug("Not an etudiant");
                     try {
                         ProfesseurRepository professeurRepository = new ProfesseurRepository(Utils.getEntityManagerFactory().createEntityManager());
                         Professeur professeur = professeurRepository.getByLogin(username);
                         Group root = new Group();
                         Scene scene = new Scene(root, width, height);
                         new Gui(professeur,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
-                    }
-                    catch (Exception ex_pr) {
-                        log.info("Not a professeur");
+                    } catch (NoResultException ex_pr) {
+                        log.debug("Not a professeur");
                         try {
                             ResponsableRepository responsableRepository = new ResponsableRepository(Utils.getEntityManagerFactory().createEntityManager());
                             Responsable responsable = responsableRepository.getByLogin(username);
@@ -92,14 +91,13 @@ public class LoginPage {
                             log.info("Not a responsable, problem in the database ?");
                             //log.error(ex_res.getMessage());
                             ex_res.printStackTrace();
-                            
                         }
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 message.setText(" Erreur de connexion à la base de données !");
                 message.setStyle("-fx-text-fill: red;");
+                log.error("Erreur de connexion à la base de données", ex);
             }
         });
 
