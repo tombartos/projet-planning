@@ -3,12 +3,15 @@ package fr.univtln.m1im.png.gui;
 import javafx.scene.paint.Color;
 
 import java.nio.Buffer;
+import java.security.KeyStore.Entry;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
+import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.model.Module;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -16,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollBar;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
@@ -26,6 +30,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class GuiCreneau {
+    private Utilisateur utilisateur;
     private Group group;
     private Rectangle rectangle;
     private Label label;
@@ -45,7 +50,8 @@ public class GuiCreneau {
     private OffsetDateTime premierJour; // Premier jour de l'année
     private OffsetDateTime dernierJour; // Dernier jour de l'année
 
-    public GuiCreneau(Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour) {
+    public GuiCreneau(Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour) {
+        this.utilisateur = utilisateur;
         this.group = group;
         this.creneau = creneau;
         this.width = width;
@@ -194,8 +200,37 @@ public class GuiCreneau {
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
-        Label noteProfLabel = new Label("Aucune note");
-        noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
+        if(this.utilisateur instanceof Professeur || this.utilisateur instanceof Responsable){
+            TextField noteProfField = new TextField();
+            Button noteProfButton = new Button("Modifier");
+            noteProfField.setPromptText("Aucune note");
+            noteProfField.setOnKeyReleased(e -> {
+                noteProfButton.setStyle("-fx-text-fill: red;");
+            });
+            
+                noteProfButton.setOnAction(e -> {
+                noteProfButton.setStyle("-fx-text-fill: black;");
+                // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
+                System.out.println("Note modifiée : " + noteProfField.getText());
+            });
+            grid.add(noteProfField, 0, 1);
+            grid.add(noteProfButton, 1, 1);
+        }
+        else {
+            Label noteProfLabel = new Label("Aucune note");
+            // TODO Remplacer la ligne du dessus par le commentaire du dessous
+            // if creneau.getNoteProfesseur() != null {
+            //     noteProfLabel.setText(creneau.getNoteProfesseur().getNoteProfesseur());
+            // }
+            // else{
+            //     noteProfLabel.setText("Aucune note");
+            // }
+            noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
+            grid.add(noteProfLabel, 0, 1);
+        }
+        // Label noteProfLabel = new Label("Aucune note");
+        // noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
+        // grid.add(noteProfLabel, 0, 1);
         List<Label> infoModules = new ArrayList<>();
         int nbAffichage = 3;
         //Label infoLabel2 = new Label();
@@ -211,6 +246,7 @@ public class GuiCreneau {
                 info += listCreneaux.get(i).getHeureFin().getHour() + ":"+listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
                 info += listCreneaux.get(i).getType() + "\n";
                 infoModules.add(new Label(info));
+                infoModules.get(i).setPrefSize(350, 10);
                 if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
                     infoModules.get(i).setTextFill(Color.RED);
                     infoModules.get(i).setStyle("-fx-background-color: lightgray;");
@@ -242,6 +278,7 @@ public class GuiCreneau {
         scrollBar.valueProperty().addListener((obs, oldValue, newValue) -> {
             String infoSc = new String();
             int j = 0;
+            System.out.println("\n");
             for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + nbAffichage; i++){
                 infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
@@ -249,19 +286,24 @@ public class GuiCreneau {
                 infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":" + listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
                 infoSc += listCreneaux.get(i).getType() + "\n";
                 infoModules.get(j).setText(infoSc);
+                System.out.println("nb : "+i);
 
                 if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
                     infoModules.get(j).setTextFill(Color.RED);
                     infoModules.get(j).setStyle("-fx-background-color: lightgray;");
                 }
                 else{
-                    infoModules.get(j).setTextFill(Color.BLACK);
-                    infoModules.get(j).setStyle("-fx-background-color: white;");
+                    if(listCreneaux.get(i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
+                        infoModules.get(j).setTextFill(Color.BLACK);
+                        infoModules.get(j).setStyle("-fx-background-color: lightgray;");
+                    }
+                    else
+                    {
+                        infoModules.get(j).setTextFill(Color.BLACK);
+                        infoModules.get(j).setStyle("-fx-background-color: white;");
+                    }
                 }
                 
-                if(listCreneaux.get(j).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
-                    infoModules.get(j).setStyle("-fx-background-color: lightgray;");
-                }
 
                 j++;
             }
@@ -274,7 +316,6 @@ public class GuiCreneau {
 
         //infoGroup.getChildren().add(infoLabel);
         grid.add(infoLabel, 0, 0);
-        grid.add(noteProfLabel, 0, 1);
         grid.add(gridModules, 0, 2);
         grid.add(scrollBar, 1, 2);
 
