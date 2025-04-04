@@ -65,4 +65,7 @@ public class Creneau {
 
     @ManyToOne
     private Salle salle;
+
+    @Builder.Default
+    private String noteProf = "";
 }

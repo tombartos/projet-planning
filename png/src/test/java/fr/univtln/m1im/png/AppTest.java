@@ -214,10 +214,10 @@ class AppTest {
 
         }
 
-        //Create postgres users
-        tryCreateUser(etudiant, "password");
-        tryCreateUser(professeur, "password");
-        tryCreateUser(responsable, "password");
+        // //Create postgres users
+        // tryCreateUser(etudiant, "password");
+        // tryCreateUser(professeur, "password");
+        // tryCreateUser(responsable, "password");
 
         // Voir script create-users pour crée utilisateurs
         Utils.getEntityManagerFactory().close();

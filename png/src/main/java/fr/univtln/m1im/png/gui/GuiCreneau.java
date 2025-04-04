@@ -14,6 +14,7 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
+import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.model.Module;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -41,6 +42,7 @@ public class GuiCreneau {
     private int nbHeure;
     private int nbJour;
     private int jourDeLaSemaine;
+    private EntityManager entityManager;
 
     private int collision;
     private int posCollision;
@@ -52,7 +54,7 @@ public class GuiCreneau {
 
     private Stage[] popup;
 
-    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour) {
+    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager) {
         this.popup = popup;
         this.utilisateur = utilisateur;
         this.group = group;
@@ -61,9 +63,11 @@ public class GuiCreneau {
         this.height = height;
         this.nbHeure = nbHeure;
         this.nbJour = nbJour;
+        this.entityManager = entityManager;
 
         this.collision = 1;
         this.posCollision = 0;
+        
     }
 
     public float convHeure(Creneau c)
@@ -239,6 +243,12 @@ public class GuiCreneau {
                 noteProfButton.setOnAction(e -> {
                 noteProfButton.setStyle("-fx-text-fill: black;");
                 // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
+                
+                entityManager.getTransaction().begin();
+                Creneau managedCreneau = entityManager.merge(creneau);
+                managedCreneau.setNoteProf(noteProfField.getText());
+                entityManager.getTransaction().commit();
+
                 System.out.println("Note modifiée : " + noteProfField.getText());
             });
             grid.add(noteProfField, 0, 2);
@@ -247,12 +257,12 @@ public class GuiCreneau {
         else {
             Label noteProfLabel = new Label("Aucune note de cours");
             // TODO Remplacer la ligne du dessus par le commentaire du dessous
-            // if creneau.getNoteProfesseur() != null {
-            //     noteProfLabel.setText(creneau.getNoteProfesseur().getNoteProfesseur());
-            // }
-            // else{
-            //     noteProfLabel.setText("Aucune note");
-            // }
+                if (creneau.getNoteProf() != "") {
+                noteProfLabel.setText(creneau.getNoteProf());
+            }
+            else{
+                noteProfLabel.setText("Aucune note de cours");
+            }
             noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
             grid.add(noteProfLabel, 0, 2);
         }
