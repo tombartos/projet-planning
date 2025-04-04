@@ -17,6 +17,7 @@ import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.model.Module;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TextField;
