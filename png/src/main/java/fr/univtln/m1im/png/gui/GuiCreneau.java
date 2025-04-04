@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
@@ -200,6 +202,7 @@ public class GuiCreneau {
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
+        infoLabel.setStyle("px; -fx-alignment: center; -fx-text-alignment: center;");
         if(this.utilisateur instanceof Professeur || this.utilisateur instanceof Responsable){
             TextField noteProfField = new TextField();
             Button noteProfButton = new Button("Modifier");
@@ -234,31 +237,90 @@ public class GuiCreneau {
         List<Label> infoModules = new ArrayList<>();
         int nbAffichage = 3;
         //Label infoLabel2 = new Label();
-        List<Creneau> listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
+
+        List<Creneau> listCreneaux;
+        if(this.utilisateur instanceof Etudiant)
+        {
+            // listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
+            // .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
+            // .toList();
+            // System.out.println(this.utilisateur.getGroupes());
+            // System.out.println(creneau.getGroupes());
+
+
+            Boolean trouve = false;
+            List<Creneau> tmpListCreneaux = new ArrayList<>();
+            for (Module module : creneau.getModules()) {
+                for (Creneau c : module.getCreneaux()) {
+                    for (Groupe g : c.getGroupes()) {
+                        for(Etudiant e : g.getEtudiants()){
+                            System.out.println(e.getId());
+                            if(e.getId().equals(this.utilisateur.getId())){
+                                tmpListCreneaux.add(c);
+                                trouve = true;
+                                break;
+                            }
+                        }
+                        if(trouve){
+                            trouve = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            listCreneaux = tmpListCreneaux.stream()
+                .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
+                .toList();
+        }
+        else
+        {
+            listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
             .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
-            // .filter()
+            .filter(c -> c.getProfesseurs().contains(this.utilisateur))
             .toList();
+        }
+        
+        int position = 0;
+        for(Creneau c : listCreneaux){
+            if(c.equals(creneau)){
+                break;
+            }
+            position++;
+        }
+        System.out.println("position = "+position+ " "+(listCreneaux.size()-nbAffichage));
+        if(position > listCreneaux.size()-nbAffichage){
+            position = listCreneaux.size()-nbAffichage;
+        }
         String info = new String();
             for(int i = 0; i < nbAffichage; i++){
-                info = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
-                info += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
-                info += listCreneaux.get(i).getHeureDebut().getHour() + ":"+listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
-                info += listCreneaux.get(i).getHeureFin().getHour() + ":"+listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
-                info += listCreneaux.get(i).getType() + "\n";
+                System.out.println("i = "+(i+position) +" Position "+ position+" "+ listCreneaux.size());
+                info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
+                info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
+                info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":"+listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
+                info += listCreneaux.get(position + i).getHeureFin().getHour() + ":"+listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
+                info += listCreneaux.get(position + i).getType() + "\n";
                 infoModules.add(new Label(info));
                 infoModules.get(i).setPrefSize(350, 10);
-                if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
+                if(this.creneau.getHeureDebut().equals(listCreneaux.get(position + i).getHeureDebut())){
                     infoModules.get(i).setTextFill(Color.RED);
                     infoModules.get(i).setStyle("-fx-background-color: lightgray;");
                 }
                 else{
-                    infoModules.get(i).setTextFill(Color.BLACK);
-                    infoModules.get(i).setStyle("-fx-background-color: white;");
+                    if(listCreneaux.get(position + i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
+                        infoModules.get(i).setTextFill(Color.BLACK);
+                        infoModules.get(i).setStyle("-fx-background-color: lightgray;");
+                    }
+                    else
+                    {
+                        infoModules.get(i).setTextFill(Color.BLACK);
+                        infoModules.get(i).setStyle("-fx-background-color: white;");
+                    }
+                    
                 }
                 
-                if(listCreneaux.get(i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
-                    infoModules.get(i).setStyle("-fx-background-color: lightgray;");
-                }
+                // if(listCreneaux.get(i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
+                //     infoModules.get(i).setStyle("-fx-background-color: lightgray;");
+                // }
                 gridModules.add(infoModules.get(i), 0, 1+i);
 
             }
@@ -272,13 +334,12 @@ public class GuiCreneau {
         
         scrollBar.setMin(0);
         scrollBar.setMax(listCreneaux.size()-nbAffichage);
-        scrollBar.setValue(0);
+        scrollBar.setValue(position);
         scrollBar.setBlockIncrement(1);
         scrollBar.setUnitIncrement(1);
         scrollBar.valueProperty().addListener((obs, oldValue, newValue) -> {
             String infoSc = new String();
             int j = 0;
-            System.out.println("\n");
             for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + nbAffichage; i++){
                 infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
@@ -286,7 +347,6 @@ public class GuiCreneau {
                 infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":" + listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
                 infoSc += listCreneaux.get(i).getType() + "\n";
                 infoModules.get(j).setText(infoSc);
-                System.out.println("nb : "+i);
 
                 if(this.creneau.getHeureDebut().equals(listCreneaux.get(i).getHeureDebut())){
                     infoModules.get(j).setTextFill(Color.RED);
@@ -320,8 +380,8 @@ public class GuiCreneau {
         grid.add(scrollBar, 1, 2);
 
         popup.setTitle("Information du créneau");
-        popup.setWidth(400);
-        popup.setHeight(300);
+        popup.setMinWidth(450);
+        popup.setMinHeight(400);
         popup.setScene(infoScene);
         popup.initStyle(StageStyle.UTILITY);
         popup.show();
