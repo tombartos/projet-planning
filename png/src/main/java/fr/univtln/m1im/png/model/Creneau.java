@@ -35,7 +35,7 @@ import lombok.ToString;
 @NamedQueries({
     @NamedQuery(
         name = "Creneau.getCreneauxDay",
-        query = "SELECT c FROM Creneau c WHERE c.heureDebut BETWEEN :firstHour AND :lastHour"
+        query = "SELECT c FROM Creneau c WHERE c.status = 0 AND c.heureDebut BETWEEN :firstHour AND :lastHour"
     )
 })
 public class Creneau {
