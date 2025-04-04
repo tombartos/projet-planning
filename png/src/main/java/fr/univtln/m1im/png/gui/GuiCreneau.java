@@ -186,15 +186,18 @@ public class GuiCreneau {
 
     public void afficherInformation()
     {
-        if(popup[0] != null) {
-            popup[0].close();
-        }
-        popup[0] = null;
+        // if(popup[0] != null) {
+        //     popup[0].close();
+        // }
+        // popup[0] = null;
+        popup[0].close();
         popup[0] = new Stage();
+        // popup[0].setOnCloseRequest(null);
         //Désélectionner le rectangle lors de la fermeture de la fenêtre
         popup[0].onCloseRequestProperty().set(e -> {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(1);
+            System.out.println("Fermeture de la fenêtre d'information");
         });
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -207,7 +210,7 @@ public class GuiCreneau {
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
-        infoLabel.setStyle("px; -fx-alignment: center; -fx-text-alignment: center;");
+        infoLabel.setStyle("-fx-text-alignment: center;");
 
         //Note personnelle
         TextField notePersoField = new TextField();
@@ -218,7 +221,7 @@ public class GuiCreneau {
         });
         notePersoButton.setOnAction(e -> {
             notePersoButton.setStyle("-fx-text-fill: black;");
-            // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteEtudiant().setNoteEtudiant(notePersoField.getText());
+            // TODO Remplacer la ligne d'en dessous par this.creneau.getNotePersonnelle().setNotePersonnelle(notePersoField.getText());
             System.out.println("Note modifiée : " + notePersoField.getText());
         });
         grid.add(notePersoField, 0, 1);
@@ -403,6 +406,14 @@ public class GuiCreneau {
         popup[0].setOnShown(e -> {
             infoScene.getRoot().requestFocus();
         });
+
+        if(this.utilisateur instanceof Responsable){
+            Button modifierModuleButton = new Button("Modifier le module");
+            modifierModuleButton.setOnAction(e -> {
+                // TODO Emad
+            });
+            grid.add(modifierModuleButton, 0, 4);
+        }
 
         popup[0].setTitle("Information du créneau");
         popup[0].setMinWidth(450);
