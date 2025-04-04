@@ -14,6 +14,8 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
+
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
