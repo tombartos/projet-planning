@@ -252,7 +252,7 @@ public class Gui {
             genererCreneaux();
         });
         this.ajoutCours.setOnAction(event -> {
-            AjouterCours cours = new AjouterCours( this.width, this.height);
+            AjouterCours cours = new AjouterCours( this.width, this.height, this.anneeDebut, entityManager);
             cours.afficherFenetreAjoutCours();
         });
         // Gérer la sélection d'un professeur
