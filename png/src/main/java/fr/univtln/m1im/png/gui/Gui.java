@@ -96,6 +96,8 @@ public class Gui {
     private Button ajoutCours;
     private Button demandeCours;
 
+    private Stage[] popups = {new Stage()};
+
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.utilisateur = utilisateur;
@@ -104,6 +106,7 @@ public class Gui {
         this.width = width;
         this.height = height;
         this.entityManager = entityManager;
+
 
         //variables
         this.nbHeure = 12;
@@ -134,7 +137,13 @@ public class Gui {
         this.hGrille = height * 7/10;
 
         this.grille = new Canvas(this.wGrille,this.hGrille);
-        this.grille.setOnMouseClicked(e->{for(GuiCreneau gc : guiCreneaux){gc.getRectangle().setStrokeWidth(1);;gc.getRectangle().setStroke(Color.BLACK);}});
+        this.grille.setOnMouseClicked(e->{
+            for(GuiCreneau gc : guiCreneaux)
+            {
+                gc.getRectangle().setStrokeWidth(1);
+                gc.getRectangle().setStroke(Color.BLACK);
+                this.popups[0].close();
+            }});
         this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
 
@@ -398,7 +407,7 @@ public class Gui {
             // genererCreneaux();
         guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
-                GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
                 gestionCollision(guiCreneau);
                 guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
@@ -455,3 +464,4 @@ public class Gui {
     }    
 
 }
+
