@@ -15,6 +15,8 @@ import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
+import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
@@ -33,6 +35,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.CustomMenuItem;
+import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -289,6 +294,22 @@ public class Gui {
             genererCreneaux();
 
         });
+
+        if(this.utilisateur instanceof Etudiant)
+        {
+            this.ajoutCours.setVisible(false);
+            this.demandeCours.setVisible(false);
+        }
+        else if(this.utilisateur instanceof Professeur)
+        {
+            this.ajoutCours.setVisible(false);
+            this.demandeCours.setVisible(true);
+        }
+        else if(this.utilisateur instanceof Responsable)
+        {
+            this.ajoutCours.setVisible(true);
+            this.demandeCours.setVisible(false);
+        }
         
 
         // Ajouter les boutons dans la barre horizontale
@@ -297,6 +318,49 @@ public class Gui {
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
         this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
+
+        if(this.utilisateur instanceof Responsable)
+        {
+            // Button DemandeModif = new Button("Demande de modification");
+            // DemandeModif.setOnAction(event -> {
+            //     System.out.println("Demande de modification");
+            // });
+            // this.barreFiltres.getChildren().add(DemandeModif);
+
+            MenuButton demandeModifCreneau = new MenuButton("Demandes de modification");
+
+            //tmp
+            for(int i = 0; i < 10; i++)
+            {
+                Label creneauModif = new Label("Nom du Prof " + i);
+                int idmb = i;
+                Button voirModifButton = new Button("Voir");
+                voirModifButton.setOnAction(event -> {                    
+                    System.out.println("Voir modification" + idmb);
+                });
+
+                Button approuverModifButton = new Button("Approuver");
+                approuverModifButton.setOnAction(event -> {                    
+                    System.out.println("Approuver modification " + idmb);
+                });
+
+                Button modifierModifButton = new Button("Modifier");
+                modifierModifButton.setOnAction(event -> {                    
+                    System.out.println("Modifier modification " + idmb);
+                });
+                
+                HBox demandeModifHbox = new HBox();
+                demandeModifHbox.setSpacing(10);
+                CustomMenuItem item = new CustomMenuItem(demandeModifHbox, false);
+                demandeModifHbox.getChildren().addAll(creneauModif, voirModifButton, approuverModifButton, modifierModifButton);
+                demandeModifCreneau.getItems().add(item);
+
+
+            }
+            this.barreFiltres.getChildren().add(demandeModifCreneau);
+            
+
+        }
 
 
 
@@ -465,3 +529,11 @@ public class Gui {
 
 }
 
+//TODO Affichage cours annuler
+//TODO IHM demande de modification de cours
+//TODO Gestion des Notes
+
+/*
+ * EntityManager.Merge(creneaux)
+ * 
+ */
