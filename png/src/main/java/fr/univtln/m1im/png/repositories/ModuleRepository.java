@@ -26,4 +26,10 @@ public class ModuleRepository extends JpaRepository<Module, Long> {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public Module getModuleByCode(String moduleCode){
+        return em.createNamedQuery("Module.getModuleByCode", Module.class)
+                .setParameter("codeModule", moduleCode)
+                .getSingleResult();
+    }
 }

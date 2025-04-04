@@ -38,6 +38,10 @@ import java.util.List;
     @NamedQuery(
     name = "Groupe.getWeekCreneaux",
     query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+        name = "Groupe.getByCode",
+        query = "SELECT g FROM Groupe g WHERE g.code = :code"
     )
 })
 public class Groupe {

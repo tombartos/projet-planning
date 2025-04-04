@@ -35,6 +35,10 @@ import lombok.ToString;
         name = "Module.getAllModulesCodes",
         query = "SELECT m.code FROM Module m"
     ),
+    @NamedQuery(
+        name = "Module.getModuleByCode",
+        query = "SELECT m FROM Module m WHERE m.code = :codeModule"
+    )
 })
 public class Module {
     @Id

@@ -1,11 +1,16 @@
 package fr.univtln.m1im.png.gui;
 
 
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
+import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
@@ -28,6 +33,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 import lombok.Setter;
+import fr.univtln.m1im.png.model.Module;
 
 import java.util.logging.Logger;
 
@@ -41,9 +47,12 @@ public class AjouterCours {
     private int anneeDebut;
     private String role;
 
-    public AjouterCours( int width, int height) {
+    public AjouterCours( int width, int height, EntityManager entityManager, int anneeDebut, String role) {
+        this.entityManager = entityManager;
         this.width = width;
         this.height = height;
+        this.anneeDebut = anneeDebut;
+        this.role = role;
     }   
 
     public void afficherFenetreAjoutCours() {
@@ -101,7 +110,8 @@ public class AjouterCours {
         
         ComboBox<String> moisField = new ComboBox<>();
         moisField.setPromptText("Sélectionner un mois");
-        TextField jourField = new TextField();
+        ComboBox<String> jourField = new ComboBox<>();
+        jourField.setPromptText("Sélectionner un jour");
         ComboBox<String> heureField = new ComboBox<>();
         heureField.setPromptText("Sélectionner une heure");
         heureField.setPrefWidth(200);
@@ -198,6 +208,21 @@ public class AjouterCours {
         grid.add(buttonBox, 0, row++, 6, 1);
         grid.add(errorLabel, 1, row++, 6, 1);
 
+        // Map des mois avec leur index
+        Map<String, Integer> moisMap = new HashMap<>();
+        moisMap.put("Janvier", 1);
+        moisMap.put("Février", 2);
+        moisMap.put("Mars", 3);
+        moisMap.put("Avril", 4);
+        moisMap.put("Mai", 5);
+        moisMap.put("Juin", 6);
+        moisMap.put("Juillet", 7);
+        moisMap.put("Août", 8);
+        moisMap.put("Septembre", 9);
+        moisMap.put("Octobre", 10);
+        moisMap.put("Novembre", 11);
+        moisMap.put("Décembre", 12);
+
         // Actions des boutons
         annulerButton.setOnAction(e -> stage.close());
         validerButton.setOnAction(e -> {
@@ -210,10 +235,22 @@ public class AjouterCours {
                 errorLabel.setVisible(true);
                 return;
             } else {
+                Module module = moduleRepository.getModuleByCode(moduleField.getValue());
+                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
+                Professeur professeur = professeurlist.get(profField.getSelectionModel().getSelectedIndex());
+                Groupe groupe = groupeRepository.getByCode(groupeField.getValue());
+                OffsetDateTime heureDebut = OffsetDateTime.of(
+                    Integer.parseInt(anneeField.getValue()),
+                    moisMap.get(moisField.getValue()),
+                    Integer.parseInt(jourField.getValue()),
+                    Integer.parseInt(heureField.getValue()),
+                    Integer.parseInt(minuteField.getValue()),
+                    0, 0,
+                    OffsetDateTime.now().getOffset()
+                );
+                    
                 errorLabel.setVisible(false);
             }
-            System.out.println("Cours ajouté !");
-            stage.close();
             if (this.role.equals("Ajouter")) {
                 System.out.println("Cours ajouté !");
                 stage.close();
@@ -229,38 +266,6 @@ public class AjouterCours {
         Scene scene = new Scene(grid, this.width/1.2, this.height/1.45);
         stage.setScene(scene);
         stage.show();
-
-        // les methodes pour remplir les ComboBox
-        moduleField.setOnAction(event -> {
-
-        });
-        profField.setOnAction(event -> {
-
-        });
-        groupeField.setOnAction(event -> {
-
-        });
-        salleField.setOnAction(event -> {
-
-        });
-        anneeField.setOnAction(event -> {
-
-        });
-        moisField.setOnAction(event -> {
-
-        });
-        heureField.setOnAction(event -> {
-
-        });
-        minuteField.setOnAction(event -> {
-
-        });
-        semaineDebutField.setOnAction(event -> {
-
-        });
-        semaineFinField.setOnAction(event -> {
-
-        });
         
 
         
