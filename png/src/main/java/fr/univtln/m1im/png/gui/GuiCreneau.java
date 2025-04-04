@@ -52,7 +52,10 @@ public class GuiCreneau {
     private OffsetDateTime premierJour; // Premier jour de l'année
     private OffsetDateTime dernierJour; // Dernier jour de l'année
 
-    public GuiCreneau(Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour) {
+    private Stage[] popup;
+
+    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour) {
+        this.popup = popup;
         this.utilisateur = utilisateur;
         this.group = group;
         this.creneau = creneau;
@@ -84,7 +87,7 @@ public class GuiCreneau {
 
     public void afficherCreneau()
     {
-        System.out.println(creneau.getHeureDebut().getDayOfYear());
+        // System.out.println(creneau.getHeureDebut().getDayOfYear());
         switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
             case "MONDAY":
                 jourDeLaSemaine = 0;
@@ -185,9 +188,13 @@ public class GuiCreneau {
 
     public void afficherInformation()
     {
-        Stage popup = new Stage();
+        if(popup[0] != null) {
+            popup[0].close();
+        }
+        popup[0] = null;
+        popup[0] = new Stage();
         //Désélectionner le rectangle lors de la fermeture de la fenêtre
-        popup.onCloseRequestProperty().set(e -> {
+        popup[0].onCloseRequestProperty().set(e -> {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(1);
         });
@@ -203,10 +210,27 @@ public class GuiCreneau {
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
         infoLabel.setStyle("px; -fx-alignment: center; -fx-text-alignment: center;");
+
+        //Note personnelle
+        TextField notePersoField = new TextField();
+        Button notePersoButton = new Button("Modifier");
+        notePersoField.setPromptText("Aucune note personnelle");
+        notePersoField.setOnKeyReleased(e -> {
+            notePersoButton.setStyle("-fx-text-fill: red;");
+        });
+        notePersoButton.setOnAction(e -> {
+            notePersoButton.setStyle("-fx-text-fill: black;");
+            // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteEtudiant().setNoteEtudiant(notePersoField.getText());
+            System.out.println("Note modifiée : " + notePersoField.getText());
+        });
+        grid.add(notePersoField, 0, 1);
+        grid.add(notePersoButton, 1, 1);
+
+        // Note professeur
         if(this.utilisateur instanceof Professeur || this.utilisateur instanceof Responsable){
             TextField noteProfField = new TextField();
             Button noteProfButton = new Button("Modifier");
-            noteProfField.setPromptText("Aucune note");
+            noteProfField.setPromptText("Aucune note de cours");
             noteProfField.setOnKeyReleased(e -> {
                 noteProfButton.setStyle("-fx-text-fill: red;");
             });
@@ -216,11 +240,11 @@ public class GuiCreneau {
                 // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
                 System.out.println("Note modifiée : " + noteProfField.getText());
             });
-            grid.add(noteProfField, 0, 1);
-            grid.add(noteProfButton, 1, 1);
+            grid.add(noteProfField, 0, 2);
+            grid.add(noteProfButton, 1, 2);
         }
         else {
-            Label noteProfLabel = new Label("Aucune note");
+            Label noteProfLabel = new Label("Aucune note de cours");
             // TODO Remplacer la ligne du dessus par le commentaire du dessous
             // if creneau.getNoteProfesseur() != null {
             //     noteProfLabel.setText(creneau.getNoteProfesseur().getNoteProfesseur());
@@ -229,7 +253,7 @@ public class GuiCreneau {
             //     noteProfLabel.setText("Aucune note");
             // }
             noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
-            grid.add(noteProfLabel, 0, 1);
+            grid.add(noteProfLabel, 0, 2);
         }
         // Label noteProfLabel = new Label("Aucune note");
         // noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
@@ -276,7 +300,6 @@ public class GuiCreneau {
         {
             listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
             .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
-            .filter(c -> c.getProfesseurs().contains(this.utilisateur))
             .toList();
         }
         
@@ -376,15 +399,20 @@ public class GuiCreneau {
 
         //infoGroup.getChildren().add(infoLabel);
         grid.add(infoLabel, 0, 0);
-        grid.add(gridModules, 0, 2);
-        grid.add(scrollBar, 1, 2);
+        grid.add(gridModules, 0, 3);
+        grid.add(scrollBar, 1, 3);
+        // Ensure no TextField is selected by default
+        popup[0].setOnShown(e -> {
+            infoScene.getRoot().requestFocus();
+        });
 
-        popup.setTitle("Information du créneau");
-        popup.setMinWidth(450);
-        popup.setMinHeight(400);
-        popup.setScene(infoScene);
-        popup.initStyle(StageStyle.UTILITY);
-        popup.show();
+        popup[0].setTitle("Information du créneau");
+        popup[0].setMinWidth(450);
+        popup[0].setMinHeight(400);
+        popup[0].setScene(infoScene);
+        popup[0].initStyle(StageStyle.UTILITY);
+        popup[0].show();
+        
     }
 
 }
