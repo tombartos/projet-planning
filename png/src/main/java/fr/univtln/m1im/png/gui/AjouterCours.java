@@ -22,10 +22,12 @@ public class AjouterCours {
     
     private int width;
     private int height;
+    private String role;
 
-    public AjouterCours( int width, int height) {
+    public AjouterCours( int width, int height, String role) {
         this.width = width;
         this.height = height;
+        this.role = role;
     }   
 
     public void afficherFenetreAjoutCours() {
@@ -73,9 +75,8 @@ public class AjouterCours {
         // Label pour afficher les erreurs
         Label errorLabel = new Label("Exemple d'erreur affichée ici");
         errorLabel.setTextFill(Color.RED);
-        errorLabel.setFont(new Font(12));
-        errorLabel.setVisible(true); // Visible par défaut
-
+        errorLabel.setFont(new Font(13));
+        errorLabel.setVisible(true); 
         // Boutons
         Button annulerButton = new Button("Annuler");
         Button validerButton = new Button("Valider");
@@ -113,13 +114,20 @@ public class AjouterCours {
         grid.add(semaineFinField, 1, row++);
 
         grid.add(buttonBox, 0, row++, 6, 1);
-        grid.add(errorLabel, 2, row++, 6, 1);
+        grid.add(errorLabel, 1, row++, 6, 1);
 
         // Actions des boutons
         annulerButton.setOnAction(e -> stage.close());
         validerButton.setOnAction(e -> {
-            System.out.println("Cours ajouté !");
-            stage.close();
+            if (this.role.equals("Ajouter")) {
+                System.out.println("Cours ajouté !");
+                stage.close();
+            }
+            else if (this.role.equals("Demander")) {
+                System.out.println("Demande de cours envoyée !");
+                stage.close();
+            }
+            
         });
 
         // 🚀 Ajout de la scène et affichage de la fenêtre
@@ -158,7 +166,7 @@ public class AjouterCours {
         semaineFinField.setOnAction(event -> {
 
         });
-        
+
 
         
     }
