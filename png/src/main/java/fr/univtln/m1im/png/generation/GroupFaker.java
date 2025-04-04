@@ -3,13 +3,15 @@ package fr.univtln.m1im.png.generation;
 import static java.text.Normalizer.normalize;
 
 import java.text.Normalizer.Form;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import fr.univtln.m1im.png.model.Groupe;
+import fr.univtln.m1im.png.model.Module;
 import static fr.univtln.m1im.png.generation.FakeModule.*;
 
-public class GroupFaker {
-    public static record FakeFormation(String nom, FakeModule[] modules) { }
+class GroupFaker {
+    static record FakeFormation(String nom, FakeModule[] modules) { }
 
     final static FakeFormation[] FORMATIONS = new FakeFormation[] {
         new FakeFormation( "Licence Science de la Vie",          MODULES_LICENCE_SCIENCE_DE_LA_VIE         ),
@@ -34,24 +36,39 @@ public class GroupFaker {
         new FakeFormation( "Master Ingénierie Mécanique",        MODULES_MASTER_INGENIERIE_MECANIQUE       )
     };
 
-    final java.util.Random rand;
+    private final java.util.Random rand;
+    private HashCacheFn<FakeModule, Module> moduleGetter =
+        HashCacheFn.of(module -> Module.builder()
+                .code(module.code())
+                .nom(module.nom())
+                .description(module.description())
+                .build());
+    private java.util.List<Groupe> racines;
+    private java.util.List<Groupe> feuilles;
+    private java.util.List<Groupe> toutes;
 
     private GroupFaker(java.util.Random rand) {
         this.rand = rand;
+        this.racines = new java.util.ArrayList<>();
+        this.feuilles = new java.util.ArrayList<>();
+        this.toutes = new java.util.ArrayList<>();
     }
 
     public static GroupFaker with(java.util.Random rand) {
         return new GroupFaker(rand);
     }
 
-    Groupe createFormation(String nomFormation) {
+    Groupe createFormation(FakeFormation formation) {
         return Groupe.builder()
-            .code(normalize(nomFormation, Form.NFKD).chars()
+            .code(normalize(formation.nom(), Form.NFKD).chars()
                     .filter(Character::isUpperCase)
                     .mapToObj(Character::toString)
                     .collect(Collectors.joining("")))
-            .nom(nomFormation)
-            .formation(nomFormation)
+            .nom(formation.nom())
+            .formation(formation.nom())
+            .modules(Arrays.stream(formation.modules())
+                    .map(this.moduleGetter)
+                    .toList())
             .build();
     }
 
@@ -77,29 +94,45 @@ public class GroupFaker {
     /**
      * Créer un foret de groupes et renvoie la liste de toute les groupes.
      */
-    public java.util.List<Groupe> createGroups() {
-        var list = new java.util.ArrayList<Groupe>();
-
+    public GroupFaker createGroups() {
         for (var fakeFormation : FORMATIONS) {
             final var nomFormation = fakeFormation.nom();
-            final var formation = createFormation(nomFormation);
-            list.add(formation);
+            final var formation = createFormation(fakeFormation);
+            this.toutes.add(formation);
+            this.racines.add(formation);
 
             if (rand.nextBoolean()) {
                 for (var i = 0; i < 2; ++i) {
                     final var gtd = createGroupeTD(i, formation, nomFormation);
-                    list.add(gtd);
+                    this.toutes.add(gtd);
 
                     if (rand.nextBoolean()) {
                         for (var j = 0; j < 2; ++j) {
                             final var gtp = createGroupeTP(j, gtd, nomFormation);
-                            list.add(gtp);
+                            this.toutes.add(gtp);
+                            this.feuilles.add(gtp);
                         }
                     }
                 }
             }
         }
 
-        return list;
+        return this;
+    }
+
+    public Iterable<Groupe> getRacines() {
+        return this.racines;
+    }
+
+    public Iterable<Groupe> getFeuills() {
+        return this.feuilles;
+    }
+
+    public Iterable<Groupe> getAllGroupe() {
+        return this.toutes;
+    }
+
+    public Iterable<Module> getModules() {
+        return this.moduleGetter.getCache().values();
     }
 }
