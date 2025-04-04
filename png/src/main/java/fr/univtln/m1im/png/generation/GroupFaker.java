@@ -6,29 +6,32 @@ import java.text.Normalizer.Form;
 import java.util.stream.Collectors;
 
 import fr.univtln.m1im.png.model.Groupe;
+import static fr.univtln.m1im.png.generation.FakeModule.*;
 
 public class GroupFaker {
-    final static String[] NOMS_FORMATIONS = new String[] {
-        "Licence Science de la Vie",
-        "Licence Mathématiques",
-        "Master Physique Chimie",
-        "Licence Informatique",
-        "Licence Histoire",
-        "Master Génie Civil",
-        "Licence Lettres Modernes",
-        "Licence Économie et Gestion",
-        "Master Intelligence Artificielle",
-        "Licence Psychologie",
-        "Licence Droit",
-        "Master Biotechnologies",
-        "Licence Géographie et Aménagement",
-        "Master Marketing Digital",
-        "Licence Sciences Politiques",
-        "Master Finance et Comptabilité",
-        "Licence Arts Plastiques",
-        "Master Systèmes d'Information",
-        "Licence Sociologie",
-        "Master Ingénierie Mécanique"
+    public static record FakeFormation(String nom, FakeModule[] modules) { }
+
+    final static FakeFormation[] FORMATIONS = new FakeFormation[] {
+        new FakeFormation( "Licence Science de la Vie",          MODULES_LICENCE_SCIENCE_DE_LA_VIE         ),
+        new FakeFormation( "Licence Mathématiques",              MODULES_LICENCE_MATHEMATIQUES             ),
+        new FakeFormation( "Master Physique Chimie",             MODULES_MASTER_PHYSIQUE_CHIMIE            ),
+        new FakeFormation( "Licence Informatique",               MODULES_LICENCE_INFORMATIQUE              ),
+        new FakeFormation( "Licence Histoire",                   MODULES_LICENCE_HISTOIRE                  ),
+        new FakeFormation( "Master Génie Civil",                 MODULES_MASTER_GENIE_CIVIL                ),
+        new FakeFormation( "Licence Lettres Modernes",           MODULES_LICENCE_LETTRES_MODERNES          ),
+        new FakeFormation( "Licence Économie et Gestion",        MODULES_LICENCE_ECONOMIE_ET_GESTION       ),
+        new FakeFormation( "Master Intelligence Artificielle",   MODULES_MASTER_INTELLIGENCE_ARTIFICIELLE  ),
+        new FakeFormation( "Licence Psychologie",                MODULES_LICENCE_PSYCHOLOGIE               ),
+        new FakeFormation( "Licence Droit",                      MODULES_LICENCE_DROIT                     ),
+        new FakeFormation( "Master Biotechnologies",             MODULES_MASTER_BIOTECHNOLOGIES            ),
+        new FakeFormation( "Licence Géographie et Aménagement",  MODULES_LICENCE_GEOGRAPHIE_ET_AMENAGEMENT ),
+        new FakeFormation( "Master Marketing Digital",           MODULES_MASTER_MARKETING_DIGITAL          ),
+        new FakeFormation( "Licence Sciences Politiques",        MODULES_LICENCE_SCIENCES_POLITIQUES       ),
+        new FakeFormation( "Master Finance et Comptabilité",     MODULES_MASTER_FINANCE_ET_COMPTABILITE    ),
+        new FakeFormation( "Licence Arts Plastiques",            MODULES_LICENCE_ARTS_PLASTIQUES           ),
+        new FakeFormation( "Master Systèmes d'Information",      MODULES_MASTER_SYSTEMES_DINFORMATION      ),
+        new FakeFormation( "Licence Sociologie",                 MODULES_LICENCE_SOCIOLOGIE                ),
+        new FakeFormation( "Master Ingénierie Mécanique",        MODULES_MASTER_INGENIERIE_MECANIQUE       )
     };
 
     final java.util.Random rand;
@@ -77,7 +80,8 @@ public class GroupFaker {
     public java.util.List<Groupe> createGroups() {
         var list = new java.util.ArrayList<Groupe>();
 
-        for (var nomFormation : NOMS_FORMATIONS) {
+        for (var fakeFormation : FORMATIONS) {
+            final var nomFormation = fakeFormation.nom();
             final var formation = createFormation(nomFormation);
             list.add(formation);
 
