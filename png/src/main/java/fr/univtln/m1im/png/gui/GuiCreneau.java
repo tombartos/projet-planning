@@ -188,15 +188,18 @@ public class GuiCreneau {
 
     public void afficherInformation()
     {
-        if(popup[0] != null) {
-            popup[0].close();
-        }
-        popup[0] = null;
+        // if(popup[0] != null) {
+        //     popup[0].close();
+        // }
+        // popup[0] = null;
+        popup[0].close();
         popup[0] = new Stage();
+        // popup[0].setOnCloseRequest(null);
         //Désélectionner le rectangle lors de la fermeture de la fenêtre
         popup[0].onCloseRequestProperty().set(e -> {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(1);
+            System.out.println("Fermeture de la fenêtre d'information");
         });
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -209,7 +212,7 @@ public class GuiCreneau {
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
-        infoLabel.setStyle("px; -fx-alignment: center; -fx-text-alignment: center;");
+        infoLabel.setStyle("-fx-text-alignment: center;");
 
         //Note personnelle
         TextField notePersoField = new TextField();
