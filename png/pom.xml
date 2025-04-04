@@ -11,6 +11,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <junit.version>5.6.0</junit.version>
     <lombok.version>1.18.36</lombok.version>
+    <exec.mainClass>fr.univtln.m1im.png.App</exec.mainClass>
   </properties>
 
   <dependencies>
@@ -90,9 +91,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <mainClass>fr.univtln.m1im.png.App</mainClass>
-        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

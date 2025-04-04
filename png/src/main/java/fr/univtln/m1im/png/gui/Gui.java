@@ -67,6 +67,7 @@ public class Gui {
     private Utilisateur utilisateur;
     private List<Creneau> creneaux;
     private List<Rectangle> cCreneaux;
+    private List<GuiCreneau> guiCreneaux;
     
     private Group gpGrille;
     private Group gpCreneaux;
@@ -92,6 +93,7 @@ public class Gui {
 
     private String codeGroupeChoisi;
     private Button btnEdt;
+    private Button ajoutCours;
 
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
@@ -125,10 +127,13 @@ public class Gui {
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
 
+        this.guiCreneaux = new ArrayList<>();
+
         this.wGrille = width * 9/10;
         this.hGrille = height * 7/10;
 
         this.grille = new Canvas(this.wGrille,this.hGrille);
+        this.grille.setOnMouseClicked(e->{for(GuiCreneau gc : guiCreneaux){gc.getRectangle().setStrokeWidth(1);;gc.getRectangle().setStroke(Color.BLACK);}});
         this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
 
@@ -196,6 +201,7 @@ public class Gui {
         this.barreFiltres = new HBox();
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         this.btnEdt = new Button("Mon EDT");
+        this.ajoutCours = new Button("Ajouter cours");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
         this.salleDropdown.setVisible(false); 
@@ -210,7 +216,7 @@ public class Gui {
         this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
         this.filtreDropdown.setPromptText("Filtrer par");
         
-        filtreDropdown.setOnAction(event -> {
+        this.filtreDropdown.setOnAction(event -> {
             String choix = filtreDropdown.getValue();
             switch (choix) {
                 case "Salles":
@@ -238,12 +244,16 @@ public class Gui {
         });
 
         // Gérer la sélection d'un groupe
-        btnEdt.setOnAction(event -> {
+        this.btnEdt.setOnAction(event -> {
             this.etatCourant = 0;
             this.salleDropdown.setVisible(false);
             this.groupesDropdown.setVisible(false); 
             this.profDropdown.setVisible(false);
             genererCreneaux();
+        });
+        this.ajoutCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height);
+            cours.afficherFenetreAjoutCours();
         });
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
@@ -267,7 +277,7 @@ public class Gui {
         
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
@@ -373,10 +383,10 @@ public class Gui {
             // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
             // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
             // genererCreneaux();
-        List<GuiCreneau> guiCreneaux = new ArrayList<>();
+        guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-                gestionCollision(guiCreneau, guiCreneaux);
+                gestionCollision(guiCreneau);
                 guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
             
@@ -385,7 +395,7 @@ public class Gui {
         // }
     }
 
-    public void gestionCollision(GuiCreneau guiCreneau, List<GuiCreneau> guiCreneaux){
+    public void gestionCollision(GuiCreneau guiCreneau){
         for(GuiCreneau gc : guiCreneaux){
             if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
              && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
