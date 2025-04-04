@@ -221,7 +221,7 @@ public class GuiCreneau {
         });
         notePersoButton.setOnAction(e -> {
             notePersoButton.setStyle("-fx-text-fill: black;");
-            // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteEtudiant().setNoteEtudiant(notePersoField.getText());
+            // TODO Remplacer la ligne d'en dessous par this.creneau.getNotePersonnelle().setNotePersonnelle(notePersoField.getText());
             System.out.println("Note modifiée : " + notePersoField.getText());
         });
         grid.add(notePersoField, 0, 1);
@@ -406,6 +406,14 @@ public class GuiCreneau {
         popup[0].setOnShown(e -> {
             infoScene.getRoot().requestFocus();
         });
+
+        if(this.utilisateur instanceof Responsable){
+            Button modifierModuleButton = new Button("Modifier le module");
+            modifierModuleButton.setOnAction(e -> {
+                // TODO Emad
+            });
+            grid.add(modifierModuleButton, 0, 4);
+        }
 
         popup[0].setTitle("Information du créneau");
         popup[0].setMinWidth(450);
