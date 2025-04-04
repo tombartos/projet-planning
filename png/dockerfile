@@ -1,0 +1,14 @@
+# Use the official PostgreSQL image from Docker Hub
+FROM postgres:17
+
+# Set environment variables for PostgreSQL
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=mysecretpassword
+
+COPY ./create_users ./
+RUN chmod +x create_users
+RUN ./create_users
+
+
+# Default command to run PostgreSQL
+CMD ["postgres"]
