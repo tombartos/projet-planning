@@ -9,7 +9,6 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
-import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ResponsableRepository;
 // import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 // import fr.univtln.m1im.png.repositories.SalleRepository;
@@ -202,7 +201,7 @@ class AppTest {
             // log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
             ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
             log.info(responsableRepository.addCreneau(creneau)); //Excepted : error
-            Creneau creneau7 = Creneau.builder().type("CMMMMMM").heureDebut(OffsetDateTime.of(2025, 3, 3, 8, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 11, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
+            Creneau creneau7 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 8, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 11, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
             creneau7.getModules().add(module);
             creneau7.getGroupes().add(groupe);
             creneau7.getProfesseurs().add(professeur);

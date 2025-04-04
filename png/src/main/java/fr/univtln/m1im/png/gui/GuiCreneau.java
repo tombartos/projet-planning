@@ -2,7 +2,6 @@ package fr.univtln.m1im.png.gui;
 
 import javafx.scene.paint.Color;
 
-import java.nio.Buffer;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,12 +11,9 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Module;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
