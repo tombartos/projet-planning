@@ -539,6 +539,6 @@ public class Gui {
 //TODO Gestion des Notes
 
 /*
- * EntityManager.Merge(creneaux)
- * 
+ * mvn test
+ * ./create-users
  */
