@@ -71,6 +71,12 @@ public class AjouterCours {
         ComboBox<String> minuteField = new ComboBox<>();
         minuteField.setPromptText("Sélectionner une minute");
         minuteField.setPrefWidth(200);
+        ComboBox<String> heurefin = new ComboBox<>();
+        heurefin.setPromptText("Sélectionner une heure fin");
+        heurefin.setPrefWidth(200);
+        ComboBox<String> minutefin = new ComboBox<>();
+        minutefin.setPromptText("Sélectionner une minute");
+        minutefin.setPrefWidth(200);
 
         // Étendre les semaines
         ComboBox<String> semaineDebutField = new ComboBox<>();
@@ -115,6 +121,14 @@ public class AjouterCours {
         grid.add(heureField, 3, row_entry);
         grid.add(new Label("Minute"), 4, row_lable_anne); 
         grid.add(minuteField, 4, row_entry);
+
+        int rowLabeleFin = row++;
+        int rowEntryFin = row++;
+        grid.add(new Label("Heure Fin"), 3, rowLabeleFin); 
+        grid.add(heurefin ,3, rowEntryFin);
+        grid.add(new Label("Minute"), 4, rowLabeleFin); 
+        grid.add(minutefin, 4, rowEntryFin);
+
         grid.add(new Label("Étendre de semaine à semaine"), 0, row++, 2, 1);
         grid.add(semaineDebutField, 0, row);
         grid.add(semaineFinField, 1, row++);
@@ -137,7 +151,7 @@ public class AjouterCours {
         });
 
         //  Ajout de la scène et affichage de la fenêtre
-        Scene scene = new Scene(grid, this.width/1.2, this.height/1.45);
+        Scene scene = new Scene(grid, this.width/1.2, this.height/1.35);
         stage.setScene(scene);
         stage.show();
 
