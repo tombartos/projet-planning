@@ -68,4 +68,7 @@ public class Creneau {
 
     @Builder.Default
     private String noteProf = "";
+
+    @Builder.Default
+    private int status = 0; //0: actif, 1: annulé
 }
