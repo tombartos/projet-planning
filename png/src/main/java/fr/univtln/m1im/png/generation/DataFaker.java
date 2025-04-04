@@ -16,13 +16,18 @@ public class DataFaker {
         final var rand = new java.util.Random(123);
         final var faker = new com.github.javafaker.Faker(java.util.Locale.FRANCE, rand);
 
-        var groups = GroupFaker.with(rand).createGroups();
+        var groupFaker = GroupFaker.with(rand).createGroups();
         try (var em = emf.createEntityManager()) {
             try {
                 em.getTransaction().begin();
 
-                for (var group : groups) {
+                for (var module : groupFaker.getModules()) {
+                    em.persist(module);
+                }
+
+                for (var group : groupFaker.getAllGroupe()) {
                     em.persist(group);
+
                     if (group.getSousGroupes().isEmpty()) {
                         for (int i = 0; i < 1000; ++i) {
                             var etudiant = FakeUser.with(faker, rand).withStudentEmail()
@@ -38,7 +43,5 @@ public class DataFaker {
                 throw e;
             }
         }
-
-        //var module = Module.builder().code("M1").nom("Module1").description("Description1").nbHeuresCM(10).nbHeuresTD(20).nbHeuresTP(30).build();
     }
 }
