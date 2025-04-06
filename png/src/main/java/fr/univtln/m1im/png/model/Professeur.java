@@ -36,6 +36,10 @@ import java.util.List;
     @NamedQuery(
         name = "ProfesseurDTO.getAllDTO",
         query = "SELECT new fr.univtln.m1im.png.dto.ProfesseurDTO(p.id, p.nom, p.prenom) FROM Professeur p"
+    ),
+    @NamedQuery(
+        name = "Professeur.getAll",
+        query = "SELECT p FROM Professeur p"
     )
   })
 public class Professeur extends Utilisateur {

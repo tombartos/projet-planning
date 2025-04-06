@@ -21,6 +21,11 @@ import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
+
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 @Table(name="Utilisateurs")

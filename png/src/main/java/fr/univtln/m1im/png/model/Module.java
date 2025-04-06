@@ -30,6 +30,14 @@ import lombok.ToString;
     @NamedQuery(
         name = "Module.getAllCreneaux",
         query = "SELECT c FROM Creneau c JOIN c.modules m WHERE m.code = :codeModule"
+    ),
+    @NamedQuery(
+        name = "Module.getAllModulesCodes",
+        query = "SELECT m.code FROM Module m"
+    ),
+    @NamedQuery(
+        name = "Module.getModuleByCode",
+        query = "SELECT m FROM Module m WHERE m.code = :codeModule"
     )
 })
 public class Module {

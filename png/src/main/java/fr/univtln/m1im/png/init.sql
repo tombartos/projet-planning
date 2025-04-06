@@ -1,11 +1,10 @@
-#!/bin/sh
-
-psql 'postgres://postgres:mysecretpassword@localhost:8080/' <<EOF
-
 CREATE USER et1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO et1;
 GRANT USAGE ON SCHEMA public TO et1;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO et1;
+GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO et1;
+GRANT INSERT ON TABLE notes_perso TO et1;
+GRANT UPDATE ON TABLE notes_perso TO et1;
 
 CREATE USER pr1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO pr1;
@@ -14,19 +13,11 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO pr1;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO pr1;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO pr1;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO pr1;
+GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO pr1;
+GRANT INSERT ON TABLE notes_perso TO pr1;
+GRANT UPDATE ON TABLE notes_perso TO pr1;
 
 
-DO \$\$
-BEGIN
-    EXECUTE (
-        SELECT string_agg(
-            format('GRANT USAGE, SELECT ON SEQUENCE %I.%I TO pr1;', schemaname, sequencename),
-            ' '
-        )
-        FROM pg_sequences
-        WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
-    );
-END \$\$;
 
 CREATE USER resp1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO resp1;
@@ -35,7 +26,7 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
-DO \$\$
+DO $$
 BEGIN
     EXECUTE (
         SELECT string_agg(
@@ -45,6 +36,4 @@ BEGIN
         FROM pg_sequences
         WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
     );
-END \$\$;
-
-EOF
+END $$;
