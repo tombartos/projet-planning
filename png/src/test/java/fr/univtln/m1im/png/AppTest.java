@@ -17,6 +17,8 @@ import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import fr.univtln.m1im.png.model.Module;
+import fr.univtln.m1im.png.model.NotePersonnelle;
+
 import java.time.OffsetDateTime;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
@@ -154,6 +156,10 @@ class AppTest {
         creneau6.getProfesseurs().add(professeur);
         professeur.getCreneaux().add(creneau6);
 
+        NotePersonnelle notePersonnelle = NotePersonnelle.builder().notePerso("Note1").utilisateur(etudiant).creneau(creneau).build();
+        creneau.getNotesPerso().add(notePersonnelle);
+        etudiant.getNotesPerso().add(notePersonnelle);
+
 
 
         // Persist entities, don't use save method, it's not recommended for the first time
@@ -175,6 +181,7 @@ class AppTest {
             entityManager.persist(creneau5);
             entityManager.persist(creneau6);
             entityManager.persist(responsable);
+            entityManager.persist(notePersonnelle);
             entityManager.getTransaction().commit();
             log.info("Entities persisted successfully");
         } catch (Exception e) {

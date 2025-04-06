@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
@@ -71,4 +72,9 @@ public class Creneau {
 
     @Builder.Default
     private int status = 0; //0: actif, 1: annulé
+
+    @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ToString.Exclude
+    @Builder.Default
+    private List<NotePersonnelle> notesPerso = new ArrayList<NotePersonnelle>();
 }
