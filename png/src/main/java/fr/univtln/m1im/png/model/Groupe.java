@@ -29,7 +29,7 @@ import java.util.List;
 @ToString
 @NamedQueries({
     @NamedQuery(
-        name = "Groupe.getAll",
+        name = "Groupe.getAll", 
         query = "SELECT g FROM Groupe g"),
     @NamedQuery(
         name = "Groupe.getAllDTO",

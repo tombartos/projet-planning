@@ -30,7 +30,6 @@ replay_pid*
 *.pdf
 *.synctex.gz
 *.dvi
-*.png
 
 # Maven
 target/
