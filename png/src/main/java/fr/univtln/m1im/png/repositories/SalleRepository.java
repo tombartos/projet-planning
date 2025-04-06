@@ -29,4 +29,10 @@ public class SalleRepository extends JpaRepository<Salle, Long> {
                 .setMaxResults(pageSize)
                 .getResultList();
     }
+
+    public Salle getByCode(String code){
+        return em.createNamedQuery("Salle.getByCode", Salle.class)
+                .setParameter("code", code)
+                .getSingleResult();
+    }
 }
