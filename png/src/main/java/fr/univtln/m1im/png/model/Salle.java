@@ -1,11 +1,9 @@
 package fr.univtln.m1im.png.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -23,6 +21,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+@NamedQueries({
+    @NamedQuery(
+      name = "Salle.getWeekCrenaux",
+      query = "SELECT c FROM Creneau c WHERE c.salle.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+      name = "Salle.getAll",
+      query = "SELECT s FROM Salle s"
+    )
+  })
 public class Salle {
     @Id
     private String code;

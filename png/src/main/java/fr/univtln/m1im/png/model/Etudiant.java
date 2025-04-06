@@ -28,8 +28,16 @@ import jakarta.persistence.NamedQuery;
 @ToString
 @NamedQueries({
     @NamedQuery(
-      name = "Etudiant.getCreneaux",
+      name = "Etudiant.getAllCreneaux",
       query = "SELECT c FROM Etudiant e JOIN e.groupes g JOIN g.creneaux c WHERE e.id = :etudiantId"
+    ),
+    @NamedQuery(
+      name = "Etudiant.getWeekCrenaux",
+      query = "SELECT c FROM Etudiant e JOIN e.groupes g JOIN g.creneaux c WHERE e.id = :etudiantId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    ),
+    @NamedQuery(
+      name = "Etudiant.getByLogin",
+      query = "SELECT e FROM Etudiant e WHERE e.login = :login"
     )
   })
 public class Etudiant extends Utilisateur {
@@ -37,4 +45,5 @@ public class Etudiant extends Utilisateur {
     @Builder.Default
     @ManyToMany(mappedBy = "etudiants", fetch = FetchType.LAZY)
     private List<Groupe> groupes = new ArrayList<Groupe>();
+
 }

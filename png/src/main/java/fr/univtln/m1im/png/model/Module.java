@@ -7,6 +7,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,6 +26,12 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+@NamedQueries({
+    @NamedQuery(
+        name = "Module.getAllCreneaux",
+        query = "SELECT c FROM Creneau c JOIN c.modules m WHERE m.code = :codeModule"
+    )
+})
 public class Module {
     @Id
     private String code;

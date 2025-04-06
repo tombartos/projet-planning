@@ -5,6 +5,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -25,6 +27,19 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@NamedQueries({
+    @NamedQuery(
+        name = "Groupe.getAll", 
+        query = "SELECT g FROM Groupe g"),
+    @NamedQuery(
+        name = "Groupe.getAllDTO",
+        query = "SELECT new fr.univtln.m1im.png.dto.GroupeDTO(g.code, g.nom, g.formation) FROM Groupe g"
+    ),
+    @NamedQuery(
+    name = "Groupe.getWeekCreneaux",
+    query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
+    )
+})
 public class Groupe {
     @Id
     private String code;
@@ -53,4 +68,30 @@ public class Groupe {
     @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
+
+    /**
+     * Adds a student to the current group and propagates the addition to the parent group if it exists, add the group to etudiant too.
+     *
+     * @param etudiant the student to be added to the group
+     */
+    public void addEtudiant(Etudiant etudiant) {
+        this.etudiants.add(etudiant);
+        etudiant.getGroupes().add(this);
+        if (parent != null) {
+            parent.addEtudiant(etudiant);
+        }
+    }
+
+    /**
+     * Adds a Creneau (time slot) to the current group and propagates the addition
+     * to the parent group if it exists. WARNING: this method does not add the Groupe to the Creneau object.
+     *
+     * @param creneau the Creneau object to be added to the group
+     */
+    // public void addCreneau(Creneau creneau) {
+    //     this.creneaux.add(creneau);
+    //     if (parent != null) {
+    //         parent.addCreneau(creneau);
+    //     }
+    // }
 }

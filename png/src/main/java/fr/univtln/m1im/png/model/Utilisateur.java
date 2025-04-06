@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 
@@ -34,8 +34,5 @@ public abstract class Utilisateur {
     private String prenom;
     private String login; //Username
     private String email;
-    private String password; //Hashed password
-    private OffsetDateTime dateNaissance;
-
-
+    private LocalDate dateNaissance;
 }

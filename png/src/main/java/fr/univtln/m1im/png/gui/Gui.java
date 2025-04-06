@@ -1,14 +1,29 @@
 package fr.univtln.m1im.png.gui;
 
+import java.time.OffsetDateTime;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
+import org.slf4j.LoggerFactory;
+
+import org.slf4j.Logger;
+
+import fr.univtln.m1im.png.dto.GroupeDTO;
+import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
+import fr.univtln.m1im.png.repositories.GroupeRepository;
+import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -17,11 +32,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.scene.layout.HBox;
+import javafx.scene.control.ComboBox;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
 public class Gui {
+    private static final Logger log = LoggerFactory.getLogger(Gui.class);
     //La fenêtre de l'application
     private Group group;
     private GridPane gui;
@@ -35,6 +54,9 @@ public class Gui {
     private int nbSemaines; // Nombre de semaines
     private GridPane gdSemaines; // Les semaines
     private List<Button> semaines;
+    private int numSemaine;
+    private int premierSemaine;
+    private int derniereSemaine;
     private Canvas grille;
     private int wGrille;
     private int hGrille;
@@ -45,21 +67,42 @@ public class Gui {
 
     private EntityManager entityManager;
     private Etudiant etudiant;
+    private Utilisateur utilisateur;
     private List<Creneau> creneaux;
     private List<Rectangle> cCreneaux;
+    private List<GuiCreneau> guiCreneaux;
     
     private Group gpGrille;
     private Group gpCreneaux;
-    private Group gpBarreFiltres;
+    private Group gpJour;
+    private Canvas cJours;
+    private GraphicsContext gcJours;
+    
+    private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    private String salleChoisie;
 
-    private HBox barreFiltres; // une barre de boutons pour filtrer les crene
-    private ComboBox<String> filtreDropdown; // un menu déroulant pour choisir le filtre
+    private int anneeDebut;
+
+    //Barre de filtres
+    private Group gpBarreFiltres;
+    private HBox barreFiltres;
+    private ComboBox<String> filtreDropdown;
     private ComboBox<String> salleDropdown;
     private ComboBox<String> groupesDropdown;
-    private ComboBox<String> profDropdown; 
+    private ComboBox<String> profDropdown;
 
-    public Gui(Etudiant etudiant, Group group, int width, int height, EntityManager entityManager) {
-        this.etudiant = etudiant;
+    private List<ProfesseurDTO> professeurs;
+    private long idProfChoisi;
+
+    private String codeGroupeChoisi;
+    private Button btnEdt;
+    private Button ajoutCours;
+    private Button demandeCours;
+
+
+    public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
+        this.utilisateur = utilisateur;
+        //this.etudiant = etudiant;
         this.group = group;
         this.width = width;
         this.height = height;
@@ -68,27 +111,46 @@ public class Gui {
         //variables
         this.nbHeure = 12;
         this.nbJour = 6;
-        this.nbSemaines = 30;
+        this.nbSemaines = 48;
+        this.etatCourant = 0;
         this.cCreneaux = new ArrayList<>();
         this.gpGrille = new Group();
         this.gpCreneaux = new Group();
+        this.anneeDebut = 2024;
 
         this.gui = new GridPane();
         this.group.getChildren().add(this.gui);
 
         this.gdHeuresEdt = new GridPane();
         this.gdSemainesGrille = new GridPane();
+        this.gdSemainesGrille.setHgap(20);
+        this.gdSemainesGrille.setVgap(20);
         this.gdSemaines = new GridPane();
 
         this.gui.add(this.gdHeuresEdt, 0, 2);
         this.gui.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
+
+        this.guiCreneaux = new ArrayList<>();
+
         this.wGrille = width * 9/10;
-        this.hGrille = height * 8/10;
+        this.hGrille = height * 7/10;
+
         this.grille = new Canvas(this.wGrille,this.hGrille);
-        this.heures = new Canvas(width * 1/20, hGrille);
+        this.grille.setOnMouseClicked(e->{for(GuiCreneau gc : guiCreneaux){gc.getRectangle().setStrokeWidth(1);;gc.getRectangle().setStroke(Color.BLACK);}});
+        this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
-        this.gdSemainesGrille.add(this.gpGrille,1,2);
+
+        this.gpJour = new Group();
+        this.cJours = new Canvas(this.width, 10);
+        this.gpJour.getChildren().add(this.cJours);
+        this.gcJours = this.cJours.getGraphicsContext2D();
+        this.gcJours.setFill(Color.YELLOW);
+        this.gcJours.fillRect(50, 50, 200, 50);
+
+        this.gdSemainesGrille.add(this.gpJour,1,2);
+        //this.gdSemainesGrille.add(this.gpJour,1,2);
+        this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
         this.gdSemainesGrille.add(this.gdSemaines,1,1);
@@ -99,19 +161,32 @@ public class Gui {
         this.gdHeuresEdt.add(this.gdSemainesGrille,1,0);
 
         //Ajout des semaines
-        for(int i = 0; i < this.nbSemaines; i++){
-            Button semaine = new Button(""+(i+1));
-            semaine.setPrefSize(this.wGrille/this.nbSemaines, 20);
-            final int index = i+1;
-            semaine.setOnMouseClicked(event -> majCreneaux(index));
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        OffsetDateTime premierJourAnnee = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(9).withDayOfMonth(1);
+        OffsetDateTime tmpJour = premierJourAnnee;
+        this.premierSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+        this.derniereSemaine = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(7).withDayOfMonth(31).get(weekFields.weekOfWeekBasedYear());
+        int tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+        int indexSemaine = 0;
+        while(tmpSemaine != derniereSemaine)
+        {
+            Button semaine = new Button(""+(tmpSemaine));
+            semaine.setStyle("-fx-font-size: 8px;");
+            semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
+            final int index = tmpSemaine;
+            semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
             this.semaines.add(semaine);
-            this.gdSemaines.add(semaine, i, 0);
+            this.gdSemaines.add(semaine, indexSemaine, 0);
+
+            tmpJour = tmpJour.plusDays(7);
+            tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
+            indexSemaine++;
         }
 
         //Initialisation de la grille
         //Ajout des heures
         for (int i = 0; i < this.nbHeure; i++) {
-            this.gcHeures.strokeText((i+8)+":00", 0, i * this.hGrille/this.nbHeure+20);
+            this.gcHeures.strokeText((i+8)+":00", this.heures.getWidth() / 2 - this.gcHeures.getFont().getSize(), i * this.hGrille / this.nbHeure + this.hGrille / this.nbHeure * 2.5);
         }
         //fond de la grille
         this.gcGrille.setFill(Color.LIGHTGRAY);
@@ -189,6 +264,204 @@ public class Gui {
         this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
 
         
+
+        //Ajout de la barre de filtres
+        this.gpBarreFiltres = new Group();
+        this.barreFiltres = new HBox();
+        this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        this.btnEdt = new Button("Mon EDT");
+        this.ajoutCours = new Button("Ajouter cours");
+        this.demandeCours = new Button("Demander cours");
+        this.salleDropdown = new ComboBox<>();
+        this.salleDropdown.setPromptText("Salles");
+        this.salleDropdown.setVisible(false); 
+        this.groupesDropdown = new ComboBox<>();
+        this.groupesDropdown.setPromptText("Groupes");
+        this.groupesDropdown.setVisible(false);
+        this.profDropdown = new ComboBox<>();
+        this.profDropdown.setPromptText("Professeurs");
+        this.profDropdown.setVisible(false);
+
+        this.filtreDropdown = new ComboBox<>();
+        this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
+        this.filtreDropdown.setPromptText("Filtrer par");
+        
+        this.filtreDropdown.setOnAction(event -> {
+            String choix = filtreDropdown.getValue();
+            switch (choix) {
+                case "Salles":
+                    //this.filtreDropdown.setVisible(false);
+                    this.salleDropdown.setVisible(true); 
+                    this.groupesDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    chargerSalles();
+                    break;
+                case "Groupes":
+                    //this.filtreDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    chargerGroupes();
+                    break;
+                case "Professeurs":
+                    //this.filtreDropdown.setVisible(false);
+                    this.profDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(false);
+                    chargerProfesseurs();
+                    break;
+            }
+        });
+
+        // Gérer la sélection d'un groupe
+        this.btnEdt.setOnAction(event -> {
+            this.etatCourant = 0;
+            this.salleDropdown.setVisible(false);
+            this.groupesDropdown.setVisible(false); 
+            this.profDropdown.setVisible(false);
+            genererCreneaux();
+        });
+        this.ajoutCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height, "Ajouter");
+            cours.afficherFenetreAjoutCours();
+        });
+        this.demandeCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height, "Demander");
+            cours.afficherFenetreAjoutCours();
+        });
+        // Gérer la sélection d'un professeur
+        this.profDropdown.setOnAction(event -> {
+            this.etatCourant = 1;
+            idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
+            genererCreneaux();
+        });
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            this.etatCourant = 2;
+            this.salleChoisie = salleDropdown.getValue();
+            genererCreneaux();
+        });
+        // Gérer la sélection d'un groupe
+        this.groupesDropdown.setOnAction(event -> {
+            this.etatCourant = 3;
+            codeGroupeChoisi = groupesDropdown.getValue();
+            genererCreneaux();
+
+        });
+        
+
+        // Ajouter les boutons dans la barre horizontale
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours, this.demandeCours);
+        // Ajouter la barre de boutons au groupe
+        this.gpBarreFiltres.getChildren().add(barreFiltres);
+        // Ajouter ce groupe à l'interface
+        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
+
+
+
+        stage.setScene(scene);
+        stage.setTitle("Planning Nouvelle Génération");
+        stage.show();
+        
+
+        //Ajout de la barre de filtres
+        this.gpBarreFiltres = new Group();
+        this.barreFiltres = new HBox();
+        this.barreFiltres.setSpacing(10); // Espacement entre les boutons
+        this.btnEdt = new Button("Mon EDT");
+        this.ajoutCours = new Button("Ajouter cours");
+        this.demandeCours = new Button("Demander cours");
+        this.salleDropdown = new ComboBox<>();
+        this.salleDropdown.setPromptText("Salles");
+        this.salleDropdown.setVisible(false); 
+        this.groupesDropdown = new ComboBox<>();
+        this.groupesDropdown.setPromptText("Groupes");
+        this.groupesDropdown.setVisible(false);
+        this.profDropdown = new ComboBox<>();
+        this.profDropdown.setPromptText("Professeurs");
+        this.profDropdown.setVisible(false);
+
+        this.filtreDropdown = new ComboBox<>();
+        this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
+        this.filtreDropdown.setPromptText("Filtrer par");
+        
+        this.filtreDropdown.setOnAction(event -> {
+            String choix = filtreDropdown.getValue();
+            switch (choix) {
+                case "Salles":
+                    //this.filtreDropdown.setVisible(false);
+                    this.salleDropdown.setVisible(true); 
+                    this.groupesDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    chargerSalles();
+                    break;
+                case "Groupes":
+                    //this.filtreDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.profDropdown.setVisible(false);
+                    chargerGroupes();
+                    break;
+                case "Professeurs":
+                    //this.filtreDropdown.setVisible(false);
+                    this.profDropdown.setVisible(true);
+                    this.salleDropdown.setVisible(false);
+                    this.groupesDropdown.setVisible(false);
+                    chargerProfesseurs();
+                    break;
+            }
+        });
+
+        // Gérer la sélection d'un groupe
+        this.btnEdt.setOnAction(event -> {
+            this.etatCourant = 0;
+            this.salleDropdown.setVisible(false);
+            this.groupesDropdown.setVisible(false); 
+            this.profDropdown.setVisible(false);
+            genererCreneaux();
+        });
+        this.ajoutCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height, "Ajouter");
+            cours.afficherFenetreAjoutCours();
+        });
+        this.demandeCours.setOnAction(event -> {
+            AjouterCours cours = new AjouterCours( this.width, this.height, "Demander");
+            cours.afficherFenetreAjoutCours();
+        });
+        // Gérer la sélection d'un professeur
+        this.profDropdown.setOnAction(event -> {
+            this.etatCourant = 1;
+            idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
+            genererCreneaux();
+        });
+        // Gérer la sélection d'une salle
+        this.salleDropdown.setOnAction(event -> {
+            this.etatCourant = 2;
+            this.salleChoisie = salleDropdown.getValue();
+            genererCreneaux();
+        });
+        // Gérer la sélection d'un groupe
+        this.groupesDropdown.setOnAction(event -> {
+            this.etatCourant = 3;
+            codeGroupeChoisi = groupesDropdown.getValue();
+            genererCreneaux();
+
+        });
+        
+
+        // Ajouter les boutons dans la barre horizontale
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours, this.demandeCours);
+        // Ajouter la barre de boutons au groupe
+        this.gpBarreFiltres.getChildren().add(barreFiltres);
+        // Ajouter ce groupe à l'interface
+        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
+
+
+
+        stage.setScene(scene);
+        stage.setTitle("Planning Nouvelle Génération");
+        stage.show();
+        
     }
 
     public float convHeure(Creneau c)
@@ -208,50 +481,137 @@ public class Gui {
         return r;
     }
 
+    public void genererCreneaux()
+    {
+        if(this.etatCourant == 0)
+        {
+            switch (this.utilisateur.getClass().getSimpleName()) {
+                case "Etudiant":
+                    EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+                    creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    break;
+                case "Professeur":
+                    ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+                    creneaux = professeurRepository.getWeekCrenaux(utilisateur.getId(), this.numSemaine, 2025, 0, 100);
+                    break;
+                case "Responsable":
+                    SalleRepository salleRepository = new SalleRepository(entityManager);
+                    salleChoisie = salleRepository.getAll(0, 1).getFirst().getCode();
+                    creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100);
+                    this.btnEdt.setVisible(false);
+                    break;
+                default:
+                    log.error("Erreur : utilisateur non reconnu");
+                    break;
+            }
+        }
+        else if(this.etatCourant == 1)
+        {
+            ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+            creneaux = professeurRepository.getWeekCrenaux(idProfChoisi, this.numSemaine, 2025, 0, 100);
+
+        }
+        else if(this.etatCourant == 2)
+        {
+            SalleRepository salleRepository = new SalleRepository(entityManager);
+            creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+        }
+        else if(this.etatCourant == 3)
+        {
+            GroupeRepository groupeRepository = new GroupeRepository(entityManager);
+            creneaux = groupeRepository.getWeekCreneaux(codeGroupeChoisi, this.numSemaine, 2025, 0, 100); //TODO: récupérer l'année
+
+        }
+
+        majCreneaux(this.numSemaine);
+    }
 
     public void majCreneaux(int numSemaine){
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        //this.gpJour.getChildren().clear();
+        this.gcJours.clearRect(0, 0, this.cJours.getWidth(), this.cJours.getHeight());
+        int annee = 0;
+        if (numSemaine >= this.premierSemaine){
+            annee = this.anneeDebut;
+        }
+        else{
+            annee = this.anneeDebut + 1;
+        }
+        OffsetDateTime permierJourSemaine = OffsetDateTime.now()
+        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
+        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
+        int anneeTest = permierJourSemaine.getYear();
+
+        OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
+        for(int i = 0; i < this.nbJour; i++){
+            this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
+        }
+
+
+        
         this.gpCreneaux.getChildren().clear();
-        EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-        this.creneaux = etudiantRepository.getCreneaux(etudiant.getId(), 0, 100);
+        // Les 2 prochaines lignes sont à supprimer à long terme
+        //if (utilisateur instanceof Etudiant) {
+        
+            // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
+            // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
+            // genererCreneaux();
+        guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
-            System.out.println((int)(creneau.getHeureDebut().getDayOfYear()/7 ));
-            if((int)(creneau.getHeureDebut().getDayOfYear()/7 )== numSemaine)
-            {
                 GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
+                gestionCollision(guiCreneau);
+                guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
-            }
             
+            
+        }
+        // }
+    }
+
+    public void gestionCollision(GuiCreneau guiCreneau){
+        for(GuiCreneau gc : guiCreneaux){
+            if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
+             || 
+             ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
+             && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureFin())))){
+                
+                gc.setCollision(gc.getCollision() + 1);
+                guiCreneau.setCollision(guiCreneau.getCollision() + 1);
+                guiCreneau.setPosCollision(gc.getPosCollision() + 1);
+                //gc.afficherCreneau();
+                gc.majAffichage();
+            }
         }
     }
 
     private void chargerSalles() {
         List<Salle> salles;
-        salles = entityManager.createQuery("SELECT s FROM Salle s", Salle.class).getResultList();
-
-
+        SalleRepository salleRepository = new SalleRepository(entityManager);
+        salles = salleRepository.getAll(0, 100);
+        this.salleDropdown.getItems().clear();
         for (Salle salle : salles) {
             this.salleDropdown.getItems().add(salle.getCode());
         }
     }
 
-    private void afficherCoursSalle(String salleCode) {
-        this.gpCreneaux.getChildren().clear(); // Effacer les créneaux actuels
-    
-        List<Creneau> creneauxSalle;
-        creneauxSalle = entityManager.createQuery("SELECT c FROM Creneau c WHERE c.salle.code = :salleCode", Creneau.class)
-                      .setParameter("salleCode", salleCode)
-                      .getResultList();
-
-    
-        for (Creneau creneau : creneauxSalle) {
-            GuiCreneau guiCreneau = new GuiCreneau(this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour);
-            guiCreneau.afficherCreneau();
+    private void chargerGroupes(){
+        List<GroupeDTO> groupes;
+        GroupeRepository groupeRepository = new GroupeRepository(entityManager);
+        groupes = groupeRepository.getAllDTO(0, 100);
+        this.groupesDropdown.getItems().clear();
+        for (GroupeDTO groupe : groupes) {
+            this.groupesDropdown.getItems().add(groupe.getCode());
         }
     }
-    
 
-        
-        
-    
+    private void chargerProfesseurs(){
+        ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+        professeurs = professeurRepository.getAllDTO(0, 100);
+        this.profDropdown.getItems().clear();
+        for (ProfesseurDTO professeur : professeurs) {
+            this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
+        }
+    }    
 
 }

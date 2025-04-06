@@ -10,6 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
@@ -33,6 +35,7 @@ public class Creneau {
     @Id
     @SequenceGenerator(name = "creneau_seq", sequenceName = "creneau_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "creneau_seq")
+    @Builder.Default
     private Long id = null;
     private OffsetDateTime heureDebut;
     private OffsetDateTime heureFin;
