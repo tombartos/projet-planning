@@ -18,12 +18,18 @@ import lombok.Builder;
 @ToString
 @Entity
 @Table(name = "notes_perso")
+
+@NamedQueries({
+    @NamedQuery(
+        name = "NotePersonnelle.getByCreneauUtilisateur",
+        query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau"
+    )
+})
 public class NotePersonnelle {
     @Id
     @SequenceGenerator(name = "note_perso_seq", sequenceName = "note_perso_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "note_perso_seq")
-    @Builder.Default
-    private Long id = null;
+    private Long id;
 
     @Builder.Default
     private String notePerso = "";

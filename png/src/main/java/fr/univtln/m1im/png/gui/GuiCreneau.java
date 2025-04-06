@@ -14,8 +14,10 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
+import fr.univtln.m1im.png.repositories.NotePersonnelleRepository;
 import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.model.Module;
+import fr.univtln.m1im.png.model.NotePersonnelle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -217,16 +219,22 @@ public class GuiCreneau {
         infoLabel.setStyle("-fx-text-alignment: center;");
 
         //Note personnelle
+        NotePersonnelleRepository notePersoRepo = new NotePersonnelleRepository(entityManager);
+        NotePersonnelle notePerso = notePersoRepo.getByCreneauUtilisateur(this.utilisateur.getId(), this.creneau.getId());
         TextField notePersoField = new TextField();
         Button notePersoButton = new Button("Modifier");
-        notePersoField.setPromptText("Aucune note personnelle");
+        if (notePerso != null) {
+            notePersoField.setText(notePerso.getNotePerso());
+        }
+        else{
+            notePersoField.setPromptText("Aucune note personnelle");
+        }
         notePersoField.setOnKeyReleased(e -> {
             notePersoButton.setStyle("-fx-text-fill: red;");
         });
         notePersoButton.setOnAction(e -> {
             notePersoButton.setStyle("-fx-text-fill: black;");
-            // TODO Remplacer la ligne d'en dessous par this.creneau.getNotePersonnelle().setNotePersonnelle(notePersoField.getText());
-            System.out.println("Note modifiée : " + notePersoField.getText());
+            notePersoRepo.modify(notePerso, notePersoField.getText(), creneau, utilisateur);
         });
         grid.add(notePersoField, 0, 1);
         grid.add(notePersoButton, 1, 1);
