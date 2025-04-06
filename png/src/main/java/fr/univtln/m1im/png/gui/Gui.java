@@ -362,6 +362,11 @@ public class Gui {
 
         }
 
+        // Récupérer le numéro de la semaine actuelle
+        OffsetDateTime now = OffsetDateTime.now();
+        WeekFields weekFieldsCurrent = WeekFields.of(Locale.getDefault());
+        this.numSemaine = now.get(weekFieldsCurrent.weekOfWeekBasedYear());
+        genererCreneaux();
 
 
         stage.setScene(scene);
