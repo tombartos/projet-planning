@@ -69,25 +69,34 @@ public class AjouterCours {
         grid.setAlignment(Pos.CENTER);
 
         // Champs de saisie
-        ComboBox<String> moduleField = new ComboBox<>();
-        moduleField.setPromptText("Sélectionner un module");
+        ComboBox<String> moduleField1 = new ComboBox<>();
+        moduleField1.setPromptText("Sélectionner un module 1");
+        ComboBox<String> moduleField2 = new ComboBox<>();
+        moduleField2.setPromptText("Sélectionner un module 2");
         ModuleRepository moduleRepository  = new ModuleRepository(entityManager);
-        moduleField.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
-        
-        ComboBox<String> profField = new ComboBox<>();
-        profField.setPromptText("Sélectionner un professeur");
+        moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
+        moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
+
+        ComboBox<String> profField1 = new ComboBox<>();
+        profField1.setPromptText("Sélectionner un professeur 1");
+        ComboBox<String> profField2 = new ComboBox<>();
+        profField2.setPromptText("Sélectionner un professeur 2");
         ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
         List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 100);
         for (ProfesseurDTO p : proflist){
-            profField.getItems().add(p.getNom() + " " + p.getPrenom());
+            profField1.getItems().add(p.getNom() + " " + p.getPrenom());
+            profField2.getItems().add(p.getNom() + " " + p.getPrenom());
         }
         
-        ComboBox<String> groupeField = new ComboBox<>();
-        groupeField.setPromptText("Sélectionner un groupe");
+        ComboBox<String> groupeField1 = new ComboBox<>();
+        groupeField1.setPromptText("Sélectionner un groupe 1");
+        ComboBox<String> groupeField2 = new ComboBox<>();
+        groupeField2.setPromptText("Sélectionner un groupe 2");
         GroupeRepository groupeRepository = new GroupeRepository(entityManager);
         List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 100);
         for (GroupeDTO g : grouplist){
-            groupeField.getItems().add(g.getCode());
+            groupeField1.getItems().add(g.getCode());
+            groupeField2.getItems().add(g.getCode());
         }
 
         ComboBox<String> typeField = new ComboBox<>();
@@ -189,37 +198,38 @@ public class AjouterCours {
 
         // Ajout au grid
         int row = 0;
-        grid.add(new Label("Module"), 0, row++); 
-        grid.add(moduleField, 0, row++);
-        grid.add(new Label("Professeur"), 0, row++); 
-        grid.add(profField, 0, row++);
-        grid.add(new Label("Groupe"), 0, row++); 
-        grid.add(groupeField, 0, row++);
+        grid.add(new Label("Module 1"), 0, row);
+        grid.add(new Label("Module 2"), 1, row++); 
+        grid.add(moduleField1, 0, row);
+        grid.add(moduleField2, 1, row++);
+        grid.add(new Label("Professeur 1"), 0, row);
+        grid.add(new Label("Professeur 2"), 1, row++);
+        grid.add(profField1, 0, row);
+        grid.add(profField2, 1, row++);
+        grid.add(new Label("Groupe 1"), 0, row);
+        grid.add(new Label("Groupe 2"), 1, row++);
+        grid.add(groupeField1, 0, row);
+        grid.add(groupeField2, 1, row++);
         grid.add(new Label("Type"), 0, row++); 
         grid.add(typeField, 0, row++);
         grid.add(new Label("Salle"), 0, row++); 
         grid.add(salleField, 0, row++);
 
-        int row_lable_anne = row++;
-        int row_entry = row++;
-
-        grid.add(new Label("Année"), 0, row_lable_anne); 
-        grid.add(anneeField, 0, row_entry);
-        grid.add(new Label("Mois"), 1, row_lable_anne); 
-        grid.add(moisField, 1, row_entry);
-        grid.add(new Label("Jour"), 2, row_lable_anne); 
-        grid.add(jourField, 2, row_entry);
-        grid.add(new Label("Heure"), 3, row_lable_anne); 
-        grid.add(heureField, 3, row_entry);
-        grid.add(new Label("Minute"), 4, row_lable_anne); 
-        grid.add(minuteField, 4, row_entry);
-
-        int rowLabeleFin = row++;
-        int rowEntryFin = row++;
-        grid.add(new Label("Heure Fin"), 3, rowLabeleFin); 
-        grid.add(heurefin ,3, rowEntryFin);
-        grid.add(new Label("Minute"), 4, rowLabeleFin); 
-        grid.add(minutefin, 4, rowEntryFin);
+        grid.add(new Label("Année"), 0, row);
+        grid.add(new Label("Mois"), 1, row);
+        grid.add(new Label("Jour"), 2, row);
+        grid.add(new Label("Heure"), 3, row); 
+        grid.add(new Label("Minute"), 4, row++);  
+        grid.add(anneeField, 0, row);
+        grid.add(moisField, 1, row);
+        grid.add(jourField, 2, row);
+        grid.add(heureField, 3, row);
+        grid.add(minuteField, 4, row++);
+        
+        grid.add(new Label("Heure Fin"), 3, row); 
+        grid.add(new Label("Minute"), 4, row++); 
+        grid.add(heurefin ,3, row);
+        grid.add(minutefin, 4, row++);
 
         grid.add(new Label("Étendre de semaine à semaine"), 0, row++, 2, 1);
         grid.add(semaineDebutField, 0, row);
@@ -247,7 +257,7 @@ public class AjouterCours {
         annulerButton.setOnAction(e -> stage.close());
         validerButton.setOnAction(e -> {
             // Validation des champs
-            if (moduleField.getValue() == null || profField.getValue() == null || groupeField.getValue() == null ||
+            if (moduleField1.getValue() == null || profField1.getValue() == null || groupeField1.getValue() == null ||
                 typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
                 moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
                 minuteField.getValue() == null || heurefin.getValue() == null || minutefin.getValue() == null) {
@@ -279,11 +289,11 @@ public class AjouterCours {
                     errorLabel.setVisible(true);
                     return;
                 }
-                Module module = moduleRepository.getModuleByCode(moduleField.getValue());
+                Module module = moduleRepository.getModuleByCode(moduleField1.getValue());
                 List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
-                Professeur professeur = professeurlist.get(profField.getSelectionModel().getSelectedIndex());
+                Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 //TODO: Ajout de plusieurs professeurs, groupes, modules
-                Groupe groupe = groupeRepository.getByCode(groupeField.getValue());
+                Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
                 Creneau creneau = Creneau.builder()
                                     .type(typeField.getValue())
