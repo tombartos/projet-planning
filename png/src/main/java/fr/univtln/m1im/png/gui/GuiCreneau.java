@@ -436,6 +436,9 @@ public class GuiCreneau {
             Button modifierModuleButton = new Button("Modifier le module");
             modifierModuleButton.setOnAction(e -> {
                 // TODO Emad
+                int anneeDebut = creneau.getHeureDebut().getYear();
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, anneeDebut);
+                modifierCreneau.afficherModifierCreneau();
             });
             grid.add(modifierModuleButton, 0, 4);
         }
