@@ -2,8 +2,6 @@ package fr.univtln.m1im.png.gui;
 
 import javafx.scene.paint.Color;
 
-import java.nio.Buffer;
-import java.security.KeyStore.Entry;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;

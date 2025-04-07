@@ -77,4 +77,16 @@ public class Creneau {
     @ToString.Exclude
     @Builder.Default
     private List<NotePersonnelle> notesPerso = new ArrayList<NotePersonnelle>();
+
+    public static Creneau makeFromDemandeCreneau(DemandeCreneau demandeCreneau) {
+        return Creneau.builder()
+                .heureDebut(demandeCreneau.getHeureDebut())
+                .heureFin(demandeCreneau.getHeureFin())
+                .type(demandeCreneau.getType())
+                .modules(demandeCreneau.getModules())
+                .groupes(demandeCreneau.getGroupes())
+                .professeurs(demandeCreneau.getProfesseurs())
+                .salle(demandeCreneau.getSalle())
+                .build();
+    }
 }

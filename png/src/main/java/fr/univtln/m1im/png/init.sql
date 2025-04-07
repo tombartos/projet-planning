@@ -16,7 +16,9 @@ GRANT DELETE ON ALL TABLES IN SCHEMA public TO pr1;
 GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO pr1;
 GRANT INSERT ON TABLE notes_perso TO pr1;
 GRANT UPDATE ON TABLE notes_perso TO pr1;
-
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO pr1;
+GRANT INSERT ON TABLE demandes_creneaux TO pr1;
+GRANT UPDATE ON TABLE demandes_creneaux TO pr1;
 
 
 CREATE USER resp1 WITH PASSWORD 'password';

@@ -458,9 +458,9 @@ public class Gui {
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        int anneeTest = permierJourSemaine.getYear();
+        //int anneeTest = permierJourSemaine.getYear();
 
-        OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
+        //OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
         for(int i = 0; i < this.nbJour; i++){
             this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
         }

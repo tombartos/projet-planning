@@ -10,6 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.univtln.m1im.png.model.Creneau;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 public class Utils {
@@ -65,5 +66,35 @@ public class Utils {
         res.add(firstDayOfWeek);
         res.add(lastDayOfWeek);
         return res;
+    }
+
+    public static Boolean canInsertCreneau(Creneau creneau, List<Creneau> creneauxDay) {
+        //We want to know if the creneau can be inserted in the already sorted list of creneaux of the day
+        //Check empty
+        if (creneauxDay.isEmpty()) {
+            return true;
+        }
+        //Check if the same hours are already taken
+        for (Creneau c : creneauxDay) {
+            if (c.getHeureDebut().isEqual(creneau.getHeureDebut()) || c.getHeureFin().isEqual(creneau.getHeureFin())) {
+                return false;
+            }
+        }
+        //Check if the creneau is before the first or after the last
+        if (creneauxDay.getFirst().getHeureDebut().isAfter(creneau.getHeureFin())) {
+            return true;
+        }
+        if (creneauxDay.getLast().getHeureFin().isBefore(creneau.getHeureDebut())) {
+            return true;
+        }
+        //Check if the creneau is between two creneaux
+        for (int i = 0; i < creneauxDay.size() - 1; i++) {
+            Creneau c1 = creneauxDay.get(i);
+            Creneau c2 = creneauxDay.get(i + 1);
+            if (c1.getHeureFin().isBefore(creneau.getHeureDebut()) && c2.getHeureDebut().isAfter(creneau.getHeureFin())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
