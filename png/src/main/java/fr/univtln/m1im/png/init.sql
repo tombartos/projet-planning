@@ -28,6 +28,10 @@ GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
 GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
+
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO resp1;
+GRANT INSERT ON TABLE demandes_creneaux TO resp1;
+GRANT UPDATE ON TABLE demandes_creneaux TO resp1;
 DO $$
 BEGIN
     EXECUTE (

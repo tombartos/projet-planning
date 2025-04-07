@@ -79,13 +79,25 @@ public class Creneau {
     private List<NotePersonnelle> notesPerso = new ArrayList<NotePersonnelle>();
 
     public static Creneau makeFromDemandeCreneau(DemandeCreneau demandeCreneau) {
+        List<Module> modules = new ArrayList<>();
+        for (Module m : demandeCreneau.getModules()) {
+            modules.add(m);
+        }
+        List<Groupe> groupes = new ArrayList<>();
+        for (Groupe g : demandeCreneau.getGroupes()) {
+            groupes.add(g);
+        }
+        List<Professeur> professeurs = new ArrayList<>();
+        for (Professeur p : demandeCreneau.getProfesseurs()) {
+            professeurs.add(p);
+        }
         return Creneau.builder()
                 .heureDebut(demandeCreneau.getHeureDebut())
                 .heureFin(demandeCreneau.getHeureFin())
                 .type(demandeCreneau.getType())
-                .modules(demandeCreneau.getModules())
-                .groupes(demandeCreneau.getGroupes())
-                .professeurs(demandeCreneau.getProfesseurs())
+                .modules(modules)
+                .groupes(groupes)
+                .professeurs(professeurs)
                 .salle(demandeCreneau.getSalle())
                 .build();
     }

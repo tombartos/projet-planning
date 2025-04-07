@@ -339,11 +339,7 @@ public class AjouterCours {
                     errorLabel.setText(res);
                     log.info(res);
                 }
-                
-                
             }
-            
-            
         });
 
         //  Ajout de la scène et affichage de la fenêtre

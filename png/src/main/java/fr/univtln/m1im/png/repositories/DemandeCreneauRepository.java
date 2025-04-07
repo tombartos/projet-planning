@@ -12,6 +12,7 @@ import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
+import fr.univtln.m1im.png.model.Module;
 
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
     public DemandeCreneauRepository(EntityManager entityManager){
@@ -77,8 +78,49 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         em.persist(DemandeCreneau);
         em.getTransaction().commit();
         return ("La demande a été effectuée avec succès");
-    }
-    //TODO: Etendre plusieurs semaines
+        //TODO: Etendre plusieurs semaines
 
+    }
+
+    public String acceptDemandeCreneau (DemandeCreneau demande) {
+        em.getTransaction().begin();
+        em.merge(demande);
+        //We create a creneau from the demande
+        Creneau creneau = Creneau.makeFromDemandeCreneau(demande);
+        //We set the status of the demande to accepted
+        demande.setStatus(1);
+        //We persist the creneau and make the relations with the modules, groupes and professeurs
+        for (Professeur prof : demande.getProfesseurs()) {
+            Professeur managedProf = em.merge(prof);
+            managedProf.getCreneaux().add(creneau);
+        }
+        for (Groupe groupe : demande.getGroupes()) {
+            Groupe managedGroupe = em.merge(groupe);
+            managedGroupe.getCreneaux().add(creneau);
+        }
+        for (Module m : demande.getModules()) {
+            Module managedModule = em.merge(m);
+            managedModule.getCreneaux().add(creneau);
+        }
+        em.persist(creneau);
+        em.getTransaction().commit();
+        return ("La demande a été acceptée avec succès");
+    }
+
+    public String refuseDemandeCreneau (DemandeCreneau demande) {
+        em.getTransaction().begin();
+        em.merge(demande);
+        //We set the status of the demande to refused
+        demande.setStatus(2);
+        em.getTransaction().commit();
+        return ("La demande a été refusée avec succès");
+    }
+    
+    public List<DemandeCreneau> getAll(int numpage, int size) {
+        return em.createNamedQuery("DemandeCreneau.getAllPending", DemandeCreneau.class)
+        .setFirstResult(size * numpage)
+        .setMaxResults(size)
+        .getResultList();
+    }
     
 }
