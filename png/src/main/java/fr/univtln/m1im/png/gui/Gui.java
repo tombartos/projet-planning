@@ -160,7 +160,8 @@ public class Gui {
         this.gcJours.fillRect(50, 50, 200, 50);
 
         this.gdSemainesGrille.add(this.gpJour,1,2);
-        //this.gdSemainesGrille.add(this.gpJour,1,1);
+        //this.gdSemainesGrille.add(this.gpJour,1,1);            AjouterCours cours = new AjouterCours( this.width, this.height, entityManager, anneeDebut, "Ajouter", this);
+
         this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
