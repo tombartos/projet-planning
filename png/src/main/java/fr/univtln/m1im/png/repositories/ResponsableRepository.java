@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+//import java.util.logging.Logger;
 
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
@@ -12,42 +12,14 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Module;
 import jakarta.persistence.EntityManager;
+import fr.univtln.m1im.png.Utils;
 
 public class ResponsableRepository extends JpaRepository<Responsable, Long> {
-    private static final Logger log = Logger.getLogger(ResponsableRepository.class.getName());
+    //private static final Logger log = Logger.getLogger(ResponsableRepository.class.getName());
     public ResponsableRepository(EntityManager entityManager) {
         super(Responsable.class, entityManager);
     }
 
-    private Boolean canInsertCreneau(Creneau creneau, List<Creneau> creneauxDay) {
-        //We want to know if the creneau can be inserted in the already sorted list of creneaux of the day
-        //Check empty
-        if (creneauxDay.isEmpty()) {
-            return true;
-        }
-        //Check if the same hours are already taken
-        for (Creneau c : creneauxDay) {
-            if (c.getHeureDebut().isEqual(creneau.getHeureDebut()) || c.getHeureFin().isEqual(creneau.getHeureFin())) {
-                return false;
-            }
-        }
-        //Check if the creneau is before the first or after the last
-        if (creneauxDay.getFirst().getHeureDebut().isAfter(creneau.getHeureFin())) {
-            return true;
-        }
-        if (creneauxDay.getLast().getHeureFin().isBefore(creneau.getHeureDebut())) {
-            return true;
-        }
-        //Check if the creneau is between two creneaux
-        for (int i = 0; i < creneauxDay.size() - 1; i++) {
-            Creneau c1 = creneauxDay.get(i);
-            Creneau c2 = creneauxDay.get(i + 1);
-            if (c1.getHeureFin().isBefore(creneau.getHeureDebut()) && c2.getHeureDebut().isAfter(creneau.getHeureFin())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     public Responsable getByLogin(String login) {
         return em.createNamedQuery("Responsable.getByLogin", Responsable.class)
@@ -75,7 +47,7 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
                     profCreneaux.add(c);
                 }
             }
-            if (!canInsertCreneau(creneau, profCreneaux)) {
+            if (!Utils.canInsertCreneau(creneau, profCreneaux)) {
                 return ("Le créneau ne peut pas être inséré car il y a un conflit avec le professeur " + prof.getNom() + " " + prof.getPrenom());
             }
         }
@@ -88,7 +60,7 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
                     groupeCreneaux.add(c);
                 }
             }
-            if (!canInsertCreneau(creneau, groupeCreneaux)) {
+            if (!Utils.canInsertCreneau(creneau, groupeCreneaux)) {
                 return ("Le créneau ne peut pas être inséré car il y a un conflit avec le groupe " + groupe.getNom());
             }
         }
@@ -100,7 +72,7 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
                 salleCreneaux.add(c);
             }
         }
-        if (!canInsertCreneau(creneau, creneauxDay)) {
+        if (!Utils.canInsertCreneau(creneau, creneauxDay)) {
             return ("Le créneau ne peut pas être inséré car il y a un conflit avec la salle " + creneau.getSalle().getCode());
         }
         em.getTransaction().begin();
