@@ -188,7 +188,7 @@ public class ModifierCreneau {
         annulerButton.setOnAction(e -> stage.close());
 
         validerButton.setOnAction(e -> {
-            // Todo: Récupérer les valeurs des champs et les utiliser pour modifier le créneau
+            // TODO: Récupérer les valeurs des champs et les utiliser pour modifier le créneau
             stage.close();
         });
 
