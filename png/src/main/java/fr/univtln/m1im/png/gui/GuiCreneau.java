@@ -255,7 +255,6 @@ public class GuiCreneau {
             
                 noteProfButton.setOnAction(e -> {
                 noteProfButton.setStyle("-fx-text-fill: black;");
-                // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
                 
                 entityManager.getTransaction().begin();
                 Creneau managedCreneau = entityManager.merge(creneau);
@@ -269,7 +268,6 @@ public class GuiCreneau {
         }
         else {
             Label noteProfLabel = new Label("Aucune note de cours");
-            // TODO Remplacer la ligne du dessus par le commentaire du dessous
             if (creneau.getNoteProf() != "") {
                 noteProfLabel.setText(creneau.getNoteProf());
             }
@@ -431,14 +429,13 @@ public class GuiCreneau {
         });
 
         if(this.utilisateur instanceof Responsable){
-            Button modifierModuleButton = new Button("Modifier le module");
-            modifierModuleButton.setOnAction(e -> {
-                // TODO Emad
+            Button modifierCoursButton = new Button("Modifier le cours");
+            modifierCoursButton.setOnAction(e -> {
                 int anneeDebut = creneau.getHeureDebut().getYear();
                 ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, anneeDebut);
                 modifierCreneau.afficherModifierCreneau();
             });
-            grid.add(modifierModuleButton, 0, 4);
+            grid.add(modifierCoursButton, 0, 4);
         }
 
         popup[0].setTitle("Information du créneau");

@@ -541,8 +541,6 @@ public class Gui {
 }
 
 //TODO Affichage cours annuler
-//TODO IHM demande de modification de cours
-//TODO Gestion des Notes
 
 /*
  * EntityManager.Merge(creneaux)
