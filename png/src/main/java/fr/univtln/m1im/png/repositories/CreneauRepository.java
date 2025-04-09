@@ -18,4 +18,18 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
                 .setParameter("lastHour", lastHour)
                 .getResultList();
     }
+
+    public Creneau getCreneauById(Long id) {
+        return em.createNamedQuery("Creneau.getCreneauById", Creneau.class)
+                .setParameter("id", id)
+                .getSingleResult();
+    }
+
+    public void deleteCreneau(Long id) {
+        em.getTransaction().begin();
+        em.createQuery("DELETE FROM Creneau c WHERE c.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+        em.getTransaction().commit();
+    }
 }

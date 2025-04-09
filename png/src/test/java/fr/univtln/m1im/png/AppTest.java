@@ -207,17 +207,17 @@ class AppTest {
             // ModuleRepository moduleRepository = new ModuleRepository(entityManager);
             // log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
             ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-            log.info(responsableRepository.addCreneau(creneau)); //Excepted : error
+            log.info(responsableRepository.addCreneau(creneau, -1)); //Excepted : error
             Creneau creneau7 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 8, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 11, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
             creneau7.getModules().add(module);
             creneau7.getGroupes().add(groupe);
             creneau7.getProfesseurs().add(professeur);
-            log.info(responsableRepository.addCreneau(creneau7)); //Excepted : success
+            log.info(responsableRepository.addCreneau(creneau7, -1)); //Excepted : success
             Creneau creneau8 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 9, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 10, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
             creneau8.getModules().add(module);
             creneau8.getGroupes().add(groupe);
             creneau8.getProfesseurs().add(professeur);
-            log.info(responsableRepository.addCreneau(creneau8)); //Excepted : error
+            log.info(responsableRepository.addCreneau(creneau8, -1)); //Excepted : error
 
         }
 

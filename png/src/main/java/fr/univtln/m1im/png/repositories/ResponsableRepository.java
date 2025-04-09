@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 //import java.util.logging.Logger;
+import java.util.logging.Logger;
 
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
@@ -15,7 +16,7 @@ import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.Utils;
 
 public class ResponsableRepository extends JpaRepository<Responsable, Long> {
-    //private static final Logger log = Logger.getLogger(ResponsableRepository.class.getName());
+    private static final Logger log = Logger.getLogger(ResponsableRepository.class.getName());
     public ResponsableRepository(EntityManager entityManager) {
         super(Responsable.class, entityManager);
     }
@@ -27,8 +28,9 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
                 .getSingleResult();
     }
 
-    public String addCreneau(Creneau creneau) {
+    public String addCreneau(Creneau creneau, int idModify) {
         //All the verifications are done in this method
+        //idModify is the id of the creneau to modify, if it is -1, we create a new creneau
         //First we get the list of creneaux of the day
         OffsetDateTime day = creneau.getHeureDebut().truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime firstHour = day.withHour(8).withMinute(0).withSecond(0).withNano(0);
@@ -38,6 +40,16 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
         //We could also get the creneaux of the week by criteria (one request per criteria) if the number of creneaux is too high
         List<Creneau> creneauxDay = creneauRepository.getCreneauxDay(firstHour, lastHour);
         creneauxDay.sort((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()));
+        if (idModify != -1){
+            //We delete the creneau to modify from the list of creneaux of the day
+            for (Creneau c : creneauxDay) {
+                if (c.getId() == idModify) {
+                    creneauxDay.remove(c);
+                    break;
+                }
+            }
+
+        }
         
         //1: Prof check
         for(Professeur prof : creneau.getProfesseurs()) {
@@ -92,6 +104,8 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
         
         em.persist(creneau);
         em.getTransaction().commit();
+        creneauRepository.deleteCreneau(Long.valueOf(idModify));
+
         return ("Le créneau a été inséré");
     }
     //TODO: Etendre plusieurs semaines

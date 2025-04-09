@@ -20,6 +20,7 @@ import jakarta.persistence.FetchType;
 import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,11 +34,16 @@ import lombok.ToString;
 @AllArgsConstructor
 @Builder
 @ToString
+@EqualsAndHashCode(exclude = "id")
 @NamedQueries({
     @NamedQuery(
         name = "Creneau.getCreneauxDay",
         query = "SELECT c FROM Creneau c WHERE c.status = 0 AND c.heureDebut BETWEEN :firstHour AND :lastHour"
-    )
+    ),
+    @NamedQuery(
+        name = "Creneau.getCreneauById",
+        query = "SELECT c FROM Creneau c WHERE c.id = :id"
+    ),
 })
 public class Creneau {
     @Id

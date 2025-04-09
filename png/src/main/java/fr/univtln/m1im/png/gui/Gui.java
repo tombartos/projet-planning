@@ -482,7 +482,7 @@ public class Gui {
             // genererCreneaux();
         guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
-                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager);
+                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
                 gestionCollision(guiCreneau);
                 guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();

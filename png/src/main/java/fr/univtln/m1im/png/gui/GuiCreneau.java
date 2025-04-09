@@ -49,12 +49,14 @@ public class GuiCreneau {
 
     private Creneau creneau;
 
+    private Gui gui;
+
     private OffsetDateTime premierJour; // Premier jour de l'année
     private OffsetDateTime dernierJour; // Dernier jour de l'année
 
     private Stage[] popup;
 
-    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager) {
+    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager, Gui gui) {
         this.popup = popup;
         this.utilisateur = utilisateur;
         this.group = group;
@@ -67,6 +69,7 @@ public class GuiCreneau {
 
         this.collision = 1;
         this.posCollision = 0;
+        this.gui = gui;
         
     }
 
@@ -431,8 +434,7 @@ public class GuiCreneau {
         if(this.utilisateur instanceof Responsable){
             Button modifierCoursButton = new Button("Modifier le cours");
             modifierCoursButton.setOnAction(e -> {
-                int anneeDebut = creneau.getHeureDebut().getYear();
-                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, anneeDebut);
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
                 modifierCreneau.afficherModifierCreneau();
             });
             grid.add(modifierCoursButton, 0, 4);

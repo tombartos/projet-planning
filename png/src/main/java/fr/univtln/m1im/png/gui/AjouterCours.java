@@ -321,7 +321,7 @@ public class AjouterCours {
                 }
                 if (this.role.equals("Ajouter")) {
                     ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-                    String res = responsableRepository.addCreneau(creneau);
+                    String res = responsableRepository.addCreneau(creneau, -1);
                     if (res == "Le créneau a été inséré") {
                         errorLabel.setText("Créneau ajouté !");
                         gui.genererCreneaux();
