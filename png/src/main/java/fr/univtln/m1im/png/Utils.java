@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import fr.univtln.m1im.png.model.Creneau;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
+
 public class Utils {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static EntityManagerFactory emf;
