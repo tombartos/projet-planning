@@ -436,6 +436,7 @@ public class GuiCreneau {
             modifierCoursButton.setOnAction(e -> {
                 ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
                 modifierCreneau.afficherModifierCreneau();
+                popup[0].close();
             });
             grid.add(modifierCoursButton, 0, 4);
         }

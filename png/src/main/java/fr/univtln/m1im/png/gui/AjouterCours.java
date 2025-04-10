@@ -15,11 +15,11 @@ import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
 import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 import javafx.geometry.Insets;
@@ -320,8 +320,8 @@ public class AjouterCours {
                     creneau.getModules().add(module2);
                 }
                 if (this.role.equals("Ajouter")) {
-                    ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-                    String res = responsableRepository.addCreneau(creneau, -1);
+                    CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                    String res = creneauRepository.addCreneau(creneau, null);
                     if (res == "Le créneau a été inséré") {
                         errorLabel.setText("Créneau ajouté !");
                         gui.genererCreneaux();

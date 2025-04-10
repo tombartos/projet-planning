@@ -9,10 +9,10 @@ import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -310,34 +310,32 @@ public class ModifierCreneau {
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
-                int id = creneau.getId().intValue();
-                Creneau creneau = Creneau.builder()
+                Creneau newCreneau = Creneau.builder()
                                     .type(typeField.getValue())
                                     .heureDebut(heureDebut)
                                     .heureFin(heureFin)
                                     .salle(salle)
                                     .build();
-                creneau.getGroupes().add(groupe);
-                creneau.getProfesseurs().add(professeur);
-                creneau.getModules().add(module);
+                newCreneau.getGroupes().add(groupe);
+                newCreneau.getProfesseurs().add(professeur);
+                newCreneau.getModules().add(module);
                 if (groupeField2.getValue() != null) {
                     Groupe groupe2 = groupeRepository.getByCode(groupeField2.getValue());
-                    creneau.getGroupes().add(groupe2);
+                    newCreneau.getGroupes().add(groupe2);
                 }
                 if (profField2.getValue() != null) {
                     Professeur professeur2 = professeurlist.get(profField2.getSelectionModel().getSelectedIndex());
-                    creneau.getProfesseurs().add(professeur2);
+                    newCreneau.getProfesseurs().add(professeur2);
                 }
                 if (moduleField2.getValue() != null) {
                     Module module2 = moduleRepository.getModuleByCode(moduleField2.getValue());
-                    creneau.getModules().add(module2);
+                    newCreneau.getModules().add(module2);
                 }
-                ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-                String res = responsableRepository.addCreneau(creneau, id);
+                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                String res = creneauRepository.addCreneau(newCreneau, creneau);
                 if (res == "Le créneau a été inséré") {
-                    errorLabel.setText("Créneau ajouté !");
                     gui.genererCreneaux();
-
+                    stage.close();
                 } else {
                     errorLabel.setText(res);
                 }

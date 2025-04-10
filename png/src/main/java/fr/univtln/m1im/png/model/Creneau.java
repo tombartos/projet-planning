@@ -79,7 +79,7 @@ public class Creneau {
     @Builder.Default
     private int status = 0; //0: actif, 1: annulé
 
-    @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
     private List<NotePersonnelle> notesPerso = new ArrayList<NotePersonnelle>();
