@@ -439,6 +439,8 @@ public class GuiCreneau {
                 int anneeDebut = creneau.getHeureDebut().getYear();
                 ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, anneeDebut);
                 modifierCreneau.afficherModifierCreneau();
+
+                
             });
             grid.add(modifierModuleButton, 0, 4);
         }

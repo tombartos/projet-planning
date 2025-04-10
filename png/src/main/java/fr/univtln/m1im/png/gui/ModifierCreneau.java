@@ -7,7 +7,6 @@ import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
