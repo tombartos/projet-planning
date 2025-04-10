@@ -128,4 +128,17 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         //         .executeUpdate();
         em.getTransaction().commit();
     }
+
+    public void annulerCreneau(Creneau creneau) {
+        em.getTransaction().begin();
+        creneau.setStatus(1);
+        em.merge(creneau);
+        em.getTransaction().commit();
+    }
+    public void restoreCreneau(Creneau creneau) {
+        em.getTransaction().begin();
+        creneau.setStatus(0);
+        em.merge(creneau);
+        em.getTransaction().commit();
+    }
 }
