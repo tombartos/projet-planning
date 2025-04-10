@@ -13,11 +13,7 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class CreneauRepository extends JpaRepository<Creneau, Long> {
-    private static final Logger log = LoggerFactory.getLogger(CreneauRepository.class);
     public CreneauRepository(EntityManager entityManager){
         super(Creneau.class, entityManager);
     }
