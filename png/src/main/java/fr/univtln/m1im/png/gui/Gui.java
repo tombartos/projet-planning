@@ -188,7 +188,9 @@ public class Gui {
             semaine.setStyle("-fx-font-size: 8px;");
             semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
             final int index = tmpSemaine;
-            semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
+            semaine.setOnMouseClicked(event -> {this.numSemaine = index;
+                genererCreneaux();
+            });
             this.semaines.add(semaine);
             this.gdSemaines.add(semaine, indexSemaine, 0);
 
@@ -341,6 +343,14 @@ public class Gui {
                 Button voirModifButton = new Button("Voir");
                 voirModifButton.setOnAction(event -> {                    
                     log.info("Voir modification");
+                    this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
+                    genererCreneaux();
+                    GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, Creneau.makeFromDemandeCreneau(demande), this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                    gestionCollision(guiCreneau);
+                    guiCreneaux.add(guiCreneau);
+                    guiCreneau.afficherCreneau();
+                    guiCreneau.getRectangle().setStroke(Color.PINK);
+                    guiCreneau.getRectangle().setStrokeWidth(3);
                 });
 
                 Button approuverModifButton = new Button("Approuver");
