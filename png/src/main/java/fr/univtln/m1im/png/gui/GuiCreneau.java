@@ -2,8 +2,6 @@ package fr.univtln.m1im.png.gui;
 
 import javafx.scene.paint.Color;
 
-import java.nio.Buffer;
-import java.security.KeyStore.Entry;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +12,10 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
+import fr.univtln.m1im.png.repositories.NotePersonnelleRepository;
 import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.model.Module;
+import fr.univtln.m1im.png.model.NotePersonnelle;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -49,12 +49,14 @@ public class GuiCreneau {
 
     private Creneau creneau;
 
+    private Gui gui;
+
     private OffsetDateTime premierJour; // Premier jour de l'année
     private OffsetDateTime dernierJour; // Dernier jour de l'année
 
     private Stage[] popup;
 
-    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager) {
+    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager, Gui gui) {
         this.popup = popup;
         this.utilisateur = utilisateur;
         this.group = group;
@@ -67,6 +69,7 @@ public class GuiCreneau {
 
         this.collision = 1;
         this.posCollision = 0;
+        this.gui = gui;
         
     }
 
@@ -217,16 +220,22 @@ public class GuiCreneau {
         infoLabel.setStyle("-fx-text-alignment: center;");
 
         //Note personnelle
+        NotePersonnelleRepository notePersoRepo = new NotePersonnelleRepository(entityManager);
+        NotePersonnelle notePerso = notePersoRepo.getByCreneauUtilisateur(this.utilisateur.getId(), this.creneau.getId());
         TextField notePersoField = new TextField();
         Button notePersoButton = new Button("Modifier");
-        notePersoField.setPromptText("Aucune note personnelle");
+        if (notePerso != null) {
+            notePersoField.setText(notePerso.getNotePerso());
+        }
+        else{
+            notePersoField.setPromptText("Aucune note personnelle");
+        }
         notePersoField.setOnKeyReleased(e -> {
             notePersoButton.setStyle("-fx-text-fill: red;");
         });
         notePersoButton.setOnAction(e -> {
             notePersoButton.setStyle("-fx-text-fill: black;");
-            // TODO Remplacer la ligne d'en dessous par this.creneau.getNotePersonnelle().setNotePersonnelle(notePersoField.getText());
-            System.out.println("Note modifiée : " + notePersoField.getText());
+            notePersoRepo.modify(notePerso, notePersoField.getText(), creneau, utilisateur);
         });
         grid.add(notePersoField, 0, 1);
         grid.add(notePersoButton, 1, 1);
@@ -249,7 +258,6 @@ public class GuiCreneau {
             
                 noteProfButton.setOnAction(e -> {
                 noteProfButton.setStyle("-fx-text-fill: black;");
-                // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
                 
                 entityManager.getTransaction().begin();
                 Creneau managedCreneau = entityManager.merge(creneau);
@@ -263,7 +271,6 @@ public class GuiCreneau {
         }
         else {
             Label noteProfLabel = new Label("Aucune note de cours");
-            // TODO Remplacer la ligne du dessus par le commentaire du dessous
             if (creneau.getNoteProf() != "") {
                 noteProfLabel.setText(creneau.getNoteProf());
             }
@@ -425,11 +432,13 @@ public class GuiCreneau {
         });
 
         if(this.utilisateur instanceof Responsable){
-            Button modifierModuleButton = new Button("Modifier le module");
-            modifierModuleButton.setOnAction(e -> {
-                // TODO Emad
+            Button modifierCoursButton = new Button("Modifier le cours");
+            modifierCoursButton.setOnAction(e -> {
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
+                modifierCreneau.afficherModifierCreneau();
+                popup[0].close();
             });
-            grid.add(modifierModuleButton, 0, 4);
+            grid.add(modifierCoursButton, 0, 4);
         }
 
         popup[0].setTitle("Information du créneau");

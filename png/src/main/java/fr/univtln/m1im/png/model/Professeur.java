@@ -53,4 +53,9 @@ public class Professeur extends Utilisateur {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 
+    @ToString.Exclude
+    @Builder.Default
+    @ManyToMany(fetch = FetchType.LAZY)
+    private List<DemandeCreneau> demandes_creneaux = new ArrayList<DemandeCreneau>();
+
 }

@@ -1,149 +1,191 @@
 package fr.univtln.m1im.png.gui;
 
+//Cette classe est principalement copiee collee de la classe AjouterCreneau, nous avons conscience qu'il y a de la redondance
+//TODO: Refactoriser le code dans AjouterCreneau pour eviter la redondance
 
+import fr.univtln.m1im.png.dto.GroupeDTO;
+import fr.univtln.m1im.png.dto.ProfesseurDTO;
+import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.Groupe;
+import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
+import fr.univtln.m1im.png.repositories.GroupeRepository;
+import fr.univtln.m1im.png.repositories.ModuleRepository;
+import fr.univtln.m1im.png.repositories.ProfesseurRepository;
+import fr.univtln.m1im.png.repositories.SalleRepository;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import fr.univtln.m1im.png.model.Module;
 
-import fr.univtln.m1im.png.dto.GroupeDTO;
-import fr.univtln.m1im.png.dto.ProfesseurDTO;
-import fr.univtln.m1im.png.model.Creneau;
-import fr.univtln.m1im.png.model.DemandeCreneau;
-import fr.univtln.m1im.png.model.Groupe;
-import fr.univtln.m1im.png.model.Professeur;
-import fr.univtln.m1im.png.model.Salle;
-import fr.univtln.m1im.png.repositories.CreneauRepository;
-import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
-import fr.univtln.m1im.png.repositories.GroupeRepository;
-import fr.univtln.m1im.png.repositories.ModuleRepository;
-import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.SalleRepository;
-import jakarta.persistence.EntityManager;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
+import jakarta.persistence.EntityManager;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.stage.Stage;
-import lombok.Getter;
-import lombok.Setter;
-import fr.univtln.m1im.png.model.Module;
 
-import java.util.logging.Logger;
 
-@Getter @Setter
-public class AjouterCours {
-    private static final Logger log = Logger.getLogger(AjouterCours.class.getName());
-    
-    private int width;
-    private int height;
-    private EntityManager entityManager;
-    private int anneeDebut;
-    private String role;
-    private Gui gui;
+public class ModifierCreneau {
 
-    public AjouterCours( int width, int height, EntityManager entityManager, int anneeDebut, String role, Gui gui) {
+    private final EntityManager entityManager;
+    private final Gui gui;
+    private final int anneeDebut;
+    private final Creneau creneau;
+    private String selectedYear = null;
+
+    public ModifierCreneau(Creneau creneau, EntityManager entityManager, Gui gui) {
+        this.creneau = creneau;
         this.entityManager = entityManager;
-        this.width = width;
-        this.height = height;
-        this.anneeDebut = anneeDebut;
-        this.role = role;
         this.gui = gui;
-    }   
+        this.anneeDebut = gui.getAnneeDebut();
+    }
 
-    public void afficherFenetreAjoutCours() {
+    public void afficherModifierCreneau() {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
-        stage.setTitle("Ajouter Cours");
+        stage.setTitle("Modifier Cours");
 
-        // GridPane pour organiser les champs
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(15));
         grid.setHgap(15);
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-        // Champs de saisie
+        // === Remplissage des champs comme dans ta méthode précédente ===
+        ModuleRepository moduleRepository = new ModuleRepository(entityManager);
+        ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
+        GroupeRepository groupeRepository = new GroupeRepository(entityManager);
+        SalleRepository salleRepository = new SalleRepository(entityManager);
+
         ComboBox<String> moduleField1 = new ComboBox<>();
-        moduleField1.setPromptText("Sélectionner un module 1");
         ComboBox<String> moduleField2 = new ComboBox<>();
-        moduleField2.setPromptText("Sélectionner un module 2");
-        ModuleRepository moduleRepository  = new ModuleRepository(entityManager);
         moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
         moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
-        
-        ComboBox<String> profField1 = new ComboBox<>();
-        profField1.setPromptText("Sélectionner un professeur 1");
-        ComboBox<String> profField2 = new ComboBox<>();
-        profField2.setPromptText("Sélectionner un professeur 2");
-        ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-        List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 100);
-        for (ProfesseurDTO p : proflist){
-            profField1.getItems().add(p.getNom() + " " + p.getPrenom());
-            profField2.getItems().add(p.getNom() + " " + p.getPrenom());
+
+        if (!creneau.getModules().isEmpty()) {
+            moduleField1.setValue(creneau.getModules().get(0).getCode());
+            if (creneau.getModules().size() > 1)
+                moduleField2.setValue(creneau.getModules().get(1).getCode());
         }
-        
+
+        ComboBox<String> profField1 = new ComboBox<>();
+        ComboBox<String> profField2 = new ComboBox<>();
+        List<ProfesseurDTO> profs = professeurRepository.getAllDTO(0, 100);
+        for (ProfesseurDTO p : profs) {
+            String fullName = p.getNom() + " " + p.getPrenom();
+            profField1.getItems().add(fullName);
+            profField2.getItems().add(fullName);
+        }
+        if (!creneau.getProfesseurs().isEmpty()) {
+            profField1.setValue(creneau.getProfesseurs().get(0).getNom() + " " + creneau.getProfesseurs().get(0).getPrenom());
+            if (creneau.getProfesseurs().size() > 1)
+                profField2.setValue(creneau.getProfesseurs().get(1).getNom() + " " + creneau.getProfesseurs().get(1).getPrenom());
+        }
+
         ComboBox<String> groupeField1 = new ComboBox<>();
-        groupeField1.setPromptText("Sélectionner un groupe 1");
         ComboBox<String> groupeField2 = new ComboBox<>();
-        groupeField2.setPromptText("Sélectionner un groupe 2");
-        GroupeRepository groupeRepository = new GroupeRepository(entityManager);
-        List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 100);
-        for (GroupeDTO g : grouplist){
+        List<GroupeDTO> groupes = groupeRepository.getAllDTO(0, 100);
+        for (GroupeDTO g : groupes) {
             groupeField1.getItems().add(g.getCode());
             groupeField2.getItems().add(g.getCode());
         }
+        if (!creneau.getGroupes().isEmpty()) {
+            groupeField1.setValue(creneau.getGroupes().get(0).getCode());
+            if (creneau.getGroupes().size() > 1)
+                groupeField2.setValue(creneau.getGroupes().get(1).getCode());
+        }
 
         ComboBox<String> typeField = new ComboBox<>();
-        typeField.setPromptText("Sélectionner un type de cours");
         typeField.getItems().addAll("CM", "TD", "TP", "Exam");
-        
+        typeField.setValue(creneau.getType());
+
         ComboBox<String> salleField = new ComboBox<>();
-        salleField.setPromptText("Sélectionner une salle");
-        SalleRepository salleRepository = new SalleRepository(entityManager);
-        List<Salle> sallelist = salleRepository.getAll(0, 100);
-        for (Salle s : sallelist){
-            salleField.getItems().add(s.getCode());
-        }
+        List<Salle> salles = salleRepository.getAll(0, 100);
+        for (Salle s : salles) salleField.getItems().add(s.getCode());
+        if (creneau.getSalle() != null) salleField.setValue(creneau.getSalle().getCode());
 
+        OffsetDateTime debut = creneau.getHeureDebut();
+        OffsetDateTime fin = creneau.getHeureFin();
 
-        // Sélection de date et heure
-        ComboBox<String> anneeField =new ComboBox<>();
-        anneeField.setPromptText("Sélectionner une année");
-        anneeField.setPrefWidth(200);
+        ComboBox<String> anneeField = new ComboBox<>();
         anneeField.getItems().addAll(String.valueOf(anneeDebut), String.valueOf(anneeDebut + 1));
-        
-        ComboBox<String> moisField = new ComboBox<>();
-        moisField.setPromptText("Sélectionner un mois");
-        ComboBox<String> jourField = new ComboBox<>();
-        jourField.setPromptText("Sélectionner un jour");
-        ComboBox<String> heureField = new ComboBox<>();
-        heureField.setPromptText("Sélectionner une heure");
-        heureField.setPrefWidth(200);
-        ArrayList<String> heures = new ArrayList<>();
-        for (int i = 8; i < 20; i++) {
-            heures.add(String.format("%02d", i)); 
-        }
-        heureField.getItems().addAll(heures);
+        anneeField.setValue(String.valueOf(debut.getYear()));
 
-        ComboBox<String> minuteField = new ComboBox<>();
-        minuteField.setPromptText("Sélectionner une minute");
-        ArrayList<String> minutes = new ArrayList<>();
-        for (int i = 0; i < 60; i++) {
-            minutes.add(String.format("%02d", i));
+        // Map des mois avec leur index
+        Map<String, Integer> moisMap = new HashMap<>();
+        moisMap.put("Janvier", 1);
+        moisMap.put("Février", 2);
+        moisMap.put("Mars", 3);
+        moisMap.put("Avril", 4);
+        moisMap.put("Mai", 5);
+        moisMap.put("Juin", 6);
+        moisMap.put("Juillet", 7);
+        moisMap.put("Août", 8);
+        moisMap.put("Septembre", 9);
+        moisMap.put("Octobre", 10);
+        moisMap.put("Novembre", 11);
+        moisMap.put("Décembre", 12);
+
+        Map<Integer, String> reverseMoisMap = new HashMap<>();
+        for (Map.Entry<String, Integer> entry : moisMap.entrySet()) {
+            reverseMoisMap.put(entry.getValue(), entry.getKey());
         }
+
+        ComboBox<String> moisField = new ComboBox<>();
+        moisField.setValue(reverseMoisMap.get(debut.getMonthValue()));
+
+        ComboBox<String> jourField = new ComboBox<>();
+        for (int i = 1; i <= 31; i++) jourField.getItems().add(String.valueOf(i));
+        jourField.setValue(String.valueOf(debut.getDayOfMonth()));
+
+        ArrayList<String> heures = new ArrayList<>();
+        for (int i = 8; i < 20; i++) heures.add(String.format("%02d", i));
+        ComboBox<String> heureField = new ComboBox<>();
+        heureField.getItems().addAll(heures);
+        heureField.setValue(String.format("%02d", debut.getHour()));
+
+        ArrayList<String> minutes = new ArrayList<>();
+        for (int i = 0; i < 60; i++) minutes.add(String.format("%02d", i));
+        ComboBox<String> minuteField = new ComboBox<>();
         minuteField.getItems().addAll(minutes);
-        
+        minuteField.setValue(String.format("%02d", debut.getMinute()));
+
+        ComboBox<String> heureFinField = new ComboBox<>();
+        heureFinField.getItems().addAll(heures);
+        heureFinField.setValue(String.format("%02d", fin.getHour()));
+
+        ComboBox<String> minuteFinField = new ComboBox<>();
+        minuteFinField.getItems().addAll(minutes);
+        minuteFinField.setValue(String.format("%02d", fin.getMinute()));
+
+        selectedYear = anneeField.getValue();
+            if (selectedYear != null) {
+                int year = Integer.parseInt(selectedYear);
+                // Remplir le mois en fonction de l'année sélectionnée
+                if (year == anneeDebut) {
+                    moisField.getItems().clear();
+                    moisField.getItems().addAll("Septembre", "Octobre", "Novembre", "Décembre");
+                } else {
+                    moisField.getItems().clear();
+                    moisField.getItems().addAll("Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                        "Juillet");
+                }
+            }
+
         anneeField.setOnAction(event -> {
-            log.info("Année sélectionnée : " + anneeField.getValue());
-            String selectedYear = anneeField.getValue();
+            selectedYear = anneeField.getValue();
             if (selectedYear != null) {
                 int year = Integer.parseInt(selectedYear);
                 // Remplir le mois en fonction de l'année sélectionnée
@@ -169,94 +211,64 @@ public class AjouterCours {
                 }
             }
         });
-        minuteField.setPrefWidth(200);
-        
-        ComboBox<String> heurefin = new ComboBox<>();
-        heurefin.setPromptText("Sélectionner une heure fin");
-        heurefin.setPrefWidth(200);
-        heurefin.getItems().addAll(heures);
-        
-        ComboBox<String> minutefin = new ComboBox<>();
-        minutefin.setPromptText("Sélectionner une minute");
-        minutefin.setPrefWidth(200);
-        minutefin.getItems().addAll(minutes);
-
-        // Étendre les semaines
-        ComboBox<String> semaineDebutField = new ComboBox<>();
-        semaineDebutField.setPromptText("Sélectionner la semaine de début");
-        ComboBox<String> semaineFinField = new ComboBox<>();
-        semaineFinField.setPromptText("Sélectionner la semaine de fin");
 
         // Label pour afficher les erreurs
-        Label errorLabel = new Label("Exemple d'erreur affichée ici");
+        Label errorLabel = new Label("");
         errorLabel.setTextFill(Color.RED);
         errorLabel.setFont(new Font(13));
-        errorLabel.setVisible(true); 
-        // Boutons
+        errorLabel.setVisible(true);
+
+        // === Boutons ===
         Button annulerButton = new Button("Annuler");
         Button validerButton = new Button("Valider");
-        HBox buttonBox = new HBox(10, annulerButton, validerButton);
-        buttonBox.setAlignment(Pos.CENTER_RIGHT);
 
-        // Ajout au grid
+        // === Layout (comme dans ton code) ===
         int row = 0;
         grid.add(new Label("Module 1"), 0, row);
-        grid.add(new Label("Module 2"), 1, row++); 
+        grid.add(new Label("Module 2"), 1, row++);
         grid.add(moduleField1, 0, row);
         grid.add(moduleField2, 1, row++);
+
         grid.add(new Label("Professeur 1"), 0, row);
         grid.add(new Label("Professeur 2"), 1, row++);
         grid.add(profField1, 0, row);
         grid.add(profField2, 1, row++);
+
         grid.add(new Label("Groupe 1"), 0, row);
         grid.add(new Label("Groupe 2"), 1, row++);
         grid.add(groupeField1, 0, row);
         grid.add(groupeField2, 1, row++);
-        grid.add(new Label("Type"), 0, row++); 
+
+        grid.add(new Label("Type"), 0, row++);
         grid.add(typeField, 0, row++);
-        grid.add(new Label("Salle"), 0, row++); 
+
+        grid.add(new Label("Salle"), 0, row++);
         grid.add(salleField, 0, row++);
 
         grid.add(new Label("Année"), 0, row);
         grid.add(new Label("Mois"), 1, row);
         grid.add(new Label("Jour"), 2, row);
-        grid.add(new Label("Heure"), 3, row); 
-        grid.add(new Label("Minute"), 4, row++);  
+        grid.add(new Label("Heure"), 3, row);
+        grid.add(new Label("Minute"), 4, row++);
         grid.add(anneeField, 0, row);
         grid.add(moisField, 1, row);
         grid.add(jourField, 2, row);
         grid.add(heureField, 3, row);
         grid.add(minuteField, 4, row++);
-        
-        grid.add(new Label("Heure Fin"), 3, row); 
-        grid.add(new Label("Minute"), 4, row++); 
-        grid.add(heurefin ,3, row);
-        grid.add(minutefin, 4, row++);
 
-        grid.add(new Label("Étendre de semaine à semaine"), 0, row++, 2, 1);
-        grid.add(semaineDebutField, 0, row);
-        grid.add(semaineFinField, 1, row++);
-
-        grid.add(buttonBox, 0, row++, 6, 1);
+        grid.add(new Label("Heure Fin"), 3, row);
+        grid.add(new Label("Minute"), 4, row++);
+        grid.add(heureFinField, 3, row);
+        grid.add(minuteFinField, 4, row++);
         grid.add(errorLabel, 1, row++, 6, 1);
 
-        // Map des mois avec leur index
-        Map<String, Integer> moisMap = new HashMap<>();
-        moisMap.put("Janvier", 1);
-        moisMap.put("Février", 2);
-        moisMap.put("Mars", 3);
-        moisMap.put("Avril", 4);
-        moisMap.put("Mai", 5);
-        moisMap.put("Juin", 6);
-        moisMap.put("Juillet", 7);
-        moisMap.put("Août", 8);
-        moisMap.put("Septembre", 9);
-        moisMap.put("Octobre", 10);
-        moisMap.put("Novembre", 11);
-        moisMap.put("Décembre", 12);
+        HBox buttonBox = new HBox(10, annulerButton, validerButton);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        grid.add(buttonBox, 0, row++, 5, 1);
 
-        // Actions des boutons
+        // === Actions boutons ===
         annulerButton.setOnAction(e -> stage.close());
+
         validerButton.setOnAction(e -> {
             // Validation des champs
             if ((moduleField1.getValue() == null && moduleField2.getValue() == null) || 
@@ -264,7 +276,7 @@ public class AjouterCours {
                 (groupeField1.getValue() == null && groupeField2.getValue() == null) ||
                 typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
                 moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
-                minuteField.getValue() == null || heurefin.getValue() == null || minutefin.getValue() == null) {
+                minuteField.getValue() == null || heureFinField.getValue() == null || minuteFinField.getValue() == null) {
                 errorLabel.setText("Veuillez remplir tous les champs !");
                 errorLabel.setVisible(true);
                 return;
@@ -282,8 +294,8 @@ public class AjouterCours {
                     Integer.parseInt(anneeField.getValue()),
                     moisMap.get(moisField.getValue()),
                     Integer.parseInt(jourField.getValue()),
-                    Integer.parseInt(heurefin.getValue()),
-                    Integer.parseInt(minutefin.getValue()),
+                    Integer.parseInt(heureFinField.getValue()),
+                    Integer.parseInt(minuteFinField.getValue()),
                     0, 0,
                     ZoneOffset.UTC
                 );
@@ -298,56 +310,41 @@ public class AjouterCours {
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
-                Creneau creneau = Creneau.builder()
+                Creneau newCreneau = Creneau.builder()
                                     .type(typeField.getValue())
                                     .heureDebut(heureDebut)
                                     .heureFin(heureFin)
                                     .salle(salle)
                                     .build();
-                creneau.getGroupes().add(groupe);
-                creneau.getProfesseurs().add(professeur);
-                creneau.getModules().add(module);
+                newCreneau.getGroupes().add(groupe);
+                newCreneau.getProfesseurs().add(professeur);
+                newCreneau.getModules().add(module);
                 if (groupeField2.getValue() != null) {
                     Groupe groupe2 = groupeRepository.getByCode(groupeField2.getValue());
-                    creneau.getGroupes().add(groupe2);
+                    newCreneau.getGroupes().add(groupe2);
                 }
                 if (profField2.getValue() != null) {
                     Professeur professeur2 = professeurlist.get(profField2.getSelectionModel().getSelectedIndex());
-                    creneau.getProfesseurs().add(professeur2);
+                    newCreneau.getProfesseurs().add(professeur2);
                 }
                 if (moduleField2.getValue() != null) {
                     Module module2 = moduleRepository.getModuleByCode(moduleField2.getValue());
-                    creneau.getModules().add(module2);
+                    newCreneau.getModules().add(module2);
                 }
-                if (this.role.equals("Ajouter")) {
-                    CreneauRepository creneauRepository = new CreneauRepository(entityManager);
-                    String res = creneauRepository.addCreneau(creneau, null);
-                    if (res == "Le créneau a été inséré") {
-                        errorLabel.setText("Créneau ajouté !");
-                        gui.genererCreneaux();
-
-                    } else {
-                        errorLabel.setText(res);
-                    }
+                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                String res = creneauRepository.addCreneau(newCreneau, creneau);
+                if (res == "Le créneau a été inséré") {
+                    gui.genererCreneaux();
+                    stage.close();
+                } else {
                     errorLabel.setText(res);
-                
                 }
-                else if (this.role.equals("Demander")) {
-                    DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(creneau);
-                    DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
-                    String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
-                    errorLabel.setText(res);
-                    log.info(res);
-                }
+                errorLabel.setText(res);
             }
         });
 
-        //  Ajout de la scène et affichage de la fenêtre
-        Scene scene = new Scene(grid, this.width/1.2, this.height/1.35);
+        Scene scene = new Scene(grid, 800, 600);
         stage.setScene(scene);
         stage.show();
-        
-
-        
     }
 }
