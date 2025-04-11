@@ -14,11 +14,13 @@ import org.slf4j.Logger;
 import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
+import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
 import fr.univtln.m1im.png.repositories.EtudiantRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
@@ -100,6 +102,7 @@ public class Gui {
     private Button btnEdt;
     private Button ajoutCours;
     private Button demandeCours;
+    private String res; // Field to store the result of demandeCreneauRepository.acceptDemandeCreneau
 
     private Stage[] popups = {new Stage()};
 
@@ -186,7 +189,9 @@ public class Gui {
             semaine.setStyle("-fx-font-size: 8px;");
             semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
             final int index = tmpSemaine;
-            semaine.setOnMouseClicked(event -> {this.numSemaine = index; genererCreneaux();});
+            semaine.setOnMouseClicked(event -> {this.numSemaine = index;
+                genererCreneaux();
+            });
             this.semaines.add(semaine);
             this.gdSemaines.add(semaine, indexSemaine, 0);
 
@@ -329,25 +334,38 @@ public class Gui {
             // this.barreFiltres.getChildren().add(DemandeModif);
 
             MenuButton demandeModifCreneau = new MenuButton("Demandes de modification");
-
-            //tmp
-            for(int i = 0; i < 10; i++)
+            DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
+            List<DemandeCreneau> demandes = demandeCreneauRepository.getAll(0, 20); // 20 max at the moment, to be changed later maybe
+            String res = "";     //TODO : Label pour afficher res en haut de la page, potentiel probleme avec le string a verifier
+            for(DemandeCreneau demande : demandes)
             {
-                Label creneauModif = new Label("Nom du Prof " + i);
-                int idmb = i;
+                Professeur prof = demande.getProfesseurs().getFirst();
+                Label creneauModif = new Label(prof.getNom() + " " + prof.getPrenom());
                 Button voirModifButton = new Button("Voir");
                 voirModifButton.setOnAction(event -> {                    
-                    System.out.println("Voir modification" + idmb);
+                    log.info("Voir modification");
+                    this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
+                    genererCreneaux();
+                    GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, Creneau.makeFromDemandeCreneau(demande), this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                    gestionCollision(guiCreneau);
+                    guiCreneaux.add(guiCreneau);
+                    guiCreneau.afficherCreneau();
+                    guiCreneau.getRectangle().setStroke(Color.PINK);
+                    guiCreneau.getRectangle().setStrokeWidth(3);
+                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande));
+                    voirCreneau.afficherCreneau();
                 });
 
                 Button approuverModifButton = new Button("Approuver");
-                approuverModifButton.setOnAction(event -> {                    
-                    System.out.println("Approuver modification " + idmb);
+                approuverModifButton.setOnAction(event -> {      
+                    this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
+                    genererCreneaux();
+                    log.info(res);
                 });
 
                 Button modifierModifButton = new Button("Modifier");
                 modifierModifButton.setOnAction(event -> {                    
-                    System.out.println("Modifier modification " + idmb);
+                    log.info("Modifier modification ");
                 });
                 
                 HBox demandeModifHbox = new HBox();
@@ -459,9 +477,9 @@ public class Gui {
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        int anneeTest = permierJourSemaine.getYear();
+        //int anneeTest = permierJourSemaine.getYear();
 
-        OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
+        //OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
         for(int i = 0; i < this.nbJour; i++){
             this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
         }
@@ -477,7 +495,7 @@ public class Gui {
             // genererCreneaux();
         guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
-                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager);
+                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
                 gestionCollision(guiCreneau);
                 guiCreneaux.add(guiCreneau);
                 guiCreneau.afficherCreneau();
@@ -536,10 +554,8 @@ public class Gui {
 }
 
 //TODO Affichage cours annuler
-//TODO IHM demande de modification de cours
-//TODO Gestion des Notes
 
 /*
- * EntityManager.Merge(creneaux)
- * 
+ * mvn test
+ * ./create-users
  */

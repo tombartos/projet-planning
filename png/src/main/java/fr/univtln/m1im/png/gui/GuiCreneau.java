@@ -2,18 +2,16 @@ package fr.univtln.m1im.png.gui;
 
 import javafx.scene.paint.Color;
 
-import java.nio.Buffer;
-import java.security.KeyStore.Entry;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
 import fr.univtln.m1im.png.repositories.NotePersonnelleRepository;
 import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.model.Module;
@@ -51,12 +49,14 @@ public class GuiCreneau {
 
     private Creneau creneau;
 
+    private Gui gui;
+
     private OffsetDateTime premierJour; // Premier jour de l'année
     private OffsetDateTime dernierJour; // Dernier jour de l'année
 
     private Stage[] popup;
 
-    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager) {
+    public GuiCreneau(Stage[] popup, Utilisateur utilisateur, Group group, Creneau creneau, int width, int height, int nbHeure, int nbJour, EntityManager entityManager, Gui gui) {
         this.popup = popup;
         this.utilisateur = utilisateur;
         this.group = group;
@@ -69,6 +69,7 @@ public class GuiCreneau {
 
         this.collision = 1;
         this.posCollision = 0;
+        this.gui = gui;
         
     }
 
@@ -91,6 +92,7 @@ public class GuiCreneau {
 
     public void afficherCreneau()
     {
+        
         // System.out.println(creneau.getHeureDebut().getDayOfYear());
         switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
             case "MONDAY":
@@ -165,6 +167,10 @@ public class GuiCreneau {
         });
         // label.setStyle("-fx-font-size: "+10+"px");
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
+        String listGroupe = new String();
+        for(Groupe groupe : creneau.getGroupes()){
+            listGroupe += groupe.getCode()+" ";
+        }
         String listModule = new String();
         for(Module module : creneau.getModules()){
             listModule += module.getNom()+"\n";
@@ -173,9 +179,20 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        label.setText(creneau.getSalle().getCode()+"\n"+creneau.getGroupes().getFirst().getCode()+"\n"+listModule+creneau.getType()+"\n"+listProf);
+        
+        label.setText(creneau.getSalle().getCode()+"\n"+listGroupe+"\n"+listModule+creneau.getType()+"\n"+listProf);
+
 
         group.getChildren().add(rectangle);
+        if(this.creneau.getStatus() == 1)
+        {
+            Label labelAnnule = new Label("Annulé");
+            labelAnnule.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
+            labelAnnule.setStyle("-fx-text-fill: violet; -fx-font-size: 20px; -fx-alignment: center; -fx-text-alignment: center;");
+            labelAnnule.setLayoutX(jourDeLaSemaine*width/nbJour + (width/nbJour * posCollision/collision));
+            labelAnnule.setLayoutY(convHeure(creneau)*height/nbHeure);  
+            group.getChildren().add(labelAnnule);
+        }
         group.getChildren().add(label);
     }
 
@@ -257,7 +274,6 @@ public class GuiCreneau {
             
                 noteProfButton.setOnAction(e -> {
                 noteProfButton.setStyle("-fx-text-fill: black;");
-                // TODO Remplacer la ligne d'en dessous par this.creneau.getNoteProfesseur().setNoteProfesseur(noteProfField.getText());
                 
                 entityManager.getTransaction().begin();
                 Creneau managedCreneau = entityManager.merge(creneau);
@@ -271,7 +287,6 @@ public class GuiCreneau {
         }
         else {
             Label noteProfLabel = new Label("Aucune note de cours");
-            // TODO Remplacer la ligne du dessus par le commentaire du dessous
             if (creneau.getNoteProf() != "") {
                 noteProfLabel.setText(creneau.getNoteProf());
             }
@@ -433,16 +448,44 @@ public class GuiCreneau {
         });
 
         if(this.utilisateur instanceof Responsable){
-            Button modifierModuleButton = new Button("Modifier le module");
-            modifierModuleButton.setOnAction(e -> {
-                // TODO Emad
-                int anneeDebut = creneau.getHeureDebut().getYear();
-                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, anneeDebut);
+            Button modifierCoursButton = new Button("Modifier le cours");
+            modifierCoursButton.setOnAction(e -> {
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
                 modifierCreneau.afficherModifierCreneau();
-
-                
+                popup[0].close();
             });
-            grid.add(modifierModuleButton, 0, 4);
+            Button annulerCoursButton = new Button("Annuler le cours");
+            if(creneau.getStatus() == 1){
+                annulerCoursButton.setText("Restaurer le cours");
+            }
+            annulerCoursButton.setOnAction(e -> {
+                entityManager.getTransaction().begin();
+                Creneau managedCreneau = entityManager.merge(creneau);
+                if(creneau.getStatus() == 1){
+                    managedCreneau.setStatus(0);
+                    annulerCoursButton.setText("Annuler le cours");
+                }
+                else
+                {
+                    managedCreneau.setStatus(1);
+                    annulerCoursButton.setText("Restaurer le cours");
+                }
+                entityManager.getTransaction().commit();
+                gui.genererCreneaux();
+                popup[0].close();
+            });
+
+            Button supprimerCoursButton = new Button("Supprimer le cours");
+            supprimerCoursButton.setOnAction(e -> {
+                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                creneauRepository.deleteCreneau(creneau);
+                gui.genererCreneaux();
+                System.out.println("suppression du cours");
+
+            });
+            grid.add(modifierCoursButton, 0, 4);
+            grid.add(annulerCoursButton, 0, 5);
+            grid.add(supprimerCoursButton, 0, 6);
         }
 
         popup[0].setTitle("Information du créneau");

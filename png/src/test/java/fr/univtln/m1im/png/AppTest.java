@@ -10,10 +10,10 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
 import fr.univtln.m1im.png.model.Utilisateur;
-import fr.univtln.m1im.png.repositories.ResponsableRepository;
 // import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 // import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,18 +208,19 @@ class AppTest {
             log.info("TEST1");
             // ModuleRepository moduleRepository = new ModuleRepository(entityManager);
             // log.info(moduleRepository.getAllCreneaux(module.getCode(), 0, 100).toString());
-            ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-            log.info(responsableRepository.addCreneau(creneau)); //Excepted : error
+            CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+            log.info(creneauRepository.addCreneau(creneau, null)); //Excepted : error
             Creneau creneau7 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 8, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 11, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
             creneau7.getModules().add(module);
             creneau7.getGroupes().add(groupe);
             creneau7.getProfesseurs().add(professeur);
-            log.info(responsableRepository.addCreneau(creneau7)); //Excepted : success
+            log.info(creneauRepository.addCreneau(creneau7, null)); //Excepted : success
+
             Creneau creneau8 = Creneau.builder().type("CM").heureDebut(OffsetDateTime.of(2025, 3, 3, 9, 0, 0, 0, ZoneOffset.UTC)).heureFin(OffsetDateTime.of(2025, 3, 3, 10, 0, 0, 0, ZoneOffset.UTC)).salle(salle).build();
             creneau8.getModules().add(module);
             creneau8.getGroupes().add(groupe);
             creneau8.getProfesseurs().add(professeur);
-            log.info(responsableRepository.addCreneau(creneau8)); //Excepted : error
+            log.info(creneauRepository.addCreneau(creneau8, null)); //Excepted : error
 
         }
 

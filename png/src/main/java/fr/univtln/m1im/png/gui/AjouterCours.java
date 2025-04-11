@@ -11,13 +11,15 @@ import java.util.Map;
 import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.repositories.CreneauRepository;
+import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
-import fr.univtln.m1im.png.repositories.ResponsableRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
 import javafx.geometry.Insets;
@@ -76,7 +78,7 @@ public class AjouterCours {
         ModuleRepository moduleRepository  = new ModuleRepository(entityManager);
         moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
         moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
-
+        
         ComboBox<String> profField1 = new ComboBox<>();
         profField1.setPromptText("Sélectionner un professeur 1");
         ComboBox<String> profField2 = new ComboBox<>();
@@ -257,7 +259,9 @@ public class AjouterCours {
         annulerButton.setOnAction(e -> stage.close());
         validerButton.setOnAction(e -> {
             // Validation des champs
-            if (moduleField1.getValue() == null || profField1.getValue() == null || groupeField1.getValue() == null ||
+            if ((moduleField1.getValue() == null && moduleField2.getValue() == null) || 
+                (profField1.getValue() == null && profField2.getValue() == null) || 
+                (groupeField1.getValue() == null && groupeField2.getValue() == null) ||
                 typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
                 moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
                 minuteField.getValue() == null || heurefin.getValue() == null || minutefin.getValue() == null) {
@@ -292,7 +296,6 @@ public class AjouterCours {
                 Module module = moduleRepository.getModuleByCode(moduleField1.getValue());
                 List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
-                //TODO: Ajout de plusieurs professeurs, groupes, modules
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
                 Creneau creneau = Creneau.builder()
@@ -304,9 +307,21 @@ public class AjouterCours {
                 creneau.getGroupes().add(groupe);
                 creneau.getProfesseurs().add(professeur);
                 creneau.getModules().add(module);
+                if (groupeField2.getValue() != null) {
+                    Groupe groupe2 = groupeRepository.getByCode(groupeField2.getValue());
+                    creneau.getGroupes().add(groupe2);
+                }
+                if (profField2.getValue() != null) {
+                    Professeur professeur2 = professeurlist.get(profField2.getSelectionModel().getSelectedIndex());
+                    creneau.getProfesseurs().add(professeur2);
+                }
+                if (moduleField2.getValue() != null) {
+                    Module module2 = moduleRepository.getModuleByCode(moduleField2.getValue());
+                    creneau.getModules().add(module2);
+                }
                 if (this.role.equals("Ajouter")) {
-                    ResponsableRepository responsableRepository = new ResponsableRepository(entityManager);
-                    String res = responsableRepository.addCreneau(creneau);
+                    CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                    String res = creneauRepository.addCreneau(creneau, null);
                     if (res == "Le créneau a été inséré") {
                         errorLabel.setText("Créneau ajouté !");
                         gui.genererCreneaux();
@@ -318,14 +333,13 @@ public class AjouterCours {
                 
                 }
                 else if (this.role.equals("Demander")) {
-                    //TODO:Demandes
-                    System.out.println("Demande de cours envoyée !");
+                    DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(creneau);
+                    DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
+                    String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
+                    errorLabel.setText(res);
+                    log.info(res);
                 }
-                
-                
             }
-            
-            
         });
 
         //  Ajout de la scène et affichage de la fenêtre
