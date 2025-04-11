@@ -123,9 +123,6 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
             prof.getCreneaux().remove(creneau);
         }
         em.remove(creneau);
-        // em.createQuery("DELETE FROM Creneau c WHERE c.id = :id")
-        //         .setParameter("id", creneau.getId())
-        //         .executeUpdate();
         em.getTransaction().commit();
     }
 

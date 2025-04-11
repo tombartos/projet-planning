@@ -4,7 +4,6 @@ import fr.univtln.m1im.png.model.Responsable;
 import jakarta.persistence.EntityManager;
 
 public class ResponsableRepository extends JpaRepository<Responsable, Long> {
-    //private static final Logger log = Logger.getLogger(ResponsableRepository.class.getName());
     public ResponsableRepository(EntityManager entityManager) {
         super(Responsable.class, entityManager);
     }
