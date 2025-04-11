@@ -375,7 +375,7 @@ public class Gui {
                 approuverModifButton.setOnAction(event -> {
                     // TODO: Approuver la demande de modification      
                     this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
-                    if(res.equals("La demande a été acceptée avec succès"))
+                    if(res.equals("Le créneau a été inséré"))
                     {
                         demandeModifCreneau.getItems().remove(item);
                         demandeModifCreneau.getItems().getFirst().setText(res);
