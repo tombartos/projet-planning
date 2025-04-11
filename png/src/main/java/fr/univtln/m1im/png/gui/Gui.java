@@ -351,6 +351,8 @@ public class Gui {
                     guiCreneau.afficherCreneau();
                     guiCreneau.getRectangle().setStroke(Color.PINK);
                     guiCreneau.getRectangle().setStrokeWidth(3);
+                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande));
+                    voirCreneau.afficherCreneau();
                 });
 
                 Button approuverModifButton = new Button("Approuver");
