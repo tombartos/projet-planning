@@ -2,11 +2,14 @@ package fr.univtln.m1im.png.gui;
 
 
 import fr.univtln.m1im.png.model.Creneau;
+import jakarta.persistence.EntityManager;
+
 import java.time.OffsetDateTime;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,9 +18,13 @@ import javafx.stage.Stage;
 
 public class VoirCreneau {
     private final Creneau creneau;
+    private final EntityManager entityManager;
+    private final Gui gui;
 
-    public VoirCreneau(Creneau creneau) {
+    public VoirCreneau(Creneau creneau,EntityManager entityManager, Gui gui) {
         this.creneau = creneau;
+        this.entityManager = entityManager;
+        this.gui = gui;
     }
 
     public void afficherCreneau() {
@@ -98,6 +105,7 @@ public class VoirCreneau {
 
         // === Bouton ===
         Button okButton = new Button("OK");
+        Button modifButton = new Button("Modifier");
 
         // === Layout (comme dans ton code) ===
         int row = 0;
@@ -159,10 +167,18 @@ public class VoirCreneau {
         grid.add(heureFinField, 3, row);
         grid.add(minuteFinField, 4, row++);
 
-        grid.add(okButton, 2, row++);
+        HBox buttonBox = new HBox(10, okButton, modifButton);
+        buttonBox.setAlignment(Pos.CENTER_RIGHT);
+        grid.add(buttonBox, 0, row++, 5, 1);
 
         // === Actions boutons ===
         okButton.setOnAction(e -> stage.close());
+
+        modifButton.setOnAction( e -> {
+            stage.close();
+            ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager,gui);
+            modifierCreneau.afficherModifierCreneau();
+        });
 
         Scene scene = new Scene(grid, 800, 600);
         stage.setScene(scene);

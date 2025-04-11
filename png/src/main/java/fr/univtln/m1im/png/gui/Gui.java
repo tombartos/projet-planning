@@ -362,7 +362,7 @@ public class Gui {
                     guiCreneau.afficherCreneau();
                     guiCreneau.getRectangle().setStroke(Color.PINK);
                     guiCreneau.getRectangle().setStrokeWidth(3);
-                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande));
+                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande),entityManager,this);
                     voirCreneau.afficherCreneau();
                 });
 
