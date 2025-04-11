@@ -341,7 +341,8 @@ public class Gui {
             
             List<DemandeCreneau> demandes = demandeCreneauRepository.getAll(0, 20); // 20 max at the moment, to be changed later maybe
             Label demandeModifLabel = new Label("Il y a "+ demandes.size() + " demandes de modification");
-            demandeModifCreneau.getItems().add(new CustomMenuItem(demandeModifLabel, false));
+            CustomMenuItem demandeModifItem =  new CustomMenuItem(demandeModifLabel, false);
+            demandeModifCreneau.getItems().add(demandeModifItem);
             String res = "";
 
             for(DemandeCreneau demande : demandes)
@@ -378,11 +379,11 @@ public class Gui {
                     if(res.equals("La demande a été acceptée avec succès"))
                     {
                         demandeModifCreneau.getItems().remove(item);
-                        demandeModifCreneau.getItems().getFirst().setText(res);
+                        demandeModifLabel.setText(res);
                     }
                     else
                     {
-                        demandeModifCreneau.getItems().getFirst().setText(res);
+                        demandeModifLabel.setText(res);
                     }
                     genererCreneaux();
                     log.info(res);
