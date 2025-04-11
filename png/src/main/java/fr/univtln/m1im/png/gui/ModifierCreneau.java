@@ -366,3 +366,5 @@ public class ModifierCreneau {
         stage.show();
     }
 }
+
+//TODO : Patcher bug : quand un prof fait une demande de modification et que le responsable accepte ça crée un nouveau creneau sans supprimer l'ancien + gérer demandes annulation et suppression
