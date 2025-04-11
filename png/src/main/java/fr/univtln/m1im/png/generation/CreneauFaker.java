@@ -68,15 +68,28 @@ class CreneauFaker implements Iterable<Creneau> {
             public Creneau next() {
                 date = date.plusWeeks(1);
                 final var timeSlot = timeSlots[rand.nextInt(timeSlots.length)];
+
+                final var modules = List.of(groupe.getModules().getFirst());
+                final var groupes = List.of(groupe);
+                final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
+
                 var creneau = Creneau.builder()
-                    .modules(List.of(groupe.getModules().getFirst()))
-                    .groupes(List.of(groupe))
+                    //.modules(modules)
+                    //.groupes(groupes)
+                    //.professeurs(profs)
                     .salle(salles.getFirst())
                     .heureDebut(date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
                     .heureFin(date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
                     .type("CM")
                     .status(0)
                     .build();
+
+                // XXX the builder as is does not maintain coherence, though
+                // that is where this belongs
+                for (var module : modules) module.getCreneaux().add(creneau);
+                for (var groupe : groupes) groupe.getCreneaux().add(creneau);
+                for (var prof : profs) prof.getCreneaux().add(creneau);
+
                 return creneau;
             }
         };

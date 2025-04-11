@@ -1,5 +1,6 @@
 package fr.univtln.m1im.png;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import fr.univtln.m1im.png.model.Creneau;
@@ -76,6 +77,7 @@ class AppTest {
      * Rigorous Test.
      */
     @Test
+    @Disabled
     void testApp() {
         //!!!!All this is to initialize the database with a default admin account, this will be removed, this is only until we have the data generator  !!!!
         System.err.println("Hello World!");

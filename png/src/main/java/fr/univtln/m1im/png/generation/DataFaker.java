@@ -1,5 +1,7 @@
 package fr.univtln.m1im.png.generation;
 
+import java.util.List;
+
 import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Professeur;
@@ -26,17 +28,15 @@ public class DataFaker {
                 em.getTransaction().begin();
 
                 salles.forEach(em::persist);
-                groupFaker.getModules().forEach(em::persist);
 
-                for (int i = 0; i < 100; ++i) {
+                for (var module : groupFaker.getModules()) {
                     var prof = FakeUser.with(faker, rand)
                         .withProfEmail()
                         .configure(Professeur.builder()).build();
+                    module.setProfesseurs(List.of(prof));
                     em.persist(prof);
+                    em.persist(module);
                 }
-
-                em.getTransaction().commit();
-                em.getTransaction().begin();
 
                 for (var group : groupFaker.getAllGroupe()) {
                     em.persist(group);
@@ -50,9 +50,6 @@ public class DataFaker {
                         }
                     }
                 }
-
-                em.getTransaction().commit();
-                em.getTransaction().begin();
 
                 for (var creneau : creneauFaker) {
                     em.persist(creneau);
