@@ -491,6 +491,48 @@ public class GuiCreneau {
             grid.add(supprimerCoursButton, 0, 6);
         }
 
+        //TODO prof
+        else if(this.utilisateur instanceof Professeur){
+            Button modifierCoursButton = new Button("Demande de modifier le cours");
+            modifierCoursButton.setOnAction(e -> {
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
+                modifierCreneau.afficherModifierCreneau();
+                popup[0].close();
+            });
+            Button annulerCoursButton = new Button("Demande d'annuler le cours");
+            if(creneau.getStatus() == 1){
+                annulerCoursButton.setText("Demande de restaurer le cours");
+            }
+            annulerCoursButton.setOnAction(e -> {
+                entityManager.getTransaction().begin();
+                Creneau managedCreneau = entityManager.merge(creneau);
+                if(creneau.getStatus() == 1){
+                    managedCreneau.setStatus(0);
+                    annulerCoursButton.setText("Demande d'annuler le cours");
+                }
+                else
+                {
+                    managedCreneau.setStatus(1);
+                    annulerCoursButton.setText("Demande de restaurer le cours");
+                }
+                entityManager.getTransaction().commit();
+                gui.genererCreneaux();
+                popup[0].close();
+            });
+
+            Button supprimerCoursButton = new Button("Demande de supprimer le cours");
+            supprimerCoursButton.setOnAction(e -> {
+                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                creneauRepository.deleteCreneau(creneau);
+                gui.genererCreneaux();
+                System.out.println("suppression du cours");
+
+            });
+            grid.add(modifierCoursButton, 0, 4);
+            grid.add(annulerCoursButton, 0, 5);
+            grid.add(supprimerCoursButton, 0, 6);
+        }
+
         popup[0].setTitle("Information du créneau");
         popup[0].setMinWidth(450);
         popup[0].setMinHeight(400);
