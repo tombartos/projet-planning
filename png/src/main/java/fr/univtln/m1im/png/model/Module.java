@@ -3,6 +3,7 @@ package fr.univtln.m1im.png.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -43,7 +44,9 @@ import lombok.ToString;
 public class Module {
     @Id
     private String code;
+    @Column(nullable = false)
     private String nom;
+    @Column(nullable = false)
     private String description;
 
     @ToString.Exclude
@@ -61,7 +64,10 @@ public class Module {
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Creneau> creneaux = new ArrayList<Creneau>();
 
+    @Column(nullable = false)
     private int nbHeuresCM;
+    @Column(nullable = false)
     private int nbHeuresTD;
+    @Column(nullable = false)
     private int nbHeuresTP;
 }

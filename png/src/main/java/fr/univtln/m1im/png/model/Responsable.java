@@ -1,5 +1,6 @@
 package fr.univtln.m1im.png.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.NamedQueries;
 import jakarta.persistence.NamedQuery;
@@ -21,6 +22,7 @@ import lombok.experimental.SuperBuilder;
         query = "SELECT r FROM Responsable r WHERE r.login = :login")
 })
 public class Responsable extends Utilisateur {
+    @Column(nullable = false)
     String UFR; // UFR affected to the responsible
 
 }

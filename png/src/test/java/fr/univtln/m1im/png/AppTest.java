@@ -102,7 +102,7 @@ class AppTest {
         Creneau creneau5 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7).minusHours(1)).salle(salle2).build();
         Creneau creneau6 = Creneau.builder().type("TP").heureDebut(heureDebut.plusDays(7)).heureFin(heureFin.plusDays(7)).salle(salle).build();
 
-        Responsable responsable = Responsable.builder().nom("Nom3").prenom("Prenom3").login("resp1").email("resp1@email.com").dateNaissance(now).build();
+        Responsable responsable = Responsable.builder().nom("Nom3").prenom("Prenom3").login("resp1").email("resp1@email.com").dateNaissance(now).UFR("Sciences").build();
         
         groupe.getSousGroupes().add(groupe2); // Add groupe2 and groupe3 to groupe
         groupe.getSousGroupes().add(groupe3); // Add groupe2 and groupe3 to groupe
