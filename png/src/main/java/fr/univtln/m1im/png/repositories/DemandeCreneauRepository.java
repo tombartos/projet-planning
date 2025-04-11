@@ -12,7 +12,6 @@ import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
-import fr.univtln.m1im.png.model.Module;
 
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
     public DemandeCreneauRepository(EntityManager entityManager){
@@ -83,28 +82,19 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
     }
 
     public String acceptDemandeCreneau (DemandeCreneau demande) {
-        em.getTransaction().begin();
-        em.merge(demande);
         //We create a creneau from the demande
-        Creneau creneau = Creneau.makeFromDemandeCreneau(demande);
-        //We set the status of the demande to accepted
-        demande.setStatus(1);
+        Creneau creneau = Creneau.makeFromDemandeCreneau(demande); 
         //We persist the creneau and make the relations with the modules, groupes and professeurs
-        for (Professeur prof : demande.getProfesseurs()) {
-            Professeur managedProf = em.merge(prof);
-            managedProf.getCreneaux().add(creneau);
+        CreneauRepository creneauRepository = new CreneauRepository(em);
+        String res = creneauRepository.addCreneau(creneau, null);
+        if (res.equals("Le créneau a été inséré")){
+            em.getTransaction().begin();
+            //We set the status of the demande to accepted
+            demande.setStatus(1);
+            em.merge(demande);
+            em.getTransaction().commit();
         }
-        for (Groupe groupe : demande.getGroupes()) {
-            Groupe managedGroupe = em.merge(groupe);
-            managedGroupe.getCreneaux().add(creneau);
-        }
-        for (Module m : demande.getModules()) {
-            Module managedModule = em.merge(m);
-            managedModule.getCreneaux().add(creneau);
-        }
-        em.persist(creneau);
-        em.getTransaction().commit();
-        return ("La demande a été acceptée avec succès");
+        return res;
     }
 
     public String refuseDemandeCreneau (DemandeCreneau demande) {
