@@ -1,5 +1,6 @@
 package fr.univtln.m1im.png.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -41,10 +42,15 @@ public abstract class Utilisateur {
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     private Long id;
+    @Column(nullable = false)
     private String nom;
+    @Column(nullable = false)
     private String prenom;
+    @Column(nullable = false)
     private String login; //Username
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private LocalDate dateNaissance;
 
     @OneToMany(mappedBy = "utilisateur")

@@ -1,7 +1,5 @@
 package fr.univtln.m1im.png.model;
 
-import jakarta.persistence.Entity;
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +30,7 @@ public class NotePersonnelle {
     private Long id;
 
     @Builder.Default
+    @Column(nullable = false)
     private String notePerso = "";
 
     @ManyToOne

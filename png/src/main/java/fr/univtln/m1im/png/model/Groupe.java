@@ -1,5 +1,6 @@
 package fr.univtln.m1im.png.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -47,7 +48,9 @@ import java.util.List;
 public class Groupe {
     @Id
     private String code;
+    @Column(nullable = false)
     private String nom;
+    @Column(nullable = false)
     private String formation;
 
     @ManyToOne

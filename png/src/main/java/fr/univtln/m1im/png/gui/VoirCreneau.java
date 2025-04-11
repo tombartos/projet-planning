@@ -2,7 +2,6 @@ package fr.univtln.m1im.png.gui;
 
 
 import fr.univtln.m1im.png.model.Creneau;
-import fr.univtln.m1im.png.model.Utilisateur;
 import jakarta.persistence.EntityManager;
 
 import java.time.OffsetDateTime;
@@ -21,14 +20,11 @@ public class VoirCreneau {
     private final Creneau creneau;
     private final EntityManager entityManager;
     private final Gui gui;
-    private Utilisateur utilisateur;
 
-
-    public VoirCreneau(Creneau creneau,EntityManager entityManager, Gui gui, Utilisateur utilisateur) {
+    public VoirCreneau(Creneau creneau,EntityManager entityManager, Gui gui) {
         this.creneau = creneau;
         this.entityManager = entityManager;
         this.gui = gui;
-        this.utilisateur = utilisateur;
     }
 
     public void afficherCreneau() {
@@ -182,8 +178,7 @@ public class VoirCreneau {
             stage.close();
             ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager,gui);
             modifierCreneau.afficherModifierCreneau();
-        }
-        );
+        });
 
         Scene scene = new Scene(grid, 800, 600);
         stage.setScene(scene);
