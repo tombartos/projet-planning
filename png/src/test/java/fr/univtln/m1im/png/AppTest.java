@@ -237,6 +237,19 @@ class AppTest {
             // Associate the Groupe with the Module
             newModule.getGroupes().add(newGroupe);
             newGroupe.getModules().add(newModule);
+
+            // Create a new Responsable
+            Responsable newResponsable = Responsable.builder()
+                .nom("NewResp")
+                .prenom("NewPrenom")
+                .login("newresp")
+                .email("newresp@email.com")
+                .dateNaissance(LocalDate.of(1975, 8, 10))
+                .UFR("NewUFR")
+                .build();
+
+            // Persist the new Responsable
+            entityManager.persist(newResponsable);
     
             // Persist all entities
             entityManager.persist(newProfesseur);

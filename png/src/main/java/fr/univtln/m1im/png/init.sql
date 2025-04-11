@@ -6,6 +6,15 @@ GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO et1;
 GRANT INSERT ON TABLE notes_perso TO et1;
 GRANT UPDATE ON TABLE notes_perso TO et1;
 
+CREATE USER newetudiant WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO newetudiant;
+GRANT USAGE ON SCHEMA public TO newetudiant;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO newetudiant;
+GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO newetudiant;
+GRANT INSERT ON TABLE notes_perso TO newetudiant;
+GRANT UPDATE ON TABLE notes_perso TO newetudiant;
+
+
 CREATE USER pr1 WITH PASSWORD 'password';
 GRANT CONNECT ON DATABASE postgres TO pr1;
 GRANT USAGE ON SCHEMA public TO pr1;
@@ -21,22 +30,60 @@ GRANT INSERT ON TABLE demandes_creneaux TO pr1;
 GRANT UPDATE ON TABLE demandes_creneaux TO pr1;
 
 
-CREATE USER resp1 WITH PASSWORD 'password';
-GRANT CONNECT ON DATABASE postgres TO resp1;
-GRANT USAGE ON SCHEMA public TO resp1;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
-GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
-GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
-GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
+CREATE USER newprof WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO newprof;
+GRANT USAGE ON SCHEMA public TO newprof;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO newprof;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO newprof;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO newprof;
+GRANT DELETE ON ALL TABLES IN SCHEMA public TO newprof;
+GRANT USAGE, SELECT ON SEQUENCE public."note_perso_sequence" TO newprof;
+GRANT INSERT ON TABLE notes_perso TO newprof;
+GRANT UPDATE ON TABLE notes_perso TO newprof;
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO newprof;
+GRANT INSERT ON TABLE demandes_creneaux TO newprof;
+GRANT UPDATE ON TABLE demandes_creneaux TO newprof;
 
-GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO resp1;
-GRANT INSERT ON TABLE demandes_creneaux TO resp1;
-GRANT UPDATE ON TABLE demandes_creneaux TO resp1;
+
+CREATE USER newresp WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO newresp;
+GRANT USAGE ON SCHEMA public TO newresp;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT DELETE ON ALL TABLES IN SCHEMA public TO newresp;
+
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO newresp;
+GRANT INSERT ON TABLE demandes_creneaux TO newresp;
+GRANT UPDATE ON TABLE demandes_creneaux TO newresp;
 DO $$
 BEGIN
     EXECUTE (
         SELECT string_agg(
-            format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO resp1;', schemaname, sequencename),
+            format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO newresp;', schemaname, sequencename),
+            ' '
+        )
+        FROM pg_sequences
+        WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+    );
+END $$;
+
+CREATE USER newresp WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO newresp;
+GRANT USAGE ON SCHEMA public TO newresp;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO newresp;
+GRANT DELETE ON ALL TABLES IN SCHEMA public TO newresp;
+
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO newresp;
+GRANT INSERT ON TABLE demandes_creneaux TO newresp;
+GRANT UPDATE ON TABLE demandes_creneaux TO newresp;
+DO $$
+BEGIN
+    EXECUTE (
+        SELECT string_agg(
+            format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO newresp;', schemaname, sequencename),
             ' '
         )
         FROM pg_sequences
