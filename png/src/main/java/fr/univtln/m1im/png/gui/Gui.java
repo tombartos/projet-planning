@@ -337,8 +337,13 @@ public class Gui {
 
             MenuButton demandeModifCreneau = new MenuButton("Demandes de modification");
             DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
+            
+            
             List<DemandeCreneau> demandes = demandeCreneauRepository.getAll(0, 20); // 20 max at the moment, to be changed later maybe
-            String res = "";     //TODO : Label pour afficher res en haut de la page, potentiel probleme avec le string a verifier
+            Label demandeModifLabel = new Label("Il y a "+ demandes.size() + " demandes de modification");
+            demandeModifCreneau.getItems().add(new CustomMenuItem(demandeModifLabel, false));
+            String res = "";
+
             for(DemandeCreneau demande : demandes)
             {
                 
@@ -367,10 +372,19 @@ public class Gui {
                 });
 
                 Button approuverModifButton = new Button("Approuver");
-                approuverModifButton.setOnAction(event -> {      
+                approuverModifButton.setOnAction(event -> {
+                    // TODO: Approuver la demande de modification      
                     this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
+                    if(res.equals("La demande a été acceptée avec succès"))
+                    {
+                        demandeModifCreneau.getItems().remove(item);
+                        demandeModifCreneau.getItems().getFirst().setText(res);
+                    }
+                    else
+                    {
+                        demandeModifCreneau.getItems().getFirst().setText(res);
+                    }
                     genererCreneaux();
-                    demandeModifCreneau.getItems().remove(item);
                     log.info(res);
 
                 });
