@@ -55,12 +55,12 @@ public class ModifierCreneau {
     private static final Logger log = Logger.getLogger(AjouterCours.class.getName());
     
 
-    public ModifierCreneau(Creneau creneau, EntityManager entityManager, Gui gui, Utilisateur utilisateur) {
+    public ModifierCreneau(Creneau creneau, EntityManager entityManager, Gui gui) {
         this.creneau = creneau;
         this.entityManager = entityManager;
         this.gui = gui;
         this.anneeDebut = gui.getAnneeDebut();
-        this.utilisateur = utilisateur;
+        this.utilisateur = gui.getUtilisateur();
     }
 
     public void afficherModifierCreneau() {

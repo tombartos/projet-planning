@@ -180,7 +180,7 @@ public class VoirCreneau {
 
         modifButton.setOnAction( e -> {
             stage.close();
-            ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager,gui,utilisateur);
+            ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager,gui);
             modifierCreneau.afficherModifierCreneau();
         }
         );
