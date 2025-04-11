@@ -158,11 +158,14 @@ public class GuiCreneau {
         label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
         label.setOnMouseClicked(e -> {
+            if(this.creneau.getStatus() != 2)
+            {
+                rectangle.setStroke(Color.BLUE);
+                rectangle.setStrokeWidth(4);
+                System.out.println("Rectangle clicked: " + creneau.toString());
+                afficherInformation();
+            }
             
-            rectangle.setStroke(Color.BLUE);
-            rectangle.setStrokeWidth(4);
-            System.out.println("Rectangle clicked: " + creneau.toString());
-            afficherInformation();
 
         });
         // label.setStyle("-fx-font-size: "+10+"px");

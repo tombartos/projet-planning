@@ -148,9 +148,12 @@ public class Gui {
         this.grille.setOnMouseClicked(e->{
             for(GuiCreneau gc : guiCreneaux)
             {
-                gc.getRectangle().setStrokeWidth(1);
+                if(gc.getCreneau().getStatus() != 2)
+                {
+                    gc.getRectangle().setStrokeWidth(1);
                 gc.getRectangle().setStroke(Color.BLACK);
                 this.popups[0].close();
+                }
             }});
         this.heures = new Canvas(width * 1/20, height*8/10);
         this.gcHeures = this.heures.getGraphicsContext2D();
@@ -338,6 +341,12 @@ public class Gui {
             String res = "";     //TODO : Label pour afficher res en haut de la page, potentiel probleme avec le string a verifier
             for(DemandeCreneau demande : demandes)
             {
+                
+                HBox demandeModifHbox = new HBox();
+                demandeModifHbox.setSpacing(10);
+                CustomMenuItem item = new CustomMenuItem(demandeModifHbox, false);
+                demandeModifCreneau.getItems().add(item);
+
                 Professeur prof = demande.getProfesseurs().getFirst();
                 Label creneauModif = new Label(prof.getNom() + " " + prof.getPrenom());
                 Button voirModifButton = new Button("Voir");
@@ -345,7 +354,9 @@ public class Gui {
                     log.info("Voir modification");
                     this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
                     genererCreneaux();
-                    GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, Creneau.makeFromDemandeCreneau(demande), this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                    Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
+                    visuCreneau.setStatus(2);
+                    GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
                     gestionCollision(guiCreneau);
                     guiCreneaux.add(guiCreneau);
                     guiCreneau.afficherCreneau();
@@ -359,19 +370,16 @@ public class Gui {
                 approuverModifButton.setOnAction(event -> {      
                     this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
                     genererCreneaux();
+                    demandeModifCreneau.getItems().remove(item);
                     log.info(res);
+
                 });
 
                 Button modifierModifButton = new Button("Modifier");
                 modifierModifButton.setOnAction(event -> {                    
                     log.info("Modifier modification ");
                 });
-                
-                HBox demandeModifHbox = new HBox();
-                demandeModifHbox.setSpacing(10);
-                CustomMenuItem item = new CustomMenuItem(demandeModifHbox, false);
                 demandeModifHbox.getChildren().addAll(creneauModif, voirModifButton, approuverModifButton, modifierModifButton);
-                demandeModifCreneau.getItems().add(item);
 
 
             }
