@@ -6,10 +6,14 @@ package fr.univtln.m1im.png.gui;
 import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Salle;
+import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.CreneauRepository;
+import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ModuleRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
@@ -21,6 +25,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import fr.univtln.m1im.png.model.Module;
+
+import java.util.logging.Logger;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -43,13 +49,18 @@ public class ModifierCreneau {
     private final Gui gui;
     private final int anneeDebut;
     private final Creneau creneau;
+    private Utilisateur utilisateur;
     private String selectedYear = null;
 
-    public ModifierCreneau(Creneau creneau, EntityManager entityManager, Gui gui) {
+    private static final Logger log = Logger.getLogger(AjouterCours.class.getName());
+    
+
+    public ModifierCreneau(Creneau creneau, EntityManager entityManager, Gui gui, Utilisateur utilisateur) {
         this.creneau = creneau;
         this.entityManager = entityManager;
         this.gui = gui;
         this.anneeDebut = gui.getAnneeDebut();
+        this.utilisateur = utilisateur;
     }
 
     public void afficherModifierCreneau() {
@@ -310,6 +321,7 @@ public class ModifierCreneau {
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
+                
                 Creneau newCreneau = Creneau.builder()
                                     .type(typeField.getValue())
                                     .heureDebut(heureDebut)
@@ -331,15 +343,24 @@ public class ModifierCreneau {
                     Module module2 = moduleRepository.getModuleByCode(moduleField2.getValue());
                     newCreneau.getModules().add(module2);
                 }
-                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
-                String res = creneauRepository.addCreneau(newCreneau, creneau);
-                if (res == "Le créneau a été inséré") {
-                    gui.genererCreneaux();
-                    stage.close();
-                } else {
+                if ( this.utilisateur instanceof Responsable){
+                    CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                    String res = creneauRepository.addCreneau(newCreneau, creneau);
+                    if (res == "Le créneau a été inséré") {
+                        gui.genererCreneaux();
+                        stage.close();
+                    } else {
+                        errorLabel.setText(res);
+                    }
                     errorLabel.setText(res);
                 }
-                errorLabel.setText(res);
+                else if (this.utilisateur instanceof Professeur){
+                    DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(newCreneau);
+                    DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
+                    String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
+                    errorLabel.setText(res);
+                    log.info(res);
+                }
             }
         });
 

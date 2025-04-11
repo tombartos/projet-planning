@@ -450,7 +450,7 @@ public class GuiCreneau {
         if(this.utilisateur instanceof Responsable){
             Button modifierCoursButton = new Button("Modifier le cours");
             modifierCoursButton.setOnAction(e -> {
-                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
+                ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui,utilisateur);
                 modifierCreneau.afficherModifierCreneau();
                 popup[0].close();
             });
