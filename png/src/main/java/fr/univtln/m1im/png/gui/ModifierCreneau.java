@@ -12,7 +12,6 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.model.Salle;
-import fr.univtln.m1im.png.model.Utilisateur;
 import fr.univtln.m1im.png.repositories.CreneauRepository;
 import fr.univtln.m1im.png.repositories.DemandeCreneauRepository;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
@@ -43,7 +42,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.logging.Logger;
+
 
 public class ModifierCreneau {
 

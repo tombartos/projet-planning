@@ -5,10 +5,14 @@
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/dto/GroupeDTO.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/dto/ProfesseurDTO.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/AjouterCours.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/AjouterModule.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/Gui.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/GuiCreneau.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/LoginPage.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/ModifierCreneau.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/gui/VoirCreneau.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Creneau.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/DemandeCreneau.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Etudiant.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Groupe.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Module.java
@@ -18,6 +22,7 @@
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Salle.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/model/Utilisateur.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/repositories/CreneauRepository.java
+/home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/repositories/DemandeCreneauRepository.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/repositories/EtudiantRepository.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/repositories/GenericRepository.java
 /home/emad_70/M1/Sopra/projet-planning/png/src/main/java/fr/univtln/m1im/png/repositories/GroupeRepository.java
