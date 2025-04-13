@@ -15,7 +15,6 @@ import fr.univtln.m1im.png.dto.GroupeDTO;
 import fr.univtln.m1im.png.dto.ProfesseurDTO;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
-import fr.univtln.m1im.png.model.Module;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import jakarta.persistence.EntityManager;
@@ -23,11 +22,9 @@ import jakarta.persistence.EntityManager;
 public class AjouterModule {
 
     private EntityManager entityManager;
-    //private Gui gui;
 
     public AjouterModule( EntityManager entityManager){
         this.entityManager = entityManager;
-        //this.gui = gui;
     }
 
     public void afficherAjoutModule() {
@@ -88,9 +85,9 @@ public class AjouterModule {
 
         annulerButton.setOnAction(e -> stage.close());
         validerButton.setOnAction(e -> {
-            if( (codeField.getText() == null) || (nomField.getText() == null) || (descriptionField.getText() == null) ||
-                (profCombo.getValue() == null) || ( groupeCombo.getValue() == null) || (cmField.getText()==null) ||
-                (tdField.getText() == null ) || (tpField.getText() == null)) {
+            if( (codeField.getText().trim().isEmpty()) || (nomField.getText().trim().isEmpty()) || (descriptionField.getText().trim().isEmpty()) ||
+                (profCombo.getValue() == null) || ( groupeCombo.getValue() == null) || (cmField.getText().trim().isEmpty()) ||
+                (tdField.getText().trim().isEmpty() ) || (tpField.getText().trim().isEmpty())) {
 
                     messageLabel.setText("Veuillez remplir tous les champs !");
                     return;
@@ -112,7 +109,8 @@ public class AjouterModule {
                 List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
                 Professeur professeur = professeurlist.get(profCombo.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeCombo.getValue());
-                Module newModule = Module.builder()
+                //parce que le compilateur a un confli avec "java.lang.Module"
+                fr.univtln.m1im.png.model.Module newModule = fr.univtln.m1im.png.model.Module.builder() 
                                     .code(codeM)
                                     .nom(nomM)
                                     .description(desc)
