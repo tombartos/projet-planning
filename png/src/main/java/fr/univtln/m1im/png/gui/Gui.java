@@ -102,6 +102,7 @@ public class Gui {
     private Button btnEdt;
     private Button ajoutCours;
     private Button demandeCours;
+    private Button ajouteModule;
     private String res; // Field to store the result of demandeCreneauRepository.acceptDemandeCreneau
 
     private Stage[] popups = {new Stage()};
@@ -222,6 +223,7 @@ public class Gui {
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         this.btnEdt = new Button("Mon EDT");
         this.ajoutCours = new Button("Ajouter cours");
+        this.ajouteModule = new Button("Ajouter module");
         this.demandeCours = new Button("Demander cours");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
@@ -273,6 +275,10 @@ public class Gui {
             AjouterCours cours = new AjouterCours( this.width, this.height, entityManager, anneeDebut, "Ajouter", this);
             cours.afficherFenetreAjoutCours();
         });
+        this.ajouteModule.setOnAction( e -> {
+            AjouterModule moduleAjoutee = new AjouterModule(entityManager);
+            moduleAjoutee.afficherAjoutModule();
+        });
         this.demandeCours.setOnAction(event -> {
             AjouterCours cours = new AjouterCours(this.width, this.height, entityManager, anneeDebut, "Demander", this);
             cours.afficherFenetreAjoutCours();
@@ -301,21 +307,24 @@ public class Gui {
         {
             this.ajoutCours.setVisible(false);
             this.demandeCours.setVisible(false);
+            this.ajouteModule.setVisible(false);
         }
         else if(this.utilisateur instanceof Professeur)
         {
             this.ajoutCours.setVisible(false);
             this.demandeCours.setVisible(true);
+            this.ajouteModule.setVisible(false);
         }
         else if(this.utilisateur instanceof Responsable)
         {
             this.ajoutCours.setVisible(true);
             this.demandeCours.setVisible(false);
+            this.ajouteModule.setVisible(true);
         }
         
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours, this.demandeCours);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours,  this.ajouteModule, this.demandeCours);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
