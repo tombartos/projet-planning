@@ -48,9 +48,12 @@ public class Gui {
     private static final Logger log = LoggerFactory.getLogger(Gui.class);
     //La fenêtre de l'application
     private Group group;
-    private GridPane gui;
+    private GridPane gdFiltresAutres;
     private int width;
     private int height;
+
+    private GridPane gdTmp;
+
     //L'emploi du temps
     private GridPane gdHeuresEdt; // (0,0) : Les heures; (1,0) L'edt
     private Canvas heures;
@@ -126,8 +129,8 @@ public class Gui {
         this.gpCreneaux = new Group();
         this.anneeDebut = 2024;
 
-        this.gui = new GridPane();
-        this.group.getChildren().add(this.gui);
+        this.gdFiltresAutres = new GridPane();
+        this.group.getChildren().add(this.gdFiltresAutres);
 
         this.gdHeuresEdt = new GridPane();
         this.gdSemainesGrille = new GridPane();
@@ -135,8 +138,10 @@ public class Gui {
         this.gdSemainesGrille.setVgap(20);
         this.gdSemaines = new GridPane();
 
-        this.gui.add(this.gdHeuresEdt, 0, 2);
-        this.gui.add(this.gdSemainesGrille, 1, 0);
+        this.gdTmp = new GridPane();
+        this.gdFiltresAutres.add(group, 0, 1);
+        this.gdTmp.add(this.gdHeuresEdt, 0, 2);
+        this.gdTmp.add(this.gdSemainesGrille, 1, 0);
         this.semaines = new ArrayList<>();
 
         this.guiCreneaux = new ArrayList<>();
@@ -328,7 +333,7 @@ public class Gui {
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
-        this.gdSemainesGrille.add(this.gpBarreFiltres, 1, 0);
+        this.gdFiltresAutres.add(this.gpBarreFiltres, 0, 0);
 
         if(this.utilisateur instanceof Responsable)
         {
