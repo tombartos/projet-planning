@@ -82,19 +82,43 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
     }
 
     public String acceptDemandeCreneau (DemandeCreneau demande) {
-        //We create a creneau from the demande
-        Creneau creneau = Creneau.makeFromDemandeCreneau(demande); 
-        //We persist the creneau and make the relations with the modules, groupes and professeurs
-        CreneauRepository creneauRepository = new CreneauRepository(em);
-        String res = creneauRepository.addCreneau(creneau, null);
-        if (res.equals("Le créneau a été inséré")){
-            em.getTransaction().begin();
-            //We set the status of the demande to accepted
-            demande.setStatus(1);
-            em.merge(demande);
-            em.getTransaction().commit();
+        switch (demande.getTypeDemande()) {
+            case 1:
+            case 0:
+                //We create a creneau from the demande
+                Creneau creneau = Creneau.makeFromDemandeCreneau(demande); 
+                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                CreneauRepository creneauRepository = new CreneauRepository(em);
+                String res = creneauRepository.addCreneau(creneau, null);
+                if (res.equals("Le créneau a été inséré")){
+                    creneauRepository.annulerCreneau(demande.getCreneauToModify());
+                    em.getTransaction().begin();
+                    //We set the status of the demande to accepted
+                    demande.setStatus(1);
+                    em.merge(demande);
+                    em.getTransaction().commit();
+                }
+                return res;
+            case 2:
+                //Invert creneau status
+                CreneauRepository creneauRepository2 = new CreneauRepository(em);
+                Creneau creneauToCancel = demande.getCreneauToModify();
+                if (creneauToCancel != null) {
+                    if (creneauToCancel.getStatus() == 0){
+                        creneauRepository2.annulerCreneau(creneauToCancel);
+                    }
+                    else{
+                        creneauRepository2.restoreCreneau(creneauToCancel);
+                    }
+                    return ("success");
+                } else {
+                    throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
+                }
+
+            default:
+                throw new UnsupportedOperationException("Type de demande non supporté : " + demande.getTypeDemande());
         }
-        return res;
+        
     }
 
     public String refuseDemandeCreneau (DemandeCreneau demande) {

@@ -421,10 +421,11 @@ public class Gui {
 
                 Button approuverModifButton = new Button("Approuver");
                 approuverModifButton.setOnAction(event -> {
-                    // TODO: Approuver la demande de modification      
+                    // TODO: Approuver la demande de modification et d'annulation     
                     this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
-                    if(res.equals("Le créneau a été inséré"))
+                    if(res.equals("Le créneau a été inséré") || res.equals("success"))
                     {
+                        log.info("OUI");
                         demandeModifCreneau.getItems().remove(item);
                         demandeModifLabel.setText(res);
                     }
@@ -676,7 +677,7 @@ public class Gui {
     }    
 
 }
-
+//TODO: faire que les demandes s'update quand on clique sur le bouton et pas juste a l'initialisation de la fenetre
 
 /*
  * mvn test

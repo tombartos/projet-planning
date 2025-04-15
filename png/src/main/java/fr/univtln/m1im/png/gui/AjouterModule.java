@@ -18,6 +18,7 @@ import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import jakarta.persistence.EntityManager;
+import fr.univtln.m1im.png.model.Module;
 
 public class AjouterModule {
 
@@ -109,8 +110,7 @@ public class AjouterModule {
                 List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
                 Professeur professeur = professeurlist.get(profCombo.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeCombo.getValue());
-                //parce que le compilateur a un confli avec "java.lang.Module"
-                fr.univtln.m1im.png.model.Module newModule = fr.univtln.m1im.png.model.Module.builder() 
+                Module newModule = Module.builder() 
                                     .code(codeM)
                                     .nom(nomM)
                                     .description(desc)
@@ -121,18 +121,22 @@ public class AjouterModule {
                                     
                 newModule.getProfesseurs().add(professeur);
                 newModule.getGroupes().add(groupe);
-                    
-            
-                messageLabel.setText("Module ajouté !");
-    
-            
-
+                try {
+                    entityManager.getTransaction().begin();
+                    entityManager.persist(newModule);
+                    entityManager.getTransaction().commit();
+                    messageLabel.setText("Module ajouté !");
+                }
+                catch (Exception ex) {
+                    entityManager.getTransaction().rollback();
+                    if (ex.getCause() instanceof org.hibernate.exception.ConstraintViolationException) {
+                        messageLabel.setText("Erreur : Un module avec ce code existe déjà !");
+                    } else {
+                        messageLabel.setText("Erreur lors de l'ajout du module : " + ex.getMessage());
+                    }
+                }
             }
-
-            
         });
-
-        
         stage.setScene(new Scene(grid, 450, 500));
         stage.showAndWait();
     }

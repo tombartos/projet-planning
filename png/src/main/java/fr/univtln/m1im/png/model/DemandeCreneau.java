@@ -64,7 +64,7 @@ public class DemandeCreneau {
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Professeur> professeurs = new ArrayList<Professeur>();
 
     @ManyToOne
@@ -73,6 +73,14 @@ public class DemandeCreneau {
     @Builder.Default
     @Column(nullable = false)
     private int status = 0; //0: En attente, 1: accepte, 2 : refuse
+
+    @ManyToOne
+    @Builder.Default
+    private Creneau creneauToModify = null; //Si not null, la demande est une demande de modification d'un creneau existant
+
+    @Builder.Default
+    @Column(nullable = false)
+    private int typeDemande = 0; //0: nouveau, 1: modification, 2: annulation, 3: suppression
 
     public static DemandeCreneau makeFromCreneau(Creneau c) {
         List<Module> modules = new ArrayList<>();
