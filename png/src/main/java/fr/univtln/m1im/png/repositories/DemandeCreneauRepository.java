@@ -88,6 +88,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         CreneauRepository creneauRepository = new CreneauRepository(em);
         String res = creneauRepository.addCreneau(creneau, null);
         if (res.equals("Le créneau a été inséré")){
+            creneauRepository.deleteCreneau(demande.getCreneauToModify());
             em.getTransaction().begin();
             //We set the status of the demande to accepted
             demande.setStatus(1);

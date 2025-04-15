@@ -74,6 +74,10 @@ public class DemandeCreneau {
     @Column(nullable = false)
     private int status = 0; //0: En attente, 1: accepte, 2 : refuse
 
+    @ManyToOne
+    @Builder.Default
+    private Creneau creneauToModify = null; //Si not null, la demande est une demande de modification d'un creneau existant
+
     public static DemandeCreneau makeFromCreneau(Creneau c) {
         List<Module> modules = new ArrayList<>();
         for (Module m : c.getModules()) {

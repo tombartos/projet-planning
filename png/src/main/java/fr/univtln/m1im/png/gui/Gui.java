@@ -575,7 +575,6 @@ public class Gui {
 
 }
 
-//TODO Affichage cours annuler
 
 /*
  * mvn test

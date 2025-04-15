@@ -352,6 +352,7 @@ public class ModifierCreneau {
                 }
                 else if (this.utilisateur instanceof Professeur){
                     DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(newCreneau);
+                    demandeCreneau.setCreneauToModify(creneau);
                     DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
                     String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
                     errorLabel.setText(res);
