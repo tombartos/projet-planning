@@ -90,6 +90,7 @@ public class LoginPage {
                         }
                         catch (Exception ex_res) {
                             log.info("Not a responsable, problem in the database ?");
+                            ex_res.printStackTrace();
                         }
                     }
                 }
