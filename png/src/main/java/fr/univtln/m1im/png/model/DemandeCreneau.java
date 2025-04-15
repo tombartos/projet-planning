@@ -64,7 +64,7 @@ public class DemandeCreneau {
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Professeur> professeurs = new ArrayList<Professeur>();
 
     @ManyToOne

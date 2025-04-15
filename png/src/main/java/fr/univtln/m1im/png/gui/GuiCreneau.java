@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
@@ -31,6 +32,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class GuiCreneau {
+    private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(GuiCreneau.class.getName());
     private Utilisateur utilisateur;
     private Group group;
     private Rectangle rectangle;
@@ -177,7 +179,7 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        
+
         label.setText(creneau.getSalle().getCode()+"\n"+listGroupe+"\n"+listModule+creneau.getType()+"\n"+listProf);
 
 
@@ -466,18 +468,31 @@ public class GuiCreneau {
                 annulerCoursButton.setText("Demande de restaurer le cours");
             }
             annulerCoursButton.setOnAction(e -> {
+                //L'objet demande est identique pour les deux cas, on va juste inverser le status du cours a l'acceptation de la demande
                 entityManager.getTransaction().begin();
-                Creneau managedCreneau = entityManager.merge(creneau);
+                DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(creneau);
+                demandeCreneau.setTypeDemande(2);
+                demandeCreneau.setCreneauToModify(creneau);
+                for (Professeur prof : demandeCreneau.getProfesseurs()) {
+                    Professeur managedProf = entityManager.merge(prof);
+                    managedProf.getDemandes_creneaux().add(demandeCreneau);
+                }
+                entityManager.persist(demandeCreneau);
+                entityManager.getTransaction().commit();
+                log.info("DEBUG :"+ String.valueOf(demandeCreneau.getProfesseurs().size()));
+                for (Professeur prof : demandeCreneau.getProfesseurs()) {
+                    log.info(prof.getNom() + " " + prof.getPrenom());
+                }
+                
                 if(creneau.getStatus() == 1){
-                    managedCreneau.setStatus(0);
+
                     annulerCoursButton.setText("Demande d'annuler le cours");
                 }
                 else
                 {
-                    managedCreneau.setStatus(1);
+                    //TODO: YANN :Label pour afficher "Demande envoyée"
                     annulerCoursButton.setText("Demande de restaurer le cours");
                 }
-                entityManager.getTransaction().commit();
                 gui.genererCreneaux();
                 popup[0].close();
             });
