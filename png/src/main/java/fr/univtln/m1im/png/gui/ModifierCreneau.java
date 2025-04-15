@@ -352,6 +352,7 @@ public class ModifierCreneau {
                 }
                 else if (this.utilisateur instanceof Professeur){
                     DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(newCreneau);
+                    demandeCreneau.setTypeDemande(1);
                     demandeCreneau.setCreneauToModify(creneau);
                     DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
                     String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
@@ -368,4 +369,4 @@ public class ModifierCreneau {
     }
 }
 
-//TODO : Patcher bug : quand un prof fait une demande de modification et que le responsable accepte ça crée un nouveau creneau sans supprimer l'ancien + gérer demandes annulation et suppression
+//TODO : gérer demandes annulation et suppression

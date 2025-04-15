@@ -78,6 +78,10 @@ public class DemandeCreneau {
     @Builder.Default
     private Creneau creneauToModify = null; //Si not null, la demande est une demande de modification d'un creneau existant
 
+    @Builder.Default
+    @Column(nullable = false)
+    private int typeDemande = 0; //0: nouveau, 1: modification, 2: annulation, 3: suppression
+
     public static DemandeCreneau makeFromCreneau(Creneau c) {
         List<Module> modules = new ArrayList<>();
         for (Module m : c.getModules()) {
