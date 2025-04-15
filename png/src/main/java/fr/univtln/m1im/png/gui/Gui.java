@@ -560,7 +560,7 @@ public class Gui {
     }    
 
 }
-
+//TODO: faire que les demandes s'update quand on clique sur le bouton et pas juste a l'initialisation de la fenetre
 
 /*
  * mvn test
