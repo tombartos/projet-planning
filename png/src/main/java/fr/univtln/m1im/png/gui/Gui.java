@@ -146,20 +146,12 @@ public class Gui {
         this.gdFiltresAutres.minHeight(mHeight*4);
         this.group.getChildren().add(this.gdFiltresAutres);
 
-        //this.gdTmp = new GridPane();
-        //this.gdFiltresAutres.add(gdTmp, 0, 1);
-
         this.gdHeuresDatesAutres = new GridPane();
         this.gdFiltresAutres.add(this.gdHeuresDatesAutres, 0,1);
 
         this.gdDates = new GridPane();
         this.gdDates.setMinHeight(mHeight);
         this.gdHeuresDatesAutres.add(this.gdDates, 1, 0);
-
-        //this.gdHeuresEdt = new GridPane();
-        // this.gdSemainesGrille = new GridPane();
-        // this.gdSemainesGrille.setHgap(20);
-        // this.gdSemainesGrille.setVgap(20);
 
         this.gdSemaines = new GridPane();
         this.gdSemaines.setMinHeight(mHeight);
@@ -171,10 +163,6 @@ public class Gui {
         this.gdJoursGrille = new GridPane();
         this.gdHeuresDatesAutres.add(this.gdJoursGrille, 1, 1);
 
-        // this.gdTmp.add(this.gdHeuresEdt, 0, 2);
-        // this.gdTmp.add(this.gdSemainesGrille, 1, 0);
-        // this.gdFiltresAutres.add(this.gdHeuresEdt, 0, 2);
-        // this.gdFiltresAutres.add(this.gdSemainesGrille, 1, 0);
 
 
 
@@ -204,27 +192,19 @@ public class Gui {
         this.gcJours.setFill(Color.YELLOW);
         this.gcJours.fillRect(50, 50, 200, 50);
 
-        //this.gdSemainesGrille.add(this.gpJour,1,2);
-        //this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gdJoursGrille.add(this.gpJour,0,0);
         this.gdJoursGrille.add(this.gpGrille,0,1);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
-        // this.gdSemainesGrille.add(this.gdSemaines,1,1);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
-        //this.gdHeuresEdt.add(this.heures,0,0);
         this.gdHeuresDatesAutres.add(this.heures,0,1);
-
-        //this.gdHeuresEdt.add(this.gdSemainesGrille,1,0);
 
         //Ajout des semaines
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         OffsetDateTime premierJourAnnee = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(9).withDayOfMonth(1);
         OffsetDateTime tmpJour = premierJourAnnee;
-        System.out.println("Premier jour de l'année : " + premierJourAnnee);
         this.premierSemaine = tmpJour.withYear(anneeDebut).get(weekFields.weekOfWeekBasedYear());
-        System.out.println("Premier semaine de l'année : " + this.premierSemaine);
         this.derniereSemaine = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(7).withDayOfMonth(31).get(weekFields.weekOfWeekBasedYear());
         int tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
         int indexSemaine = 0;
@@ -513,7 +493,6 @@ public class Gui {
                     i*((this.wGrille/this.nbSemaines)/6) +
                          index * this.wGrille / (this.nbSemaines)-index/2, 
                         this.height * 1/20 / 2);
-                    System.out.println("info : " + i+" info : " + index);
                     break;
                 }
             }
@@ -605,9 +584,6 @@ public class Gui {
         else{
             annee = this.anneeDebut + 1;
         }
-        System.out.println("Num semaine : " + numSemaine+ " Annee : " + (OffsetDateTime.now()
-        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
-        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).toLocalDate()));
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
