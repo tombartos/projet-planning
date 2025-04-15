@@ -52,7 +52,8 @@ public class Gui {
     private int width;
     private int height;
 
-    private GridPane gdTmp;
+    //Jours de la semaines
+    private List<String> jours;
 
     //L'emploi du temps
     private GridPane gdHeuresDatesAutres; // (0,1) : Les heures; (1,0) : La date; (1,1) : Autres
@@ -124,6 +125,7 @@ public class Gui {
         this.height = height;
         this.entityManager = entityManager;
 
+        this.jours = List.of("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche");
 
         //variables
         this.nbHeure = 12;
@@ -230,7 +232,9 @@ public class Gui {
         {
             Button semaine = new Button(""+(tmpSemaine));
             semaine.setStyle("-fx-font-size: 8px;");
-            semaine.setPrefSize(this.wGrille/this.nbSemaines, 30);
+            semaine.setPrefSize(this.wGrille/(this.nbSemaines), 30);
+            semaine.setMinSize(this.wGrille/(this.nbSemaines), 30);
+            semaine.setMaxSize(this.wGrille/(this.nbSemaines), 30);
             final int index = tmpSemaine;
             ajouterMois(tmpSemaine,indexSemaine);
             semaine.setOnMouseClicked(event -> {this.numSemaine = index;
@@ -459,6 +463,22 @@ public class Gui {
         
     }
 
+    public String moisFr(int mois)
+    {
+        String[] moisFrList = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
+        return moisFrList[mois-1];
+    }
+
+    public String dateFr(OffsetDateTime jour)
+    {
+        String strJourSemaineFr = this.jours.get(jour.getDayOfWeek().getValue()-1);
+        String strMoisFr = ""+jour.getMonthValue();
+        String strJourFr = ""+jour.getDayOfMonth();
+        String strAnneeFr = ""+jour.getYear();
+        return strJourSemaineFr + " " + strJourFr + "/" + strMoisFr + "/" + strAnneeFr;
+
+    }
+
     public void ajouterMois(int numSemaine, int index)
     {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -486,7 +506,12 @@ public class Gui {
             {
                 if(permierJourSemaine.plusDays(i).getMonthValue() != permierJourSemaine.getMonthValue())
                 {
-                    this.gcMois.strokeText("| "+permierJourSemaine.plusDays(i).getMonth().toString(), i*((this.wGrille/this.nbSemaines+1)/7) + index * this.wGrille / this.nbSemaines, this.height * 1/20 / 2);
+                    // TODO a améliorer
+                    this.gcMois.setFont(javafx.scene.text.Font.font(12)); // Changer la taille de la police
+                    this.gcMois.strokeText("| "+ moisFr(permierJourSemaine.plusDays(i).getMonthValue()), 
+                    i*((this.wGrille/this.nbSemaines)/6) +
+                         index * this.wGrille / (this.nbSemaines)-index/2, 
+                        this.height * 1/20 / 2);
                     System.out.println("info : " + i+" info : " + index);
                     break;
                 }
@@ -586,7 +611,9 @@ public class Gui {
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
         for(int i = 0; i < this.nbJour; i++){
-            this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
+            
+            //this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
+            this.gcJours.strokeText(dateFr(permierJourSemaine.plusDays(i)), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
         }
         
 
