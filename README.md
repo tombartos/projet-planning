@@ -46,6 +46,13 @@ cd projet-planning/png
 mvn exec:java
 ```
 
+Pour réinitialiser la base de données, il faut utiliser la commande suivante : 
+```bash
+mvn test
+```
+Cette commande va supprimer la base de données et la recréer avec les données de test.
+Il faut ensuite reutiliser le script SQL (méthode 1 ou 2) pour créer les utilisateurs et leur donner les permissions nécessaires.
+
 
 
 

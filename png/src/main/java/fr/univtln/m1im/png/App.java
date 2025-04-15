@@ -10,7 +10,7 @@ import fr.univtln.m1im.png.gui.LoginPage;
  * Hello world!
  */
 @Slf4j
-public final class App extends Application{
+public final class App extends Application {
     public static void main(String[] args) {
         launch(args);
     }
@@ -20,6 +20,12 @@ public final class App extends Application{
         int width = 1200;
         int height = 800;
         LoginPage.showLoginPage(stage, width, height);
+    }
+
+    @Override
+    public void stop() {
+        var emf = Utils.getEntityManagerFactory();
+        if (emf != null) emf.close();
     }
 }
 

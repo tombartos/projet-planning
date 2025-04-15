@@ -102,6 +102,7 @@ public class Gui {
     private Button btnEdt;
     private Button ajoutCours;
     private Button demandeCours;
+    private Button ajouteModule;
     private String res; // Field to store the result of demandeCreneauRepository.acceptDemandeCreneau
 
     private Stage[] popups = {new Stage()};
@@ -109,7 +110,6 @@ public class Gui {
 
     public Gui(Utilisateur utilisateur, Group group, int width, int height, EntityManager entityManager, Stage stage, Scene scene) {
         this.utilisateur = utilisateur;
-        //this.etudiant = etudiant;
         this.group = group;
         this.width = width;
         this.height = height;
@@ -166,14 +166,12 @@ public class Gui {
         this.gcJours.fillRect(50, 50, 200, 50);
 
         this.gdSemainesGrille.add(this.gpJour,1,2);
-        //this.gdSemainesGrille.add(this.gpJour,1,1);
         this.gdSemainesGrille.add(this.gpGrille,1,3);
         this.gpGrille.getChildren().add(this.grille);
         this.gpGrille.getChildren().add(this.gpCreneaux);
         this.gdSemainesGrille.add(this.gdSemaines,1,1);
         this.gcGrille = this.grille.getGraphicsContext2D();
 
-        // this.gdSemainesGrille.add(this.heures,0,1);
         this.gdHeuresEdt.add(this.heures,0,0);
         this.gdHeuresEdt.add(this.gdSemainesGrille,1,0);
 
@@ -225,6 +223,7 @@ public class Gui {
         this.barreFiltres.setSpacing(10); // Espacement entre les boutons
         this.btnEdt = new Button("Mon EDT");
         this.ajoutCours = new Button("Ajouter cours");
+        this.ajouteModule = new Button("Ajouter module");
         this.demandeCours = new Button("Demander cours");
         this.salleDropdown = new ComboBox<>();
         this.salleDropdown.setPromptText("Salles");
@@ -244,21 +243,18 @@ public class Gui {
             String choix = filtreDropdown.getValue();
             switch (choix) {
                 case "Salles":
-                    //this.filtreDropdown.setVisible(false);
                     this.salleDropdown.setVisible(true); 
                     this.groupesDropdown.setVisible(false);
                     this.profDropdown.setVisible(false);
                     chargerSalles();
                     break;
                 case "Groupes":
-                    //this.filtreDropdown.setVisible(false);
                     this.groupesDropdown.setVisible(true);
                     this.salleDropdown.setVisible(false);
                     this.profDropdown.setVisible(false);
                     chargerGroupes();
                     break;
                 case "Professeurs":
-                    //this.filtreDropdown.setVisible(false);
                     this.profDropdown.setVisible(true);
                     this.salleDropdown.setVisible(false);
                     this.groupesDropdown.setVisible(false);
@@ -278,6 +274,10 @@ public class Gui {
         this.ajoutCours.setOnAction(event -> {
             AjouterCours cours = new AjouterCours( this.width, this.height, entityManager, anneeDebut, "Ajouter", this);
             cours.afficherFenetreAjoutCours();
+        });
+        this.ajouteModule.setOnAction( e -> {
+            AjouterModule moduleAjoutee = new AjouterModule(entityManager);
+            moduleAjoutee.afficherAjoutModule();
         });
         this.demandeCours.setOnAction(event -> {
             AjouterCours cours = new AjouterCours(this.width, this.height, entityManager, anneeDebut, "Demander", this);
@@ -307,21 +307,24 @@ public class Gui {
         {
             this.ajoutCours.setVisible(false);
             this.demandeCours.setVisible(false);
+            this.ajouteModule.setVisible(false);
         }
         else if(this.utilisateur instanceof Professeur)
         {
             this.ajoutCours.setVisible(false);
             this.demandeCours.setVisible(true);
+            this.ajouteModule.setVisible(false);
         }
         else if(this.utilisateur instanceof Responsable)
         {
             this.ajoutCours.setVisible(true);
             this.demandeCours.setVisible(false);
+            this.ajouteModule.setVisible(true);
         }
         
 
         // Ajouter les boutons dans la barre horizontale
-        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours, this.demandeCours);
+        this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown, this.filtreDropdown, this.ajoutCours,  this.ajouteModule, this.demandeCours);
         // Ajouter la barre de boutons au groupe
         this.gpBarreFiltres.getChildren().add(barreFiltres);
         // Ajouter ce groupe à l'interface
@@ -329,11 +332,6 @@ public class Gui {
 
         if(this.utilisateur instanceof Responsable)
         {
-            // Button DemandeModif = new Button("Demande de modification");
-            // DemandeModif.setOnAction(event -> {
-            //     System.out.println("Demande de modification");
-            // });
-            // this.barreFiltres.getChildren().add(DemandeModif);
 
             MenuButton demandeModifCreneau = new MenuButton("Demandes de modification");
             DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
@@ -487,7 +485,6 @@ public class Gui {
 
     public void majCreneaux(int numSemaine){
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
-        //this.gpJour.getChildren().clear();
         this.gcJours.clearRect(0, 0, this.cJours.getWidth(), this.cJours.getHeight());
         int annee = 0;
         if (numSemaine >= this.premierSemaine){
@@ -499,9 +496,6 @@ public class Gui {
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        //int anneeTest = permierJourSemaine.getYear();
-
-        //OffsetDateTime permierJourAnnee = OffsetDateTime.now().withYear(anneeTest).withMonth(9).withDayOfMonth(1);
         for(int i = 0; i < this.nbJour; i++){
             this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, 10);
         }
@@ -509,12 +503,6 @@ public class Gui {
 
         
         this.gpCreneaux.getChildren().clear();
-        // Les 2 prochaines lignes sont à supprimer à long terme
-        //if (utilisateur instanceof Etudiant) {
-        
-            // EtudiantRepository etudiantRepository = new EtudiantRepository(entityManager);
-            // this.creneaux = etudiantRepository.getWeekCreneaux(utilisateur.getId(), numSemaine, anneeTest, 0, 100);
-            // genererCreneaux();
         guiCreneaux = new ArrayList<>();
         for(Creneau creneau : this.creneaux){
                 GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
@@ -524,7 +512,6 @@ public class Gui {
             
             
         }
-        // }
     }
 
     public void gestionCollision(GuiCreneau guiCreneau){
@@ -538,7 +525,6 @@ public class Gui {
                 gc.setCollision(gc.getCollision() + 1);
                 guiCreneau.setCollision(guiCreneau.getCollision() + 1);
                 guiCreneau.setPosCollision(gc.getPosCollision() + 1);
-                //gc.afficherCreneau();
                 gc.majAffichage();
             }
         }

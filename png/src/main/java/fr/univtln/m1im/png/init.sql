@@ -45,22 +45,22 @@ GRANT INSERT ON TABLE demandes_creneaux TO newprof;
 GRANT UPDATE ON TABLE demandes_creneaux TO newprof;
 
 
-CREATE USER newresp WITH PASSWORD 'password';
-GRANT CONNECT ON DATABASE postgres TO newresp;
-GRANT USAGE ON SCHEMA public TO newresp;
-GRANT SELECT ON ALL TABLES IN SCHEMA public TO newresp;
-GRANT INSERT ON ALL TABLES IN SCHEMA public TO newresp;
-GRANT UPDATE ON ALL TABLES IN SCHEMA public TO newresp;
-GRANT DELETE ON ALL TABLES IN SCHEMA public TO newresp;
+CREATE USER resp1 WITH PASSWORD 'password';
+GRANT CONNECT ON DATABASE postgres TO resp1;
+GRANT USAGE ON SCHEMA public TO resp1;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO resp1;
+GRANT INSERT ON ALL TABLES IN SCHEMA public TO resp1;
+GRANT UPDATE ON ALL TABLES IN SCHEMA public TO resp1;
+GRANT DELETE ON ALL TABLES IN SCHEMA public TO resp1;
 
-GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO newresp;
-GRANT INSERT ON TABLE demandes_creneaux TO newresp;
-GRANT UPDATE ON TABLE demandes_creneaux TO newresp;
+GRANT USAGE, SELECT ON SEQUENCE public."demande_creneau_sequence" TO resp1;
+GRANT INSERT ON TABLE demandes_creneaux TO resp1;
+GRANT UPDATE ON TABLE demandes_creneaux TO resp1;
 DO $$
 BEGIN
     EXECUTE (
         SELECT string_agg(
-            format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO newresp;', schemaname, sequencename),
+            format('GRANT USAGE, SELECT, UPDATE ON SEQUENCE %I.%I TO resp1;', schemaname, sequencename),
             ' '
         )
         FROM pg_sequences
