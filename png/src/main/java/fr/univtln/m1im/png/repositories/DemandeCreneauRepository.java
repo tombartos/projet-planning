@@ -82,38 +82,81 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
     }
 
     public String acceptDemandeCreneau (DemandeCreneau demande) {
+        Creneau creneau;
+        Creneau oldCreneau;
+        CreneauRepository creneauRepository = new CreneauRepository(em);
+        String res;
         switch (demande.getTypeDemande()) {
-            case 1:
-            case 0:
+            case 0:  //New creneau
                 //We create a creneau from the demande
-                Creneau creneau = Creneau.makeFromDemandeCreneau(demande); 
-                //We persist the creneau and make the relations with the modules, groupes and professeurs
-                CreneauRepository creneauRepository = new CreneauRepository(em);
-                String res = creneauRepository.addCreneau(creneau, null);
-                if (res.equals("Le créneau a été inséré")){
-                    creneauRepository.annulerCreneau(demande.getCreneauToModify());
-                    em.getTransaction().begin();
-                    //We set the status of the demande to accepted
-                    demande.setStatus(1);
-                    em.merge(demande);
-                    em.getTransaction().commit();
+                creneau = Creneau.makeFromDemandeCreneau(demande);
+                //We delete the demande from the database
+                em.getTransaction().begin();
+                for (Professeur prof : demande.getProfesseurs()) {
+                    Professeur managedProf = em.merge(prof);
+                    managedProf.getDemandes_creneaux().remove(demande);
                 }
+                demande.setStatus(1); //We set the status of the demande to accepted
+                em.remove(demande);
+                em.getTransaction().commit();
+                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                res = creneauRepository.addCreneau(creneau, null);
                 return res;
-            case 2:
+
+            case 1: //Modify creneau
+                //We create a creneau from the demande
+                creneau = Creneau.makeFromDemandeCreneau(demande);
+                oldCreneau = demande.getCreneauToModify();
+                //We delete the demande from the database
+                em.getTransaction().begin();
+                for (Professeur prof : demande.getProfesseurs()) {
+                    Professeur managedProf = em.merge(prof);
+                    managedProf.getDemandes_creneaux().remove(demande);
+                }
+                demande.setStatus(1); //We set the status of the demande to accepted
+                em.remove(demande);
+                em.getTransaction().commit();
+                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                res = creneauRepository.addCreneau(creneau, oldCreneau);
+                return res;
+            case 2:  //Cancel creneau
                 //Invert creneau status
-                CreneauRepository creneauRepository2 = new CreneauRepository(em);
                 Creneau creneauToCancel = demande.getCreneauToModify();
                 if (creneauToCancel != null) {
                     if (creneauToCancel.getStatus() == 0){
-                        creneauRepository2.annulerCreneau(creneauToCancel);
+                        creneauRepository.annulerCreneau(creneauToCancel);
                     }
                     else{
-                        creneauRepository2.restoreCreneau(creneauToCancel);
+                        creneauRepository.restoreCreneau(creneauToCancel);
                     }
+                    em.getTransaction().begin();
+                    for (Professeur prof : demande.getProfesseurs()) {
+                        Professeur managedProf = em.merge(prof);
+                        managedProf.getDemandes_creneaux().remove(demande);
+                    }
+                    demande.setStatus(1); //We set the status of the demande to accepted
+                    em.remove(demande);
+                    em.getTransaction().commit();
                     return ("success");
                 } else {
                     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
                 }
+            case 3:  //Delete creneau
+                //We delete the creneau from the database
+                //TODO: a patcher, non foncitonnel
+                // Creneau creneauToDelete = demande.getCreneauToModify();
+                // if (creneauToDelete != null) {
+                //     creneauRepository.delete(creneauToDelete);
+                //     em.getTransaction().begin();
+                //     //We set the status of the demande to accepted
+                //     demande.setStatus(1);
+                //     em.merge(demande);
+                //     em.getTransaction().commit();
+                //     return ("success");
+                // } else {
+                //     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
+                // }
+
 
             default:
                 throw new UnsupportedOperationException("Type de demande non supporté : " + demande.getTypeDemande());

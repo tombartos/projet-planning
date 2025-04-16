@@ -455,7 +455,6 @@ public class GuiCreneau {
             grid.add(supprimerCoursButton, 0, 6);
         }
 
-        //TODO prof
         else if(this.utilisateur instanceof Professeur){
             Button modifierCoursButton = new Button("Demande de modifier le cours");
             modifierCoursButton.setOnAction(e -> {
@@ -499,9 +498,10 @@ public class GuiCreneau {
 
             Button supprimerCoursButton = new Button("Demande de supprimer le cours");
             supprimerCoursButton.setOnAction(e -> {
-                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
-                creneauRepository.deleteCreneau(creneau);
-                gui.genererCreneaux();
+                //TODO: Demande suppimer cours
+                // CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                // creneauRepository.deleteCreneau(creneau);
+                // gui.genererCreneaux();
 
             });
             grid.add(modifierCoursButton, 0, 4);

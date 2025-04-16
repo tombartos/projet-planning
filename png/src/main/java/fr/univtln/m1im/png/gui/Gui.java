@@ -387,21 +387,23 @@ public class Gui {
                     log.info("Voir modification");
                     this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
                     genererCreneaux();
-                    Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
-                    visuCreneau.setStatus(2);
-                    GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
-                    gestionCollision(guiCreneau);
-                    guiCreneaux.add(guiCreneau);
-                    guiCreneau.afficherCreneau();
-                    guiCreneau.getRectangle().setStroke(Color.PINK);
-                    guiCreneau.getRectangle().setStrokeWidth(3);
+                    if (demande.getTypeDemande()<2)
+                    {    
+                        Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
+                        visuCreneau.setStatus(2);
+                        GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                        gestionCollision(guiCreneau);
+                        guiCreneaux.add(guiCreneau);
+                        guiCreneau.afficherCreneau();
+                        guiCreneau.getRectangle().setStroke(Color.PINK);
+                        guiCreneau.getRectangle().setStrokeWidth(3);
+                    }
                     VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande),entityManager,this);
                     voirCreneau.afficherCreneau();
                 });
 
                 Button approuverModifButton = new Button("Approuver");
-                approuverModifButton.setOnAction(event -> {
-                    // TODO: Approuver la demande de modification et d'annulation     
+                approuverModifButton.setOnAction(event -> {    
                     this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
                     if(res.equals("Le créneau a été inséré") || res.equals("success"))
                     {
@@ -653,7 +655,8 @@ public class Gui {
     }    
 
 }
-//TODO: faire que les demandes s'update quand on clique sur le bouton et pas juste a l'initialisation de la fenetre
+//TODO: Patcher le menu des demandes de modif
+//TODO: Patcher mauvaise gestion des collisions entre cours lors d'ajout ou modif
 
 /*
  * mvn test
