@@ -368,6 +368,9 @@ public class Gui {
             Label demandeModifLabel = new Label("Il y a "+ demandes.size() + " demandes de modification");
             CustomMenuItem demandeModifItem =  new CustomMenuItem(demandeModifLabel, false);
             demandeModifCreneau.getItems().add(demandeModifItem);
+            demandeModifCreneau.setOnMouseClicked(event -> {
+                demandeModifLabel.setText("Il y a "+ demandes.size() + " demandes de modification");
+            });
 
             for(DemandeCreneau demande : demandes)
             {
@@ -408,6 +411,7 @@ public class Gui {
                         log.info("OUI");
                         demandeModifCreneau.getItems().remove(item);
                         demandeModifLabel.setText(res);
+                        demandes.remove(demande);   
                     }
                     else
                     {
