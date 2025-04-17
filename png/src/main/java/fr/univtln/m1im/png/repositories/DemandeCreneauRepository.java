@@ -12,8 +12,10 @@ import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
-
+import java.util.logging.Logger;
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
+    private static final Logger log = Logger.getLogger(DemandeCreneauRepository.class.getName());
+
     public DemandeCreneauRepository(EntityManager entityManager){
         super(DemandeCreneau.class, entityManager);
     }
@@ -101,6 +103,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 em.getTransaction().commit();
                 //We persist the creneau and make the relations with the modules, groupes and professeurs
                 res = creneauRepository.addCreneau(creneau, null);
+                log.info("Result  :"+res);
                 return res;
 
             case 1: //Modify creneau
@@ -118,6 +121,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 em.getTransaction().commit();
                 //We persist the creneau and make the relations with the modules, groupes and professeurs
                 res = creneauRepository.addCreneau(creneau, oldCreneau);
+                log.info("Resuult : "+res);
                 return res;
             case 2:  //Cancel creneau
                 //Invert creneau status
@@ -137,6 +141,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                     demande.setStatus(1); //We set the status of the demande to accepted
                     em.remove(demande);
                     em.getTransaction().commit();
+                    log.info("success");
                     return ("success");
                 } else {
                     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");

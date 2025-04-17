@@ -162,9 +162,7 @@ public class Gui {
 
         this.gdJoursGrille = new GridPane();
         this.gdHeuresDatesAutres.add(this.gdJoursGrille, 1, 1);
-
-
-
+        this.res = "";
 
         this.semaines = new ArrayList<>();
 
@@ -370,7 +368,6 @@ public class Gui {
             Label demandeModifLabel = new Label("Il y a "+ demandes.size() + " demandes de modification");
             CustomMenuItem demandeModifItem =  new CustomMenuItem(demandeModifLabel, false);
             demandeModifCreneau.getItems().add(demandeModifItem);
-            String res = "";
 
             for(DemandeCreneau demande : demandes)
             {
@@ -404,7 +401,8 @@ public class Gui {
 
                 Button approuverModifButton = new Button("Approuver");
                 approuverModifButton.setOnAction(event -> {    
-                    this.res = demandeCreneauRepository.acceptDemandeCreneau(demande);
+                    res = demandeCreneauRepository.acceptDemandeCreneau(demande);
+                    log.info("res : "+ res);
                     if(res.equals("Le créneau a été inséré") || res.equals("success"))
                     {
                         log.info("OUI");
