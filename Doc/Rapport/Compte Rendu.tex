@@ -176,14 +176,14 @@ l'administrateur qui gère les comptes et le visiteur qui n'est pas connecté, m
 
 \section{Conception UML générale de l’application}
 Voici quelques diagrammes conernant l'organisation générale de l'application (voir figures \ref{fig:uml_uc} et \ref{fig:uml_classes}).\\
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.65\textwidth]{UC.png}
     \caption{Diagramme de cas d'utilisations}
     \label{fig:uml_uc}
 \end{figure}
 
-\begin{figure}[!ht]
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.65\textwidth]{classes.png}
     \caption{Diagramme de classes}
@@ -199,14 +199,14 @@ Déclencheur : L'utilisateur arrive sur la page d'accueil ou clique sur "Mon emp
 Pré-Condition : L'utilisateur est connecté\\
 Post-Condition : L'emploi du temps de l'utilisateur et de la semaine choisie est affiché\\
 
-Scénario nominal
-1. L'utilisateur clique sur le bouton "Mon EDT"
-2. Le système affiche l'emploi du temps de l'utilisateur sur une semaine
+Scénario nominal\\
+1. L'utilisateur clique sur le bouton "Mon EDT"\\
+2. Le système affiche l'emploi du temps de l'utilisateur sur une semaine\\
 
-Scénarios alternatifs
-Choix semaine
-3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse
-4. a Le système affiche l'EDT de l'utilisateur sur la semaine choisie
+Scénarios alternatifs\\
+Choix semaine\\
+3. a L'utilisateur clique sur le numéro de la semaine qui l'intéresse\\
+4. a Le système affiche l'EDT de l'utilisateur sur la semaine choisie\\
 
 \subsection{UC03 "Consulter l'emploi du temps par salles"}
 Description : L'utilisateur connecté consulte l'emploi du temps de la salle voulue sur la semaine voulue.\\
@@ -233,10 +233,10 @@ Choix semaine\\
 3. L'utilisateur clique sur le numéro de la semaine qui l'intéresse\\
 4. Le système affiche l'EDT de la salle sur la semaine choisie\\
 
-
+Diagramme d'activités de l'UC03 : voir figure \ref{fig:act_03}.\\
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.3\textwidth]{Diag_activites_UC03.png}
+    \includegraphics[width=0.2\textwidth]{Diag_activites_UC03.png}
     \caption{Diagramme d'activités UC03}
     \label{fig:act_03}
 \end{figure}
@@ -277,16 +277,356 @@ Scénario d'exception\\
 15. Le responsable clique sur le bouton "Annuler"\\
 16. Le système ferme la fenêtre\\
 
+Voir digramme d'activités de l'UC11 figure \ref{fig:act_011}.\\
+
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.4\textwidth]{Diag_activites_UC11.png}
+    \includegraphics[width=0.35\textwidth]{Diag_activites_UC11.png}
     \caption{Diagramme d'activités UC11}
     \label{fig:act_011}
 \end{figure}
 
-\end{document}
+\section {Autres scénarios}
 
-\section{La gestion de projet avec le planning, les itérations, la répartition des tâches et le suivi de l’avancement et les difficultés rencontrées}
+\subsection{Package Login}
+\subsubsection{UC01 Se connecter}
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item Le visiteur rentre son login et son mot de passe.
+    \item Le visiteur clique sur le bouton "Connexion".
+    \item \textit{[Identifiants corrects]}.
+    \item Le système affiche la page d'accueil de l'utilisateur.
+\end{enumerate}
+
+\paragraph{Scénario Alternatif}
+\begin{enumerate}
+    \item[3.a] \textit{[Identifiants incorrects]}.
+    \item[4.a] Le système affiche "Identifiants incorrect", l'UC reprend en 1.
+\end{enumerate}
+
+\subsubsection{UC02 Consulter anonymement}
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item Le visiteur clique sur le bouton "Connexion anonyme".
+    \item Le système affiche l'emploi du temps des salles, voir UC "Emploi du temps des salles".
+\end{enumerate}
+
+\subsection{Package Fonctionnalités générales}
+\subsubsection{UC03 Consulter emploi du temps des salles}
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le bouton "Salles".
+    \item Le système affiche la liste des salles.
+    \item L'utilisateur clique sur le nom de la salle qui l'intéresse.
+    \item Le système affiche l'emploi du temps de la salle sur une semaine.
+\end{enumerate}
+
+\paragraph{Scénarios Alternatifs}
+\subparagraph{Changer salle affichée}
+\begin{enumerate}
+    \item[3.a] L'utilisateur clique sur le nom de la salle.
+    \item[4.a] Le système affiche toutes les salles.
+    \item[5.a] L'utilisateur clique sur le nom de la salle qui l'intéresse.
+    \item[6.a] Le système affiche l'EDT de la salle sur la semaine.
+\end{enumerate}
+
+\subparagraph{Choix semaine}
+\begin{enumerate}
+    \item[3.b] L'utilisateur clique sur le numéro de la semaine qui l'intéresse.
+    \item[4.b] Le système affiche l'EDT de la salle sur la semaine choisie.
+\end{enumerate}
+
+\subsubsection{UC04 Consulter emploi du temps personnel}
+\paragraph{Prérequis} L'utilisateur est connecté.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le bouton "Mon EDT".
+    \item Le système affiche l'emploi du temps de l'utilisateur sur une semaine.
+\end{enumerate}
+
+\paragraph{Scénarios Alternatifs}
+\subparagraph{Choix semaine}
+\begin{enumerate}
+    \item[3.a] L'utilisateur clique sur le numéro de la semaine qui l'intéresse.
+    \item[4.a] Le système affiche l'EDT de l'utilisateur sur la semaine choisie.
+\end{enumerate}
+
+\subsubsection{UC05 Consulter emploi du temps d'un groupe}
+\paragraph{Prérequis} L'utilisateur est connecté.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le bouton "Groupes".
+    \item Le système affiche la liste des groupes.
+    \item L'utilisateur clique sur le nom du groupe qui l'intéresse.
+    \item Le système affiche l'emploi du temps du groupe sur une semaine.
+\end{enumerate}
+
+\paragraph{Scénarios Alternatifs}
+\subparagraph{Changer groupe affiché}
+\begin{enumerate}
+    \item[3.a] L'utilisateur clique sur le nom du groupe.
+    \item[4.a] Le système affiche tous les groupes.
+    \item[5.a] L'utilisateur clique sur le nom du groupe qui l'intéresse.
+    \item[6.a] Le système affiche l'EDT du groupe sur la semaine.
+\end{enumerate}
+
+\subparagraph{Choix semaine}
+\begin{enumerate}
+    \item[3.b] L'utilisateur clique sur le numéro de la semaine qui l'intéresse.
+    \item[4.b] Le système affiche l'EDT du groupe sur la semaine choisie.
+\end{enumerate}
+
+\subsubsection{UC06 Consulter emploi du temps d'un module}
+\paragraph{Prérequis} L'utilisateur est connecté.  
+TODO: Décider qui peut consulter les modules.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le bouton "Modules".
+    \item Le système affiche la liste des modules.
+    \item L'utilisateur clique sur le nom du module qui l'intéresse.
+    \item Le système affiche la liste des cours du module.
+\end{enumerate}
+
+\paragraph{Scénarios Alternatifs}
+\subparagraph{Changer module affiché}
+\begin{enumerate}
+    \item[3.a] L'utilisateur clique sur le nom du module.
+    \item[4.a] Le système affiche tous les modules.
+    \item[5.a] L'utilisateur clique sur le nom du module qui l'intéresse.
+    \item[6.a] Le système affiche la liste des cours du module.
+\end{enumerate}
+
+\subsubsection{UC07 Ajouter une note personnelle}
+\paragraph{Prérequis} L'utilisateur est connecté.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le cours qui l'intéresse.
+    \item Le système affiche une fenêtre pour ajouter une note personnelle.
+    \item L'utilisateur rentre sa note.
+    \item L'utilisateur clique sur le bouton "Valider".
+    \item Le système affiche la note sur le cours.
+\end{enumerate}
+
+\paragraph{Scénario d'Exception}
+\begin{enumerate}
+    \item[4.a] L'utilisateur clique hors de la fenêtre.
+    \item[5.a] Le système ne prend pas en compte la note.
+\end{enumerate}
+
+\subsubsection{UC08 Modifier une note personnelle}
+\paragraph{Prérequis} L'utilisateur est connecté et une note est déjà présente.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le cours qui l'intéresse.
+    \item Le système affiche la fenêtre de la note personnelle.
+    \item L'utilisateur modifie sa note.
+    \item L'utilisateur clique sur le bouton "Valider".
+    \item Le système affiche la note modifiée sur le cours.
+\end{enumerate}
+
+\paragraph{Scénario d'Exception}
+\begin{enumerate}
+    \item[3.a] L'utilisateur clique hors de la fenêtre.
+    \item[4.a] Le système ne modifie pas la note.
+\end{enumerate}
+
+\subsubsection{UC09 Consulter notes}
+\paragraph{Prérequis} L'utilisateur est connecté.
+
+\paragraph{Scénario Nominal}
+\begin{enumerate}
+    \item L'utilisateur clique sur le cours qui l'intéresse.
+    \item Le système affiche la note personnelle de l'utilisateur et la note générale.
+\end{enumerate}
+
+\subsection{Package Modification de l'emploi du temps}
+
+\subsubsection{UC11 Ajouter un cours}
+\paragraph{Prérequis} Le responsable est connecté.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le responsable clique sur le bouton "Ajouter un cours".
+    \item Le système affiche une fenêtre pour rentrer les informations du cours.
+    \item Le responsable clique sur le bouton "Module".
+    \item Le système affiche la liste des modules.
+    \item Le responsable clique sur le module du cours.
+    \item Le responsable clique sur le bouton "Professeur".
+    \item Le système affiche la liste des professeurs.
+    \item Le responsable clique sur le professeur du cours.
+    \item Le responsable clique sur le bouton "Horaire".
+    \item Le système affiche la liste des jours et heures.
+    \item Le responsable clique sur le jour et l'heure de début et de fin du cours.
+    \item Le responsable clique sur le bouton "Salle".
+    \item Le système affiche la liste des salles disponibles.
+    \item Le responsable clique sur la salle du cours.
+    \item Le responsable clique sur le bouton "Valider".
+    \item Le système affiche le cours ajouté.
+\end{enumerate}
+
+\paragraph{Scénario alternatif}
+\begin{enumerate}
+    \item[15.] Le responsable clique sur le bouton "Propager".
+    \item[16.] Le système affiche deux menus déroulants de semaine.
+    \item[17.] Le responsable sélectionne la semaine de début et la semaine de fin.
+    \item[18.] Le responsable clique sur le bouton "Valider".
+    \item[19.] Le système affiche les cours ajoutés.
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[15.] Le responsable clique sur le bouton "Annuler".
+    \item[16.] Le système ferme la fenêtre.
+\end{enumerate}
+
+\subsubsection{UC12 Modification d'un créneau d'un cours}
+\paragraph{Prérequis} Le responsable est connecté et un cours est déjà présent.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le responsable clique sur le cours qui l'intéresse.
+    \item Le système affiche une fenêtre pour modifier les informations du cours.
+    \item Le responsable modifie les informations du cours qu'il veut modifier, voir UC "Ajouter un cours".
+    \item Le responsable clique sur le bouton "Valider".
+    \item Le système affiche le cours modifié.
+\end{enumerate}
+
+\subsubsection{UC13 Annulation de cours}
+\paragraph{Prérequis} Le responsable est connecté et un cours est déjà présent.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le responsable clique sur le cours qui l'intéresse.
+    \item Le système affiche les informations du cours (module, professeur, salle, horaires, nom du responsable qui l'a ajouté, jour de dernière modification).
+    \item Le responsable clique sur le bouton "Supprimer".
+    \item Le système affiche "Voulez-vous vraiment supprimer ce cours ?".
+    \item Le responsable clique sur "Oui".
+    \item Le système affiche "Cours supprimé".
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[5.a] Le responsable clique sur "Non".
+    \item[6.a] Le système ne supprime pas le cours.
+\end{enumerate}
+
+\subsubsection{UC14 Accepter demande de modification de cours}
+\paragraph{Prérequis} Le responsable est connecté et une demande de modification est présente.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le responsable clique sur le bouton "Demandes de modification".
+    \item Le système affiche la liste des demandes de modification.
+    \item Le responsable clique sur la demande qui l'intéresse.
+    \item Le système affiche les informations du cours (module, professeur, salle, horaires).
+    \item Le responsable clique sur le bouton "Accepter".
+    \item Le système affiche "Demande acceptée".
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[5.a] Le responsable clique sur le bouton "Refuser".
+    \item[6.a] Le système affiche "Demande refusée".
+\end{enumerate}
+
+\subsubsection{UC15 Ajouter un module}
+\paragraph{Prérequis} Le responsable est connecté.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le responsable clique sur le bouton "Ajouter un module".
+    \item Le système affiche une fenêtre pour rentrer les informations du module (id, nom, nombre d'heures).
+    \item Le responsable clique sur le bouton "Valider".
+    \item Le système affiche le module ajouté.
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[3.a] Le responsable clique sur le bouton "Annuler".
+    \item[4.a] Le système n'ajoute pas le module.
+\end{enumerate}
+
+\subsubsection{UC16 Faire une demande de Report de cours}
+\paragraph{Prérequis} Le professeur est connecté.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le professeur clique sur le cours qui l'intéresse.
+    \item Le système affiche les informations du cours (module, professeur, salle, horaires).
+    \item Le professeur clique sur le bouton "Reporter".
+    \item Le système affiche une fenêtre pour rentrer les informations du report (nouvelle date, nouvelle heure, nouvelle salle).
+    \item Le professeur clique sur le bouton "Valider".
+    \item Le système affiche "Demande de report envoyée".
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[5.a] Le professeur clique sur le bouton "Annuler".
+    \item[6.a] Le système n'envoie pas la demande de report.
+\end{enumerate}
+
+\paragraph{Scénario alternatif}
+\begin{enumerate}
+    \item[6.b] Les informations du nouveau créneau sont incorrectes (salle occupée ou groupe occupé), le système affiche "Créneau indisponible" avec la raison de l'indisponibilité, l'UC reprend en 4.
+\end{enumerate}
+
+\subsubsection{UC17 Ajouter une note de cours générale}
+\paragraph{Prérequis} Le professeur est connecté.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le professeur clique sur le cours qui l'intéresse.
+    \item Le système affiche les informations du cours (module, professeur, salle, horaires).
+    \item Le professeur clique sur le bouton "Ajouter une note générale".
+    \item Le système affiche une fenêtre pour rentrer la note générale.
+    \item Le professeur rentre la note.
+    \item Le professeur clique sur le bouton "Valider".
+    \item Le système affiche la note générale sur le cours.
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[6.a] Le professeur clique sur le bouton "Annuler".
+    \item[7.a] Le système n'ajoute pas la note.
+\end{enumerate}
+
+\subsubsection{UC18 Modifier une note de cours générale}
+\paragraph{Prérequis} Le professeur est connecté et une note est déjà présente.
+
+\paragraph{Scénario nominal}
+\begin{enumerate}
+    \item Le professeur clique sur le cours qui l'intéresse.
+    \item Le système affiche les informations du cours (module, professeur, salle, horaires).
+    \item Le professeur clique sur le bouton "Modifier la note générale".
+    \item Le système affiche la note générale.
+    \item Le professeur modifie la note.
+    \item Le professeur clique sur le bouton "Valider".
+    \item Le système affiche la note modifiée.
+\end{enumerate}
+
+\paragraph{Scénario d'exception}
+\begin{enumerate}
+    \item[6.a] Le professeur clique sur le bouton "Annuler".
+    \item[7.a] Le système ne modifie pas la note.
+\end{enumerate}
+
+
+\section{Gestion de projet}
+Cette section va présenter la gestion et l'organisation du projet, les outils utilisés, les méthodes de travail, ainsi que les difficultés rencontrées.\\
+Les User Stories réalisées lors de chaque sprint ont été chiffrées sur le document à cette adresse \href{https://docs.google.com/spreadsheets/d/1I3lit2K54TSlTaCaFj2Z68BY6hvbYxaZbvtNGo1Lqdk/edit?usp=sharing}{(lien)}.
+Le sprint 0 a été consacré à la mise en place de l'environnement de travail et la création du projet, la rédaction de quelques spécifications et le chiffrage des US du sprint 1.
+Au début du sprint 1, nous avons chiffrés les tâches pour le sprint 2 mais nous avions visé trop gros a n'avions pas eu le temps de finir toutes les tâches prévues pour le sprint 1 à la fin de celui-ci.
+Nous avons alors décidé à partir de là de ne fixer et chiffrer les tâches d'un sprint qu'au début de celui-ci tout en gardant une vague idée des tâches du prochain sprint.\\
+C'est lors du sprint 1 que nous avons commencé à travailler sur le projet. Le groupe s'est mis d'accord sur l'architecture de l'application, de la base de données et des classes de l'application, puis 
+Tom a mis en place les classes model et la base de données avec Hibernate, Yann et Emad ont de leur côté commencé à travailler sur le GUI et André a commencé à travailler sur le peuplement de la base avec des
+données ressemblant à de vraies données. Un groupe Discord a été mis en place afin que les membres du groupe communiquent entre eux tout au long du sprint, il nous arrivait aussi de discuter pendant la semaine à la fin d'un cours
+puis le vendredi matin était dédié à la mise en commun du travail effectué sur la semaine, puis on chiffrait les tâches du sprint qui arrivait, ceci a été l'organisation durant tout le reste du projet.
+Durant le sprint 2, A CONTINUER ....\\
 \section{Le maquettage de l’application}
 \section{Le modèle de la base de données}
 \section{Les perspectives d’évolution de l’application}
