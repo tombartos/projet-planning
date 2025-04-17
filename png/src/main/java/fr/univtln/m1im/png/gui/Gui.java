@@ -467,13 +467,13 @@ public class Gui {
         if (numSemaine >= this.premierSemaine){
             annee = this.anneeDebut;
         }
-        else if (numSemaine == 1 && OffsetDateTime.now()
-        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
-        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
+        // else if (numSemaine == 1 && OffsetDateTime.now()
+        // .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
+        // .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
         // else if (numSemaine == 1)
-        {
-            annee = this.anneeDebut + 1;
-        }
+        // {
+        //     annee = this.anneeDebut + 1;
+        // }
         else{
             annee = this.anneeDebut + 1;
         }
@@ -579,10 +579,10 @@ public class Gui {
         // else if (numSemaine == 1 && OffsetDateTime.now()
         // .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
         // .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
-        else if (numSemaine == 1)
-        {
-            annee = this.anneeDebut + 1;
-        }
+        // else if (numSemaine == 1)
+        // {
+        //     annee = this.anneeDebut + 1;
+        // }
         else{
             annee = this.anneeDebut + 1;
         }
