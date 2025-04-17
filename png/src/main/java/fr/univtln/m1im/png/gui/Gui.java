@@ -205,7 +205,7 @@ public class Gui {
         OffsetDateTime premierJourAnnee = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(9).withDayOfMonth(1);
         OffsetDateTime tmpJour = premierJourAnnee;
         this.premierSemaine = tmpJour.withYear(anneeDebut).get(weekFields.weekOfWeekBasedYear());
-        this.derniereSemaine = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(7).withDayOfMonth(31).get(weekFields.weekOfWeekBasedYear());
+        this.derniereSemaine = OffsetDateTime.now().withYear(this.anneeDebut).withMonth(7).withDayOfMonth(31).get(weekFields.weekOfWeekBasedYear())+1;
         int tmpSemaine = tmpJour.get(weekFields.weekOfWeekBasedYear());
         int indexSemaine = 0;
         while(tmpSemaine != derniereSemaine)
@@ -469,12 +469,13 @@ public class Gui {
         if (numSemaine >= this.premierSemaine){
             annee = this.anneeDebut;
         }
-        else if (numSemaine == 1 && OffsetDateTime.now()
-        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
-        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
-        {
-            annee = this.anneeDebut;
-        }
+        // else if (numSemaine == 1 && OffsetDateTime.now()
+        // .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
+        // .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
+        // else if (numSemaine == 1)
+        // {
+        //     annee = this.anneeDebut + 1;
+        // }
         else{
             annee = this.anneeDebut + 1;
         }
@@ -577,12 +578,13 @@ public class Gui {
         if (numSemaine >= this.premierSemaine){
             annee = this.anneeDebut;
         }
-        else if (numSemaine == 1 && OffsetDateTime.now()
-        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
-        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
-        {
-            annee = this.anneeDebut;
-        }
+        // else if (numSemaine == 1 && OffsetDateTime.now()
+        // .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
+        // .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
+        // else if (numSemaine == 1)
+        // {
+        //     annee = this.anneeDebut + 1;
+        // }
         else{
             annee = this.anneeDebut + 1;
         }
