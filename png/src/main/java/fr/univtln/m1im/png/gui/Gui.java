@@ -659,7 +659,6 @@ public class Gui {
     }    
 
 }
-//TODO: Patcher le menu des demandes de modif
 //TODO: Patcher mauvaise gestion des collisions entre cours lors d'ajout ou modif
 
 /*
