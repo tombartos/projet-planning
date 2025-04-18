@@ -175,7 +175,9 @@ l'administrateur qui gère les comptes et le visiteur qui n'est pas connecté, m
 \end{itemize}
 
 \section{Conception UML générale de l’application}
-Voici quelques diagrammes conernant l'organisation générale de l'application (voir figures \ref{fig:uml_uc} et \ref{fig:uml_classes}).\\
+Voici quelques diagrammes concernant l'organisation générale de l'application (voir figures \ref{fig:uml_uc} et \ref{fig:uml_classes}).\\
+Le schéma de la base de données est presque identique au diagramme de classes, il y a juste les notes personnelles, les demandes de cours ainsi que toutes les tables de liaison 
+pour les liens n-m en plus.\\
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.65\textwidth]{UC.png}
@@ -618,6 +620,9 @@ TODO: Décider qui peut consulter les modules.
 
 \section{Gestion de projet}
 Cette section va présenter la gestion et l'organisation du projet, les outils utilisés, les méthodes de travail, ainsi que les difficultés rencontrées.\\
+Le projet est un client en lourd JavaFX qui se connecte à une base de données PostgreSQL dans un container Docker.\\
+Nous avons utilisé GitHub pour le versionnage, chaque membre du groupe a une branche et travaille dedans, lorsqu'il a terminé une tâhce, il merge sur la branche dev. En fin de sprint, 
+nous nous assurons que la branche dev est fonctionnelle avec toutes nouvelles fonctionnalités ajoutées dans la semaine, puis nous mettons sur la branche main et faisons un tag.\\
 Les User Stories réalisées lors de chaque sprint ont été chiffrées sur le document à cette adresse \href{https://docs.google.com/spreadsheets/d/1I3lit2K54TSlTaCaFj2Z68BY6hvbYxaZbvtNGo1Lqdk/edit?usp=sharing}{(lien)}.
 Le sprint 0 a été consacré à la mise en place de l'environnement de travail et la création du projet, la rédaction de quelques spécifications et le chiffrage des US du sprint 1.
 Au début du sprint 1, nous avons chiffrés les tâches pour le sprint 2 mais nous avions visé trop gros a n'avions pas eu le temps de finir toutes les tâches prévues pour le sprint 1 à la fin de celui-ci.
@@ -626,9 +631,28 @@ C'est lors du sprint 1 que nous avons commencé à travailler sur le projet. Le 
 Tom a mis en place les classes model et la base de données avec Hibernate, Yann et Emad ont de leur côté commencé à travailler sur le GUI et André a commencé à travailler sur le peuplement de la base avec des
 données ressemblant à de vraies données. Un groupe Discord a été mis en place afin que les membres du groupe communiquent entre eux tout au long du sprint, il nous arrivait aussi de discuter pendant la semaine à la fin d'un cours
 puis le vendredi matin était dédié à la mise en commun du travail effectué sur la semaine, puis on chiffrait les tâches du sprint qui arrivait, ceci a été l'organisation durant tout le reste du projet.
-Durant le sprint 2, A CONTINUER ....\\
-\section{Le maquettage de l’application}
-\section{Le modèle de la base de données}
-\section{Les perspectives d’évolution de l’application}
+Par la suite nous avons réussi à effectuer le chiffrage de manière beaucoup plus précise et à respecter les délais de chaque sprint sans pour autant délaisser une partie du travail prévu, 
+au final nous avons réussi à implanter presque toutes les fonctionnalités que nous avions considéré comme prioritaires.\\
+Concernant les diffcultées rencontrées, il n'y a pas eu de problème majeur, presque aucun soucis de communication ou gestion du groupe, seulement quelques difficultées techniques notemment avec les 
+liens n-m de la base de données entre les classes qui ont posé quelques problèmes, nous avons fait l'erreur d'en mettre beaucoup et dans les deux sens ce qui on pensait au début nous ferait gagner du temps pour
+faciliter l'accès au données, a au final été ce qui nous a fait perdre le plus de temps pour maintenir l'intégrité de la BD. Un autre point que nous pouvons noter aussi
+est qu'au début au sprint 1 nous avions confié à un membre du groupe de s'occuper du peuplement de la base de données avec des données générées aléatoirement ressemblant à de vraies données. N'ayant jamais fait
+ce genre de choses nous nous sommes largement trompé sur le chiffrage de cette tâche, qui n'a pas été terminée durant le premier sprint comme prévu initalement, elle a débordée sur le second, puis sur le troisième,
+mais voyant que le reste du projet avançait bien, nous nous sommes permis de dédier un membre du groupe entièrement à cette tâche durant tout le projet.\\
 
+\section{Le maquettage de l’application}
+Voici un schéma de l'interface principale de l'application telle qu'elle a été imaginée à l'origine (voir figure \ref{fig:maquette}).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth]{gui-schema.png}
+    \caption{Maquette de l'interface principale de l'application}
+    \label{fig:maquette}
+\end{figure}
+\section{Les perspectives d’évolution de l’application}
+Bien que l'application soit fonctionnelle avec quelques fonctionnalités, il reste encore du travail pour l'améliorer.
+Dans un premier temps, nous pourrions rajouter un bouton de déconnexion, car pour l'instant, il faut fermer l'application pour se déconnecter.
+Nous pourrions aussi rajouter une connexion anonyme pour les utilisateurs qui ne sont pas connectés, mais qui souhaitent consulter l'emploi du temps des salles.
+Un rafraîchissement automatique de l'emploi du temps serait une bonne idée car pour l'instant il faut changer de semaine puis revenir sur la semaine pour voir les modifications si il y en eu.
+On pourrait aussi rajouter les secrétaires, qui pourraient consulter tous les emplois du temps et gérer les absences des étudiants.
+Enfin nous pourrions aussi rajouter une interface d'administration pour gérer les utilisateurs.
 \end{document}
