@@ -90,6 +90,9 @@ public class LoginPage {
                         }
                         catch (Exception ex_res) {
                             log.info("Not a responsable, problem in the database ?");
+                            //log.error(ex_res.getMessage());
+                            ex_res.printStackTrace();
+                            
                         }
                     }
                 }
@@ -110,5 +113,7 @@ public class LoginPage {
     // public static void main(String[] args) {
     //     launch(args);
     // }
+
+    //TODO: Disconnect button
 }
 

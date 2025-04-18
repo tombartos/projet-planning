@@ -12,9 +12,10 @@ import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
-import fr.univtln.m1im.png.model.Module;
-
+import java.util.logging.Logger;
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
+    private static final Logger log = Logger.getLogger(DemandeCreneauRepository.class.getName());
+
     public DemandeCreneauRepository(EntityManager entityManager){
         super(DemandeCreneau.class, entityManager);
     }
@@ -83,28 +84,89 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
     }
 
     public String acceptDemandeCreneau (DemandeCreneau demande) {
-        em.getTransaction().begin();
-        em.merge(demande);
-        //We create a creneau from the demande
-        Creneau creneau = Creneau.makeFromDemandeCreneau(demande);
-        //We set the status of the demande to accepted
-        demande.setStatus(1);
-        //We persist the creneau and make the relations with the modules, groupes and professeurs
-        for (Professeur prof : demande.getProfesseurs()) {
-            Professeur managedProf = em.merge(prof);
-            managedProf.getCreneaux().add(creneau);
+        Creneau creneau;
+        Creneau oldCreneau;
+        CreneauRepository creneauRepository = new CreneauRepository(em);
+        String res;
+        switch (demande.getTypeDemande()) {
+            case 0:  //New creneau
+                //We create a creneau from the demande
+                creneau = Creneau.makeFromDemandeCreneau(demande);
+                //We delete the demande from the database
+                em.getTransaction().begin();
+                for (Professeur prof : demande.getProfesseurs()) {
+                    Professeur managedProf = em.merge(prof);
+                    managedProf.getDemandes_creneaux().remove(demande);
+                }
+                demande.setStatus(1); //We set the status of the demande to accepted
+                em.remove(demande);
+                em.getTransaction().commit();
+                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                res = creneauRepository.addCreneau(creneau, null);
+                log.info("Result  :"+res);
+                return res;
+
+            case 1: //Modify creneau
+                //We create a creneau from the demande
+                creneau = Creneau.makeFromDemandeCreneau(demande);
+                oldCreneau = demande.getCreneauToModify();
+                //We delete the demande from the database
+                em.getTransaction().begin();
+                for (Professeur prof : demande.getProfesseurs()) {
+                    Professeur managedProf = em.merge(prof);
+                    managedProf.getDemandes_creneaux().remove(demande);
+                }
+                demande.setStatus(1); //We set the status of the demande to accepted
+                em.remove(demande);
+                em.getTransaction().commit();
+                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                res = creneauRepository.addCreneau(creneau, oldCreneau);
+                log.info("Resuult : "+res);
+                return res;
+            case 2:  //Cancel creneau
+                //Invert creneau status
+                Creneau creneauToCancel = demande.getCreneauToModify();
+                if (creneauToCancel != null) {
+                    if (creneauToCancel.getStatus() == 0){
+                        creneauRepository.annulerCreneau(creneauToCancel);
+                    }
+                    else{
+                        creneauRepository.restoreCreneau(creneauToCancel);
+                    }
+                    em.getTransaction().begin();
+                    for (Professeur prof : demande.getProfesseurs()) {
+                        Professeur managedProf = em.merge(prof);
+                        managedProf.getDemandes_creneaux().remove(demande);
+                    }
+                    demande.setStatus(1); //We set the status of the demande to accepted
+                    em.remove(demande);
+                    em.getTransaction().commit();
+                    log.info("success");
+                    return ("success");
+                } else {
+                    throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
+                }
+            case 3:  //Delete creneau
+                //We delete the creneau from the database
+                //TODO: a patcher, non foncitonnel
+                // Creneau creneauToDelete = demande.getCreneauToModify();
+                // if (creneauToDelete != null) {
+                //     creneauRepository.delete(creneauToDelete);
+                //     em.getTransaction().begin();
+                //     //We set the status of the demande to accepted
+                //     demande.setStatus(1);
+                //     em.merge(demande);
+                //     em.getTransaction().commit();
+                //     return ("success");
+                // } else {
+                //     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
+                // }
+
+
+            default:
+                throw new UnsupportedOperationException("Type de demande non supporté : " + demande.getTypeDemande());
         }
-        for (Groupe groupe : demande.getGroupes()) {
-            Groupe managedGroupe = em.merge(groupe);
-            managedGroupe.getCreneaux().add(creneau);
-        }
-        for (Module m : demande.getModules()) {
-            Module managedModule = em.merge(m);
-            managedModule.getCreneaux().add(creneau);
-        }
-        em.persist(creneau);
-        em.getTransaction().commit();
-        return ("La demande a été acceptée avec succès");
+        
     }
 
     public String refuseDemandeCreneau (DemandeCreneau demande) {

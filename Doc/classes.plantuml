@@ -59,10 +59,11 @@ Groupe "1..*" -- "0..*" Etudiant : appartient
 class Creneau
 {
     - id: UUID
-    - date: Date
-    /' gérer l'UTC '/
     - heureDebut: Time
     - heureFin: Time
+    - Type: String /'CM, TD, TP'/
+    - Status : int
+
 }
 
 Creneau "0..*"  -- "0..*" Professeur
@@ -72,4 +73,30 @@ Creneau "1..*" -- "1..*" Module : concerne
 note "Un professeur ne peut avoir plusieurs créneaux au même instant t" as n1
 n1 .. Creneau
 
+class Salle {
+    - code :String
+    - description :String
+    - capacite :Integer
+}
+note "Une salle ne peut avoir qu'un seul créneau à la fois" as n2
+n2 .. Salle
+Salle "1" -- "0..*" Creneau
+
+class Responsable
+{
+
+}
+Responsable --|> Utilisateur
+
+class DemandeCreneau
+{
+    - id: UUID
+    - heureDebut: Time
+    - heureFin: Time
+    - Type: String /'CM, TD, TP'/
+    - StatusDemande : int
+    - TypeDemande : int
+}
+DemandeCreneau "0..*" -- "0..1" Creneau : "Concerne"
+ 
 @enduml

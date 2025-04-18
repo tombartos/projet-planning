@@ -190,6 +190,81 @@ class AppTest {
             log.error("Failed to persist entities", e);
         }
 
+        try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()) {
+            entityManager.getTransaction().begin();
+    
+            // Create a new Professeur
+            Professeur newProfesseur = Professeur.builder()
+                    .nom("NewProf")
+                    .prenom("NewPrenom")
+                    .login("newprof")
+                    .email("newprof@email.com")
+                    .dateNaissance(LocalDate.of(1980, 5, 15))
+                    .build();
+    
+            // Create a new Module
+            Module newModule = Module.builder()
+                    .code("M2")
+                    .nom("NewModule")
+                    .description("This is a new module")
+                    .nbHeuresCM(15)
+                    .nbHeuresTD(25)
+                    .nbHeuresTP(35)
+                    .build();
+    
+            // Associate the Professeur with the Module
+            newModule.getProfesseurs().add(newProfesseur);
+            newProfesseur.getModules().add(newModule);
+    
+            // Create a new Groupe
+            Groupe newGroupe = Groupe.builder()
+                    .code("G1")
+                    .nom("NewGroup")
+                    .formation("NewFormation")
+                    .build();
+    
+            // Create a new Etudiant
+            Etudiant newEtudiant = Etudiant.builder()
+                    .nom("NewEtudiant")
+                    .prenom("NewPrenom")
+                    .login("newetudiant")
+                    .email("newetudiant@email.com")
+                    .dateNaissance(LocalDate.of(2000, 10, 20))
+                    .build();
+    
+            // Associate the Etudiant with the Groupe
+            newGroupe.addEtudiant(newEtudiant);
+            newEtudiant.getGroupes().add(newGroupe);
+    
+            // Associate the Groupe with the Module
+            newModule.getGroupes().add(newGroupe);
+            newGroupe.getModules().add(newModule);
+
+            // Create a new Responsable
+            Responsable newResponsable = Responsable.builder()
+                .nom("NewResp")
+                .prenom("NewPrenom")
+                .login("newresp")
+                .email("newresp@email.com")
+                .dateNaissance(LocalDate.of(1975, 8, 10))
+                .UFR("NewUFR")
+                .build();
+
+            // Persist the new Responsable
+            entityManager.persist(newResponsable);
+    
+            // Persist all entities
+            entityManager.persist(newProfesseur);
+            entityManager.persist(newModule);
+            entityManager.persist(newGroupe);
+            entityManager.persist(newEtudiant);
+    
+            entityManager.getTransaction().commit();
+            log.info("New entities created and persisted successfully.");
+        } catch (Exception e) {
+            log.error("Failed to create and persist new entities", e);
+        }
+
         //TESTS
         try (EntityManager entityManager = Utils.getEntityManagerFactory().createEntityManager()){
             // ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);

@@ -13,7 +13,11 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class CreneauRepository extends JpaRepository<Creneau, Long> {
+    private static final Logger log = LoggerFactory.getLogger(CreneauRepository.class);
     public CreneauRepository(EntityManager entityManager){
         super(Creneau.class, entityManager);
     }
@@ -103,7 +107,7 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         em.persist(creneau);
         em.getTransaction().commit();
 
-
+        log.info("Le créneau a été inséré");
         return ("Le créneau a été inséré");
     }
 
@@ -123,9 +127,6 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
             prof.getCreneaux().remove(creneau);
         }
         em.remove(creneau);
-        // em.createQuery("DELETE FROM Creneau c WHERE c.id = :id")
-        //         .setParameter("id", creneau.getId())
-        //         .executeUpdate();
         em.getTransaction().commit();
     }
 

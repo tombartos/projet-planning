@@ -357,6 +357,8 @@ public class ModifierCreneau {
                 }
                 else if (this.utilisateur instanceof Professeur){
                     DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(newCreneau);
+                    demandeCreneau.setTypeDemande(1);
+                    demandeCreneau.setCreneauToModify(creneau);
                     DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
                     String res = demandeCreneauRepository.addDemandeCreneau(demandeCreneau);
                     errorLabel.setText(res);
@@ -371,3 +373,5 @@ public class ModifierCreneau {
         stage.show();
     }
 }
+
+//TODO : gérer demandes annulation et suppression

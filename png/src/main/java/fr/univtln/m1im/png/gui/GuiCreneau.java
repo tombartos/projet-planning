@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import fr.univtln.m1im.png.model.Creneau;
+import fr.univtln.m1im.png.model.DemandeCreneau;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
@@ -31,12 +32,12 @@ import lombok.Setter;
 
 @Getter @Setter
 public class GuiCreneau {
+    private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(GuiCreneau.class.getName());
     private Utilisateur utilisateur;
     private Group group;
     private Rectangle rectangle;
     private Label label;
 
-    //private int semaine;
     private int width;
     private int height;
     private int nbHeure;
@@ -92,8 +93,6 @@ public class GuiCreneau {
 
     public void afficherCreneau()
     {
-        
-        // System.out.println(creneau.getHeureDebut().getDayOfYear());
         switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
             case "MONDAY":
                 jourDeLaSemaine = 0;
@@ -162,13 +161,11 @@ public class GuiCreneau {
             {
                 rectangle.setStroke(Color.BLUE);
                 rectangle.setStrokeWidth(4);
-                System.out.println("Rectangle clicked: " + creneau.toString());
                 afficherInformation();
             }
             
 
         });
-        // label.setStyle("-fx-font-size: "+10+"px");
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listGroupe = new String();
         for(Groupe groupe : creneau.getGroupes()){
@@ -182,7 +179,7 @@ public class GuiCreneau {
         for(Professeur prof : creneau.getProfesseurs()){
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
-        
+
         label.setText(creneau.getSalle().getCode()+"\n"+listGroupe+"\n"+listModule+creneau.getType()+"\n"+listProf);
 
 
@@ -202,7 +199,6 @@ public class GuiCreneau {
     public void majAffichage()
     {
         rectangle.setX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
-        //rectangle.setLayoutY(convHeure(creneau)*height/nbHeure);
         rectangle.setWidth(width/nbJour /collision);
         rectangle.setHeight(height/nbHeure*convDuree(creneau));
         label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
@@ -212,18 +208,12 @@ public class GuiCreneau {
 
     public void afficherInformation()
     {
-        // if(popup[0] != null) {
-        //     popup[0].close();
-        // }
-        // popup[0] = null;
         popup[0].close();
         popup[0] = new Stage();
-        // popup[0].setOnCloseRequest(null);
         //Désélectionner le rectangle lors de la fermeture de la fenêtre
         popup[0].onCloseRequestProperty().set(e -> {
             rectangle.setStroke(Color.BLACK);
             rectangle.setStrokeWidth(1);
-            System.out.println("Fermeture de la fenêtre d'information");
         });
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -282,8 +272,6 @@ public class GuiCreneau {
                 Creneau managedCreneau = entityManager.merge(creneau);
                 managedCreneau.setNoteProf(noteProfField.getText());
                 entityManager.getTransaction().commit();
-
-                System.out.println("Note modifiée : " + noteProfField.getText());
             });
             grid.add(noteProfField, 0, 2);
             grid.add(noteProfButton, 1, 2);
@@ -299,21 +287,12 @@ public class GuiCreneau {
             noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
             grid.add(noteProfLabel, 0, 2);
         }
-        // Label noteProfLabel = new Label("Aucune note");
-        // noteProfLabel.setStyle("-fx-text-fill: gray; -fx-font-style: italic;");
-        // grid.add(noteProfLabel, 0, 1);
         List<Label> infoModules = new ArrayList<>();
         int nbAffichage = 3;
-        //Label infoLabel2 = new Label();
 
         List<Creneau> listCreneaux;
         if(this.utilisateur instanceof Etudiant)
         {
-            // listCreneaux = creneau.getModules().getFirst().getCreneaux().stream()
-            // .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
-            // .toList();
-            // System.out.println(this.utilisateur.getGroupes());
-            // System.out.println(creneau.getGroupes());
 
 
             Boolean trouve = false;
@@ -322,7 +301,6 @@ public class GuiCreneau {
                 for (Creneau c : module.getCreneaux()) {
                     for (Groupe g : c.getGroupes()) {
                         for(Etudiant e : g.getEtudiants()){
-                            System.out.println(e.getId());
                             if(e.getId().equals(this.utilisateur.getId())){
                                 tmpListCreneaux.add(c);
                                 trouve = true;
@@ -354,13 +332,11 @@ public class GuiCreneau {
             }
             position++;
         }
-        System.out.println("position = "+position+ " "+(listCreneaux.size()-nbAffichage));
         if(position > listCreneaux.size()-nbAffichage){
             position = listCreneaux.size()-nbAffichage;
         }
         String info = new String();
             for(int i = 0; i < nbAffichage; i++){
-                System.out.println("i = "+(i+position) +" Position "+ position+" "+ listCreneaux.size());
                 info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
                 info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
                 info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":"+listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
@@ -384,20 +360,13 @@ public class GuiCreneau {
                     }
                     
                 }
-                
-                // if(listCreneaux.get(i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
-                //     infoModules.get(i).setStyle("-fx-background-color: lightgray;");
-                // }
                 gridModules.add(infoModules.get(i), 0, 1+i);
 
             }
-            //infoLabel2.setText(info);
 
         infoGroup.getChildren().add(grid);
-        //Mise en place de la scrollbar
         ScrollBar scrollBar = new ScrollBar();
         scrollBar.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        // scrollBar.setLayoutX(200);
         
         scrollBar.setMin(0);
         scrollBar.setMax(listCreneaux.size()-nbAffichage);
@@ -434,14 +403,10 @@ public class GuiCreneau {
 
                 j++;
             }
-            // infoLabel2.setText(infoSc);
         });
         
-
-        // infoGroup.getChildren().add(scrollBar);
         infoLabel.setText(this.label.getText());
 
-        //infoGroup.getChildren().add(infoLabel);
         grid.add(infoLabel, 0, 0);
         grid.add(gridModules, 0, 3);
         grid.add(scrollBar, 1, 3);
@@ -483,7 +448,6 @@ public class GuiCreneau {
                 CreneauRepository creneauRepository = new CreneauRepository(entityManager);
                 creneauRepository.deleteCreneau(creneau);
                 gui.genererCreneaux();
-                System.out.println("suppression du cours");
 
             });
             grid.add(modifierCoursButton, 0, 4);
@@ -491,7 +455,6 @@ public class GuiCreneau {
             grid.add(supprimerCoursButton, 0, 6);
         }
 
-        //TODO prof
         else if(this.utilisateur instanceof Professeur){
             Button modifierCoursButton = new Button("Demande de modifier le cours");
             modifierCoursButton.setOnAction(e -> {
@@ -504,28 +467,41 @@ public class GuiCreneau {
                 annulerCoursButton.setText("Demande de restaurer le cours");
             }
             annulerCoursButton.setOnAction(e -> {
+                //L'objet demande est identique pour les deux cas, on va juste inverser le status du cours a l'acceptation de la demande
                 entityManager.getTransaction().begin();
-                Creneau managedCreneau = entityManager.merge(creneau);
+                DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(creneau);
+                demandeCreneau.setTypeDemande(2);
+                demandeCreneau.setCreneauToModify(creneau);
+                for (Professeur prof : demandeCreneau.getProfesseurs()) {
+                    Professeur managedProf = entityManager.merge(prof);
+                    managedProf.getDemandes_creneaux().add(demandeCreneau);
+                }
+                entityManager.persist(demandeCreneau);
+                entityManager.getTransaction().commit();
+                log.info("DEBUG :"+ String.valueOf(demandeCreneau.getProfesseurs().size()));
+                for (Professeur prof : demandeCreneau.getProfesseurs()) {
+                    log.info(prof.getNom() + " " + prof.getPrenom());
+                }
+                
                 if(creneau.getStatus() == 1){
-                    managedCreneau.setStatus(0);
+
                     annulerCoursButton.setText("Demande d'annuler le cours");
                 }
                 else
                 {
-                    managedCreneau.setStatus(1);
+                    //TODO: YANN :Label pour afficher "Demande envoyée"
                     annulerCoursButton.setText("Demande de restaurer le cours");
                 }
-                entityManager.getTransaction().commit();
                 gui.genererCreneaux();
                 popup[0].close();
             });
 
             Button supprimerCoursButton = new Button("Demande de supprimer le cours");
             supprimerCoursButton.setOnAction(e -> {
-                CreneauRepository creneauRepository = new CreneauRepository(entityManager);
-                creneauRepository.deleteCreneau(creneau);
-                gui.genererCreneaux();
-                System.out.println("suppression du cours");
+                //TODO: Demande suppimer cours
+                // CreneauRepository creneauRepository = new CreneauRepository(entityManager);
+                // creneauRepository.deleteCreneau(creneau);
+                // gui.genererCreneaux();
 
             });
             grid.add(modifierCoursButton, 0, 4);
