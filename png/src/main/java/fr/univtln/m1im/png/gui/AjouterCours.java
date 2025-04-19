@@ -188,7 +188,7 @@ public class AjouterCours {
         semaineFinField.setPromptText("Sélectionner la semaine de fin");
 
         // Label pour afficher les erreurs
-        Label errorLabel = new Label("Exemple d'erreur affichée ici");
+        Label errorLabel = new Label();
         errorLabel.setTextFill(Color.RED);
         errorLabel.setFont(new Font(13));
         errorLabel.setVisible(true); 
