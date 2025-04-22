@@ -64,6 +64,7 @@ class CreneauFaker implements Iterable<Creneau> {
     public Iterator<Creneau> iterator() {
         return new Iterator<Creneau>() {
             private LocalDate date = FIRST_DAY;
+            //private HashMap<Groupe, Integer> slotIndex;
             private int slotIndex = 0;
 
             @Override
@@ -95,7 +96,9 @@ class CreneauFaker implements Iterable<Creneau> {
                 return randomCreneauNow();
             }
 
+            //private int nextAvailSlotToday(List<Groupe> groupes) {
             private int nextAvailSlotToday() {
+                //int n = groupes.stream().mapToInt(slotIndex::get).max().getAsInt();
                 int n = this.slotIndex;
                 final var slot = TIME_SLOTS[n];
                 while (n < TIME_SLOTS.length && TIME_SLOTS[n].start.isBefore(slot.finish))

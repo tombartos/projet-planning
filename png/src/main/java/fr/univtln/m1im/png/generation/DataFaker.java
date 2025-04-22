@@ -42,16 +42,15 @@ public class DataFaker {
     }
 
     public void fakeData() {
-        var salles = SalleFaker.with(rand).asList();
-        var groupFaker = GroupFaker.with(rand).createGroups();
-        var creneauFaker = CreneauFaker
-            .with(rand, faker, groupFaker.getAllGroupe().iterator().next(), salles);
+        final var salles = SalleFaker.with(rand).asList();
+        final var groupFaker = GroupFaker.with(rand).createGroups();
+
         emf.transaction(em -> {
 
             salles.forEach(em::persist);
 
             for (var module : groupFaker.getModules()) {
-                var prof = FakeUser.with(faker, rand)
+                final var prof = FakeUser.with(faker, rand)
                     .withProfEmail()
                     .configure(Professeur.builder()).build();
                 module.setProfesseurs(List.of(prof));
@@ -64,7 +63,7 @@ public class DataFaker {
 
                 if (group.getSousGroupes().isEmpty()) {
                     for (int i = 0; i < 50; ++i) {
-                        var etudiant = FakeUser.with(faker, rand)
+                        final var etudiant = FakeUser.with(faker, rand)
                             .withStudentEmail()
                             .configure(Etudiant.builder()).build();
                         em.persist(etudiant);
@@ -72,8 +71,12 @@ public class DataFaker {
                 }
             }
 
-            for (var creneau : creneauFaker) {
-                em.persist(creneau);
+            for (var groupe : groupFaker.getRacines()) {
+                final var creneauFaker = CreneauFaker.with(rand, faker, groupe, salles);
+
+                for (var creneau : creneauFaker) {
+                    em.persist(creneau);
+                }
             }
 
         });
