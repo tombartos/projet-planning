@@ -14,6 +14,7 @@ import com.github.javafaker.Faker;
 
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
+import fr.univtln.m1im.png.model.Module;
 import fr.univtln.m1im.png.model.Salle;
 
 class CreneauFaker implements Iterable<Creneau> {
@@ -34,9 +35,11 @@ class CreneauFaker implements Iterable<Creneau> {
         }
     };
 
-    private static TimeSlot[] timeSlots = Stream.of(
+    private static final TimeSlot[] TIME_SLOTS = Stream.of(
             "08:00:00 10:00:00",
-            "08:30:00 10:30:00", "10:00:00 12:00:00", "10:30:00 12:30:00",
+            "08:30:00 10:30:00",
+            "10:00:00 12:00:00",
+            "10:30:00 12:30:00",
             "13:00:00 15:00:00",
             "13:30:00 15:30:00",
             "15:15:00 17:15:00",
@@ -58,6 +61,7 @@ class CreneauFaker implements Iterable<Creneau> {
     public Iterator<Creneau> iterator() {
         return new Iterator<Creneau>() {
             private LocalDate date = FIRST_DAY;
+            private int slotIndex = 0;
 
             @Override
             public boolean hasNext() {
@@ -66,26 +70,48 @@ class CreneauFaker implements Iterable<Creneau> {
 
             @Override
             public Creneau next() {
-                date = date.plusWeeks(1);
-                final var timeSlot = timeSlots[rand.nextInt(timeSlots.length)];
+                var firstSlot = nextAvailSlotToday();
+                if (firstSlot == TIME_SLOTS.length) {
+                    this.date = date.plusDays(1);
+                    firstSlot = 0;
+                }
+                this.slotIndex = rand.nextInt(firstSlot, TIME_SLOTS.length);
+                return randomCreneauNow();
+            }
 
-                final var modules = List.of(groupe.getModules().getFirst());
+            private int nextAvailSlotToday() {
+                final var slot = TIME_SLOTS[slotIndex];
+                int n = slotIndex;
+                while (n < TIME_SLOTS.length && TIME_SLOTS[n].start.isBefore(slot.finish))
+                    ++n;
+                return n;
+            }
+
+            private <T> List<T> sample(List<T> list) {
+                return List.of(list.get(rand.nextInt(list.size())));
+            }
+
+            private Creneau randomCreneauNow() {
+                final var timeSlot = TIME_SLOTS[this.slotIndex];
+
+                final var modules = sample(groupe.getModules());
                 final var groupes = List.of(groupe);
                 final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
 
                 var creneau = Creneau.builder()
-                    //.modules(modules)
-                    //.groupes(groupes)
-                    //.professeurs(profs)
+                    .modules(modules)
+                    .groupes(groupes)
+                    .professeurs(profs)
                     .salle(salles.getFirst())
-                    .heureDebut(date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
-                    .heureFin(date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
+                    .heureDebut(this.date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
+                    .heureFin(this.date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
                     .type("CM")
                     .status(0)
                     .build();
 
                 // XXX the builder as is does not maintain coherence, though
-                // that is where this belongs
+                // that is where this belongs. either that, or we should change
+                // the direction of ownership.
                 for (var module : modules) module.getCreneaux().add(creneau);
                 for (var groupe : groupes) groupe.getCreneaux().add(creneau);
                 for (var prof : profs) prof.getCreneaux().add(creneau);
@@ -94,5 +120,4 @@ class CreneauFaker implements Iterable<Creneau> {
             }
         };
     }
-
 }
