@@ -25,7 +25,7 @@ import jakarta.persistence.NamedQuery;
 @SuperBuilder
 @Setter
 @Getter
-@ToString
+@ToString(callSuper = true)
 @NamedQueries({
     @NamedQuery(
       name = "Etudiant.getAllCreneaux",
