@@ -24,19 +24,29 @@ public class DataFaker {
             System.exit(1);
         }
         try (emf) {
-            fakeData(emf);
+            final var rand = new java.util.Random(123);
+            final var faker = new com.github.javafaker.Faker(java.util.Locale.FRANCE, rand);
+            final var dataFaker = new DataFaker(rand, faker, emf);
+            dataFaker.fakeData();
         }
     }
 
-    public static void fakeData(RepositoryFactory erf) {
-        final var rand = new java.util.Random(123);
-        final var faker = new com.github.javafaker.Faker(java.util.Locale.FRANCE, rand);
+	private java.util.Random rand;
+	private com.github.javafaker.Faker faker;
+    private RepositoryFactory emf;
 
+    public DataFaker(java.util.Random rand, com.github.javafaker.Faker faker, RepositoryFactory emf) {
+        this.rand = rand;
+        this.faker = faker;
+        this.emf = emf;
+    }
+
+    public void fakeData() {
         var salles = SalleFaker.with(rand).asList();
         var groupFaker = GroupFaker.with(rand).createGroups();
         var creneauFaker = CreneauFaker
             .with(rand, faker, groupFaker.getAllGroupe().iterator().next(), salles);
-        erf.transaction(em -> {
+        emf.transaction(em -> {
 
             salles.forEach(em::persist);
 
