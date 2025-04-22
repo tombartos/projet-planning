@@ -1,10 +1,13 @@
 package fr.univtln.m1im.png.generation;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
@@ -72,16 +75,29 @@ class CreneauFaker implements Iterable<Creneau> {
             public Creneau next() {
                 var firstSlot = nextAvailSlotToday();
                 if (firstSlot == TIME_SLOTS.length) {
-                    this.date = date.plusDays(1);
+                    final var tomorrow = date.plusDays(1);
                     firstSlot = 0;
+                    switch (tomorrow.getDayOfWeek()) {
+                        case MONDAY:
+                        case TUESDAY:
+                        case WEDNESDAY:
+                        case THURSDAY:
+                        case FRIDAY:
+                            this.date = tomorrow;
+                            break;
+                        case SATURDAY:
+                        case SUNDAY:
+                            this.date = tomorrow.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+                            break;
+                    }
                 }
                 this.slotIndex = rand.nextInt(firstSlot, TIME_SLOTS.length);
                 return randomCreneauNow();
             }
 
             private int nextAvailSlotToday() {
-                final var slot = TIME_SLOTS[slotIndex];
-                int n = slotIndex;
+                int n = this.slotIndex;
+                final var slot = TIME_SLOTS[n];
                 while (n < TIME_SLOTS.length && TIME_SLOTS[n].start.isBefore(slot.finish))
                     ++n;
                 return n;
