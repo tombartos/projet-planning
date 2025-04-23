@@ -1,5 +1,7 @@
 package fr.univtln.m1im.png.gui;
 
+import static fr.univtln.m1im.png.model.Creneau.Status.*;
+
 import javafx.scene.paint.Color;
 
 import java.time.OffsetDateTime;
@@ -71,7 +73,6 @@ public class GuiCreneau {
         this.collision = 1;
         this.posCollision = 0;
         this.gui = gui;
-        
     }
 
     public String dateFr(OffsetDateTime jour)
@@ -104,39 +105,35 @@ public class GuiCreneau {
 
     public void afficherCreneau()
     {
-        switch (creneau.getHeureDebut().getDayOfWeek().toString()) {
-            case "MONDAY":
+        switch (creneau.getHeureDebut().getDayOfWeek()) {
+            case MONDAY:
                 jourDeLaSemaine = 0;
                 break;
-            case "TUESDAY":
+            case TUESDAY:
                 jourDeLaSemaine = 1;
                 break;
-
-            case "WEDNESDAY":
+            case WEDNESDAY:
                 jourDeLaSemaine = 2;
-                
                 break;
-            case "THURSDAY":
+            case THURSDAY:
                 jourDeLaSemaine = 3;
-                
                 break;
-
-            case "FRIDAY":
+            case FRIDAY:
                 jourDeLaSemaine = 4;
-                
                 break;
-
-        
-            default:
+            case SATURDAY:
+            case SUNDAY:
                 jourDeLaSemaine = 5;
                 break;
         }
+
         rectangle = new Rectangle(jourDeLaSemaine*width/nbJour + (width/nbJour * posCollision/collision),
-        convHeure(creneau)*height/nbHeure, 
-        width/nbJour /collision,
-        convDuree(creneau)*height/nbHeure);
+                convHeure(creneau)*height/nbHeure,
+                width/nbJour /collision,
+                convDuree(creneau)*height/nbHeure);
         rectangle.setStroke(Color.BLACK);
         rectangle.setStrokeWidth(1);
+
         switch (creneau.getType()) {
             case "CM":
                 rectangle.setFill(Color.YELLOW);
@@ -145,37 +142,35 @@ public class GuiCreneau {
 
             case "TD":
             rectangle.setFill(Color.LIGHTGREEN);
-                
+
                 break;
 
-                case "TP":
+            case "TP":
                 rectangle.setFill(Color.RED);
-                
+
                 break;
 
             case "EXAM":
                 rectangle.setFill(Color.MAGENTA);
-                
+
                 break;
-        
+
             default:
-            rectangle.setFill(Color.WHITE);
+                rectangle.setFill(Color.WHITE);
                 break;
         }
-        
+
         label = new Label();
         label.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
         label.setLayoutX(jourDeLaSemaine*width/nbJour+ (width/nbJour * posCollision/collision));
         label.setLayoutY(convHeure(creneau)*height/nbHeure);
         label.setOnMouseClicked(e -> {
-            if(this.creneau.getStatus() != 2)
+            if(this.creneau.getStatus() != EPHEMERE)
             {
                 rectangle.setStroke(Color.BLUE);
                 rectangle.setStrokeWidth(4);
                 afficherInformation();
             }
-            
-
         });
         label.setStyle("-fx-font-size: " + 10 + "px; -fx-alignment: center; -fx-text-alignment: center;");
         String listGroupe = new String();
@@ -195,13 +190,13 @@ public class GuiCreneau {
         label.setText(creneau.getSalle().getCode()+"\n"+listGroupe+"\n"+listModule+creneau.getType()+"\n"+listProf);
 
         group.getChildren().add(rectangle);
-        if(this.creneau.getStatus() == 1)
+        if(this.creneau.getStatus() == ANNULE)
         {
             Label labelAnnule = new Label("Annulé");
             labelAnnule.setPrefSize(width/nbJour /collision, height/nbHeure*convDuree(creneau));
             labelAnnule.setStyle("-fx-text-fill: violet; -fx-font-size: 20px; -fx-alignment: center; -fx-text-alignment: center;");
             labelAnnule.setLayoutX(jourDeLaSemaine*width/nbJour + (width/nbJour * posCollision/collision));
-            labelAnnule.setLayoutY(convHeure(creneau)*height/nbHeure);  
+            labelAnnule.setLayoutY(convHeure(creneau)*height/nbHeure);
             group.getChildren().add(labelAnnule);
         }
         group.getChildren().add(label);
@@ -233,7 +228,7 @@ public class GuiCreneau {
         GridPane gridModules = new GridPane();
         gridModules.setHgap(10);
         gridModules.setVgap(10);
-        
+
         Group infoGroup = new Group();
         Scene infoScene = new Scene(infoGroup);
         Label infoLabel = new Label();
@@ -275,10 +270,10 @@ public class GuiCreneau {
             noteProfField.setOnKeyReleased(e -> {
                 noteProfButton.setStyle("-fx-text-fill: red;");
             });
-            
+
                 noteProfButton.setOnAction(e -> {
                 noteProfButton.setStyle("-fx-text-fill: black;");
-                
+
                 entityManager.getTransaction().begin();
                 Creneau managedCreneau = entityManager.merge(creneau);
                 managedCreneau.setNoteProf(noteProfField.getText());
@@ -335,7 +330,7 @@ public class GuiCreneau {
             .sorted((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()))
             .toList();
         }
-        
+
         int position = 0;
         for(Creneau c : listCreneaux){
             if(c.equals(creneau)){
@@ -370,7 +365,7 @@ public class GuiCreneau {
                         infoModules.get(i).setTextFill(Color.BLACK);
                         infoModules.get(i).setStyle("-fx-background-color: white;");
                     }
-                    
+
                 }
                 gridModules.add(infoModules.get(i), 0, 1+i);
 
@@ -379,7 +374,7 @@ public class GuiCreneau {
         infoGroup.getChildren().add(grid);
         ScrollBar scrollBar = new ScrollBar();
         scrollBar.setOrientation(javafx.geometry.Orientation.VERTICAL);
-        
+
         scrollBar.setMin(0);
         scrollBar.setMax(listCreneaux.size()-nbAffichage);
         scrollBar.setValue(position);
@@ -412,12 +407,12 @@ public class GuiCreneau {
                         infoModules.get(j).setStyle("-fx-background-color: white;");
                     }
                 }
-                
+
 
                 j++;
             }
         });
-        
+
         infoLabel.setText(this.label.getText());
 
         grid.add(infoLabel, 0, 0);
@@ -436,19 +431,19 @@ public class GuiCreneau {
                 popup[0].close();
             });
             Button annulerCoursButton = new Button("Annuler le cours");
-            if(creneau.getStatus() == 1){
+            if(creneau.getStatus() == ANNULE){
                 annulerCoursButton.setText("Restaurer le cours");
             }
             annulerCoursButton.setOnAction(e -> {
                 entityManager.getTransaction().begin();
                 Creneau managedCreneau = entityManager.merge(creneau);
-                if(creneau.getStatus() == 1){
-                    managedCreneau.setStatus(0);
+                if(creneau.getStatus() == ANNULE){
+                    managedCreneau.setStatus(ACTIF);
                     annulerCoursButton.setText("Annuler le cours");
                 }
                 else
                 {
-                    managedCreneau.setStatus(1);
+                    managedCreneau.setStatus(ANNULE);
                     annulerCoursButton.setText("Restaurer le cours");
                 }
                 entityManager.getTransaction().commit();
@@ -476,7 +471,7 @@ public class GuiCreneau {
                 popup[0].close();
             });
             Button annulerCoursButton = new Button("Demande d'annuler le cours");
-            if(creneau.getStatus() == 1){
+            if(creneau.getStatus() == ANNULE){
                 annulerCoursButton.setText("Demande de restaurer le cours");
             }
             annulerCoursButton.setOnAction(e -> {
@@ -495,13 +490,10 @@ public class GuiCreneau {
                 for (Professeur prof : demandeCreneau.getProfesseurs()) {
                     log.info(prof.getNom() + " " + prof.getPrenom());
                 }
-                
-                if(creneau.getStatus() == 1){
 
+                if(creneau.getStatus() == ANNULE){
                     annulerCoursButton.setText("Demande d'annuler le cours");
-                }
-                else
-                {
+                } else {
                     //TODO: YANN :Label pour afficher "Demande envoyée"
                     annulerCoursButton.setText("Demande de restaurer le cours");
                 }
@@ -528,7 +520,7 @@ public class GuiCreneau {
         popup[0].setScene(infoScene);
         popup[0].initStyle(StageStyle.UTILITY);
         popup[0].show();
-        
+
     }
 
 }

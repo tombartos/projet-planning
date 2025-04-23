@@ -119,7 +119,7 @@ class CreneauFaker implements Iterable<Creneau> {
             .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
             .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
             .type(type)
-            .status(0)
+            .status(Creneau.Status.ACTIF)
             .build();
 
         // XXX the builder as is does not maintain coherence, though

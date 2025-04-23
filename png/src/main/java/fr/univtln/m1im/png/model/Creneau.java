@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -80,9 +82,17 @@ public class Creneau {
     @Column(nullable = false)
     private String noteProf = "";
 
+    public static enum Status {
+        ACTIF,
+        ANNULE,
+        EPHEMERE,
+    }
+
     @Builder.Default
+    @lombok.NonNull
     @Column(nullable = false)
-    private int status = 0; //0: actif, 1: annulé
+    @Enumerated(EnumType.ORDINAL)
+    private Status status = Status.ACTIF;
 
     @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
     @ToString.Exclude
