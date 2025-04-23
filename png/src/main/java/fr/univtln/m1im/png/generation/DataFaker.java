@@ -1,10 +1,14 @@
 package fr.univtln.m1im.png.generation;
 
+import java.time.LocalDate;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Responsable;
 
 public class DataFaker {
     public static void main(String[] args) {
@@ -28,7 +32,9 @@ public class DataFaker {
             final var faker = new com.github.javafaker.Faker(java.util.Locale.FRANCE, rand);
             final var dataFaker = new DataFaker(rand, faker, emf);
             dataFaker.fakeData();
+            dataFaker.initResp();
         }
+        
     }
 
 	private java.util.Random rand;
@@ -79,6 +85,21 @@ public class DataFaker {
                 }
             }
 
+        });
+    }
+
+    public void initResp(){
+        emf.transaction(em -> {
+            LocalDate birth = LocalDate.parse("1985-01-01");
+            Responsable responsable = Responsable.builder()
+                .nom("Dupont")
+                .prenom("Jean")
+                .login("dupont888")
+                .email("dupont888@email.com")
+                .dateNaissance(birth)
+                .UFR("Sciences")
+                .build();
+            em.persist(responsable);
         });
     }
 }
