@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.chrono.ChronoLocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Arrays;
@@ -115,8 +116,8 @@ class CreneauFaker implements Iterable<Creneau> {
             .groupes(groupes)
             .professeurs(profs)
             .salle(pickRandom(salles))
-            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
-            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
+            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
             .type(type)
             .status(0)
             .build();
