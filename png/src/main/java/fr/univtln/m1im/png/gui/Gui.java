@@ -40,6 +40,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.CustomMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
+import javafx.scene.input.KeyEvent;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -262,6 +263,8 @@ public class Gui {
         this.profDropdown.setPromptText("Professeurs");
         this.profDropdown.setVisible(false);
 
+        this.profDropdown.setEditable(true);
+        
         this.filtreDropdown = new ComboBox<>();
         this.filtreDropdown.getItems().addAll("Salles", "Groupes", "Professeurs");
         this.filtreDropdown.setPromptText("Filtrer par");
@@ -619,7 +622,7 @@ public class Gui {
              && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
              || 
              ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
-             && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureFin())))){
+            )){
                 
                 gc.setCollision(gc.getCollision() + 1);
                 guiCreneau.setCollision(guiCreneau.getCollision() + 1);
@@ -656,6 +659,24 @@ public class Gui {
         for (ProfesseurDTO professeur : professeurs) {
             this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
         }
+
+        this.profDropdown.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            if(this.profDropdown.getEditor().getText() == null) return;
+            List<String> listProf = new ArrayList<>();
+            for (ProfesseurDTO professeur : professeurs) {
+                listProf.add(professeur.getNom() +" "+ professeur.getPrenom());
+            }
+            this.profDropdown.getItems().clear();
+            System.out.println(listProf);
+            for(String prof : listProf)
+            {
+                if(prof.toLowerCase().contains(this.profDropdown.getEditor().getText().toLowerCase()))
+                {
+                    this.profDropdown.getItems().add(prof);
+                }
+            }
+        });
+
     }    
 
 }
