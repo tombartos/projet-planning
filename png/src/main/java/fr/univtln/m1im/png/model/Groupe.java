@@ -18,9 +18,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import jakarta.persistence.Table;
+
+import java.util.AbstractCollection;
+import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Entity
 @Table(name="Groupes")
@@ -99,6 +105,72 @@ public class Groupe {
         this.parent = parent;
     }
 
+    public InheritanceList<Module> getModules() {
+        return InheritanceList.moduleList(this);
+    }
+
+    public static class InheritanceList<T> extends AbstractList<T> {
+        private final Groupe firstGroupe;
+        private final Function<Groupe, List<T>> attrGetter;
+
+        private InheritanceList(Groupe groupe, Function<Groupe, List<T>> attr) {
+            this.firstGroupe = groupe;
+            this.attrGetter = attr;
+        }
+
+        static InheritanceList<Module> moduleList(Groupe gr) {
+            return new InheritanceList<>(gr, g -> g.modules);
+        }
+
+		@Override
+		public Iterator<T> iterator() {
+            return new Iterator<T>() {
+                private Groupe groupe = firstGroupe;
+                private Iterator<T> iter = attrGetter.apply(groupe).iterator();
+
+				@Override
+				public boolean hasNext() {
+                    return iter.hasNext() ||
+                        groupe.parent != null &&
+                        attrGetter.apply(groupe.parent).iterator().hasNext();
+				}
+
+				@Override
+				public T next() {
+                    if (iter.hasNext() || groupe.parent == null) {
+                        return iter.next();
+                    } else {
+                        groupe = groupe.parent;
+                        iter = attrGetter.apply(groupe).iterator();
+                        return iter.next();
+                    }
+				}
+            };
+		}
+
+		@Override
+		public int size() {
+            int size = 0;
+            for (var groupe = firstGroupe; groupe != null; groupe = groupe.getParent()) {
+                size += attrGetter.apply(groupe).size();
+            }
+            return size;
+		}
+
+        @Override
+        public T get(int i) {
+            for (var groupe = firstGroupe; groupe != null; groupe = groupe.getParent()) {
+                var list = attrGetter.apply(groupe);
+                if (i < list.size()) {
+                    return list.get(i);
+                } else {
+                    i -= list.size();
+                }
+            }
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
     /**
      * Adds a student to the current group and propagates the addition to the parent group if it exists, add the group to etudiant too.
      *
@@ -143,5 +215,22 @@ public class Groupe {
                 enfant.forEachFeuil(consumer);
             }
         }
+    }
+
+    public void forEachDescendant(Consumer<Groupe> consumer) {
+        consumer.accept(this);
+        for (var enfant : sousGroupes) {
+            enfant.forEachDescendant(consumer);
+        }
+    }
+
+    public void forEachAncetre(Consumer<Groupe> consumer) {
+        for (var parent = this; parent != null; parent = parent.getParent()) {
+            consumer.accept(parent);
+        }
+    }
+
+    public boolean isLeaf() {
+        return sousGroupes.isEmpty();
     }
 }

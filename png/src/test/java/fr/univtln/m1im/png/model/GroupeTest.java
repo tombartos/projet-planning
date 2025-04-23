@@ -1,5 +1,6 @@
 package fr.univtln.m1im.png.model;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -133,5 +134,49 @@ class GroupeTest {
         assertTrue(g.getCreneaux().isEmpty());
         assertTrue(g.getEtudiants().isEmpty());
         assertTrue(g.getSousGroupes().isEmpty());
+    }
+
+    @Test
+    void testModuleIteration() {
+        var m1 = Module.builder().code("M1").build();
+        var m2 = Module.builder().code("M2").build();
+        var m3 = Module.builder().code("M3").build();
+        var m4 = Module.builder().code("M4").build();
+        var m5 = Module.builder().code("M5").build();
+
+        var g1 = Groupe.builder().modules(List.of(m1, m2)).build();
+        var g2 = Groupe.builder().parent(g1).modules(List.of(m3)).build();
+        var g3 = Groupe.builder().parent(g2).modules(List.of(m4, m5)).build();
+
+        assertEquals(5, g3.getModules().size());
+
+        java.util.Iterator<Module> iter = g3.getModules().iterator();
+        for (var m : List.of(m4, m5, m3, m1, m2)) {
+            assertTrue(iter.hasNext());
+            assertEquals(m, iter.next());
+        }
+        assertFalse(iter.hasNext());
+        assertThrows(NoSuchElementException.class, () -> iter.next());
+    }
+
+    @Test
+    void testModuleIndexation() {
+        var m1 = Module.builder().code("M1").build();
+        var m2 = Module.builder().code("M2").build();
+        var m3 = Module.builder().code("M3").build();
+        var m4 = Module.builder().code("M4").build();
+        var m5 = Module.builder().code("M5").build();
+
+        var g1 = Groupe.builder().modules(List.of(m1, m2)).build();
+        var g2 = Groupe.builder().parent(g1).modules(List.of(m3)).build();
+        var g3 = Groupe.builder().parent(g2).modules(List.of(m4, m5)).build();
+
+        assertEquals(5, g3.getModules().size());
+        assertEquals(m4, g3.getModules().get(0));
+        assertEquals(m5, g3.getModules().get(1));
+        assertEquals(m3, g3.getModules().get(2));
+        assertEquals(m1, g3.getModules().get(3));
+        assertEquals(m2, g3.getModules().get(4));
+        assertThrows(IndexOutOfBoundsException.class, () -> g3.getModules().get(5));
     }
 }
