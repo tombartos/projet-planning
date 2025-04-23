@@ -71,7 +71,10 @@ public class DataFaker {
                     for (int i = 0; i < 50; ++i) {
                         final var etudiant = FakeUser.with(faker, rand)
                             .withStudentEmail()
-                            .configure(Etudiant.builder()).build();
+                            .configure(Etudiant.builder())
+                            .groupes(List.of(group))
+                            .build();
+                        group.getEtudiants().add(etudiant);
                         em.persist(etudiant);
                     }
                 }
