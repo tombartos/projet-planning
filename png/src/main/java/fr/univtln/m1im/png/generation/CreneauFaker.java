@@ -13,17 +13,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-import com.github.javafaker.Faker;
-
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
-import fr.univtln.m1im.png.model.Module;
 import fr.univtln.m1im.png.model.Salle;
 
 class CreneauFaker implements Iterable<Creneau> {
     private Random rand;
-    private Groupe groupe;
-    private Faker faker;
+    private Groupe rootGroupe;
     private List<Salle> salles;
 
     static final ZoneId ZONE = ZoneId.of("Europe/Paris");
@@ -49,94 +45,125 @@ class CreneauFaker implements Iterable<Creneau> {
             "15:30:00 17:30:00"
             ).map(TimeSlot::fromString).toArray(TimeSlot[]::new);
 
-    private CreneauFaker(Random rand, Faker faker, Groupe groupe, List<Salle> salles) {
+    private CreneauFaker(Random rand, Groupe groupe, List<Salle> salles) {
         this.rand = rand;
-        this.faker = faker;
-        this.groupe = groupe;
+        this.rootGroupe = groupe;
         this.salles = salles;
     }
 
-    public static CreneauFaker with(Random rand, Faker faker, Groupe groupe, List<Salle> salles) {
-        return new CreneauFaker(rand, faker, groupe, salles);
+    public static CreneauFaker with(Random rand, Groupe groupe, List<Salle> salles) {
+        return new CreneauFaker(rand, groupe, salles);
     }
 
     @Override
     public Iterator<Creneau> iterator() {
+        final HashMap<Groupe, Position> positions = new HashMap<>();
+        rootGroupe.forEachDescendant(g -> positions.put(g, new Position()));
         return new Iterator<Creneau>() {
-            private LocalDate date = FIRST_DAY;
-            //private HashMap<Groupe, Integer> slotIndex;
-            private int slotIndex = 0;
+            private Position pos = new Position();
 
             @Override
             public boolean hasNext() {
-                return date.isBefore(LAST_DAY);
+                // We stop whenever a group reaches the last day. i.e., there is one unlucky
+                // group who is last to start summer break :,(
+                return pos.date.isBefore(LAST_DAY);
             }
 
             @Override
             public Creneau next() {
-                var firstSlot = nextAvailSlotToday();
-                if (firstSlot == TIME_SLOTS.length) {
-                    final var tomorrow = date.plusDays(1);
-                    firstSlot = 0;
-                    switch (tomorrow.getDayOfWeek()) {
-                        case MONDAY:
-                        case TUESDAY:
-                        case WEDNESDAY:
-                        case THURSDAY:
-                        case FRIDAY:
-                            this.date = tomorrow;
-                            break;
-                        case SATURDAY:
-                        case SUNDAY:
-                            this.date = tomorrow.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
-                            break;
-                    }
+                final var groupe = randomSousGroupe(rootGroupe);
+                this.pos = positions.get(groupe);
+                groupe.forEachAncetre(anc -> pos.advanceUpTo(positions.get(anc)));
+                pos.advance(rand);
+                groupe.forEachAncetre(anc -> positions.get(anc).advanceUpTo(pos));
+                return randomCreneau(groupe, pos);
+            }
+
+            private Groupe randomSousGroupe(Groupe groupe) {
+                if (!groupe.isLeaf() && rand.nextFloat() < 0.5) {
+                    return randomSousGroupe(pickRandom(groupe.getSousGroupes()));
+                } else {
+                    return groupe;
                 }
-                this.slotIndex = rand.nextInt(firstSlot, TIME_SLOTS.length);
-                return randomCreneauNow();
             }
 
-            //private int nextAvailSlotToday(List<Groupe> groupes) {
-            private int nextAvailSlotToday() {
-                //int n = groupes.stream().mapToInt(slotIndex::get).max().getAsInt();
-                int n = this.slotIndex;
-                final var slot = TIME_SLOTS[n];
-                while (n < TIME_SLOTS.length && TIME_SLOTS[n].start.isBefore(slot.finish))
-                    ++n;
-                return n;
-            }
-
-            private <T> List<T> sample(List<T> list) {
-                return List.of(list.get(rand.nextInt(list.size())));
-            }
-
-            private Creneau randomCreneauNow() {
-                final var timeSlot = TIME_SLOTS[this.slotIndex];
-
-                final var modules = sample(groupe.getModules());
-                final var groupes = List.of(groupe);
-                final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
-
-                var creneau = Creneau.builder()
-                    .modules(modules)
-                    .groupes(groupes)
-                    .professeurs(profs)
-                    .salle(salles.getFirst())
-                    .heureDebut(this.date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
-                    .heureFin(this.date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
-                    .type("CM")
-                    .status(0)
-                    .build();
-
-                // XXX the builder as is does not maintain coherence, though
-                // that is where this belongs. either that, or we should change
-                // the direction of ownership.
-                for (var module : modules) module.getCreneaux().add(creneau);
-                for (var groupe : groupes) groupe.getCreneaux().add(creneau);
-                for (var prof : profs) prof.getCreneaux().add(creneau);
-
-                return creneau;
-            }
         };
+    }
+
+    private <T> T pickRandom(List<T> list) {
+        return list.get(rand.nextInt(list.size()));
+    }
+
+    private Creneau randomCreneau(Groupe groupe, Position pos) {
+        final var timeSlot = TIME_SLOTS[pos.slot];
+
+        final var modules = List.of(pickRandom(groupe.getModules()));
+        final var groupes = List.of(groupe);
+        final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
+
+        var creneau = Creneau.builder()
+            .modules(modules)
+            .groupes(groupes)
+            .professeurs(profs)
+            .salle(pickRandom(salles))
+            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
+            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
+            .type("CM")
+            .status(0)
+            .build();
+
+        // XXX the builder as is does not maintain coherence, though
+        // that is where this belongs. either that, or we should change
+        // the direction of ownership.
+        for (var module : modules) module.getCreneaux().add(creneau);
+        for (var group : groupes) group.getCreneaux().add(creneau);
+        for (var prof : profs) prof.getCreneaux().add(creneau);
+
+        return creneau;
+    }
+
+    private static class Position {
+        public LocalDate date = FIRST_DAY;
+        public int slot = 0;
+
+        public void advanceUpTo(Position other) {
+            if (other.date.isAfter(this.date)) {
+                this.date = other.date;
+                if (other.slot > this.slot) {
+                    this.slot = other.slot;
+                }
+            }
+        }
+
+        public void advance(Random rand) {
+            var firstSlot = nextAvailSlotToday();
+            if (firstSlot == TIME_SLOTS.length) {
+                final var tomorrow = date.plusDays(1);
+                firstSlot = 0;
+                switch (tomorrow.getDayOfWeek()) {
+                    case MONDAY:
+                    case TUESDAY:
+                    case WEDNESDAY:
+                    case THURSDAY:
+                    case FRIDAY:
+                        this.date = tomorrow;
+                        break;
+                    case SATURDAY:
+                    case SUNDAY:
+                        this.date = tomorrow.with(TemporalAdjusters.next(DayOfWeek.MONDAY));
+                        break;
+                }
+            }
+            this.slot = rand.nextInt(firstSlot, TIME_SLOTS.length);
+        }
+
+        private int nextAvailSlotToday() {
+            int n = this.slot;
+            final var slot = TIME_SLOTS[n];
+            while (n < TIME_SLOTS.length && TIME_SLOTS[n].start.isBefore(slot.finish))
+                ++n;
+            return n;
+        }
+
     }
 }

@@ -64,7 +64,6 @@ public class Creneau {
     @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
     private List<Module> modules = new ArrayList<Module>();
 
-    @ToString.Exclude
     @Builder.Default
     @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade ={CascadeType.MERGE})
     private List<Groupe> groupes = new ArrayList<Groupe>();

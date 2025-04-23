@@ -76,7 +76,6 @@ class GroupFaker {
             .build();
     }
 
-
     Groupe createGroupeTD(int i, Groupe formation, String nomFormation) {
         return Groupe.builder()
             .code(String.format("%s-TD%d", formation.getCode(), i))
@@ -113,6 +112,7 @@ class GroupFaker {
                     if (rand.nextBoolean()) {
                         for (var j = 0; j < 2; ++j) {
                             final var gtp = createGroupeTP(j, gtd, nomFormation);
+
                             this.toutes.add(gtp);
                             this.feuilles.add(gtp);
                         }

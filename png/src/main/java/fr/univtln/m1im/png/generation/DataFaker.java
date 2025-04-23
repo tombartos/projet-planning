@@ -72,7 +72,7 @@ public class DataFaker {
             }
 
             for (var groupe : groupFaker.getRacines()) {
-                final var creneauFaker = CreneauFaker.with(rand, faker, groupe, salles);
+                final var creneauFaker = CreneauFaker.with(rand, groupe, salles);
 
                 for (var creneau : creneauFaker) {
                     em.persist(creneau);
