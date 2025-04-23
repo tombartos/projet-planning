@@ -74,6 +74,17 @@ public class GuiCreneau {
         
     }
 
+    public String dateFr(OffsetDateTime jour)
+    {
+        List<String> jours = List.of("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche");
+        String strJourSemaineFr = jours.get(jour.getDayOfWeek().getValue()-1);
+        String strMoisFr = ""+jour.getMonthValue();
+        String strJourFr = ""+jour.getDayOfMonth();
+        String strAnneeFr = ""+jour.getYear();
+        return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr;
+
+    }
+
     public float convHeure(Creneau c)
     {
         float r;
@@ -173,7 +184,7 @@ public class GuiCreneau {
         }
         String listModule = new String();
         for(Module module : creneau.getModules()){
-            listModule += module.getNom()+"\n";
+            listModule += module.getCode()+" "+module.getNom()+"\n";
         }
         String listProf = new String();
         for(Professeur prof : creneau.getProfesseurs()){
