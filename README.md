@@ -26,7 +26,9 @@ Linux et MacOS:
 mvn exec:java -Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker
 ```
 Windows:
-A venir
+```ps1
+mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker"
+```
 
 Une fois ceci fait il faut créer les utilisateurs PostGRES et leur donner les permissions nécessaires :
 
@@ -34,8 +36,18 @@ Une fois ceci fait il faut créer les utilisateurs PostGRES et leur donner les p
 
     ./create_users
 
--Méthode 2 : Windows:
-    A venir
+-Méthode 2 : Linux, MacOS et Windows: 
+    Connectez vous à la base de données en utilisant le client de votre choix avec les identifiants suivants :
+
+    Username : postgres
+    Password : mysecretpassword
+    Database : postgres
+    Port : 8080
+
+Lancez le script SQL suivant :
+`projet-planning/init.sql `
+ ou copiez collez le dans votre client SQL.
+
 
 
 # Execution
@@ -49,6 +61,10 @@ Pour réinitialiser la base de données, il faut utiliser la commande suivante :
 Linux et MacOS :
 ```bash
 mvn exec:java -Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker
+```
+Windows:
+```ps1
+mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker"
 ```
 Cette commande va supprimer la base de données et la recréer avec les données de test.
 Il faut ensuite reutiliser le script SQL (méthode 1 ou 2) pour créer les utilisateurs et leur donner les permissions nécessaires.
