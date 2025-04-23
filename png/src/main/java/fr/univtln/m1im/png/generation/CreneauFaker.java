@@ -101,6 +101,15 @@ class CreneauFaker implements Iterable<Creneau> {
         final var groupes = List.of(groupe);
         final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
 
+        final String type;
+        if (groupe.getCode().contains("-TP")) {
+            type = "TP";
+        } else if (groupe.getCode().contains("-TD")) {
+            type = "TD";
+        } else {
+            type = "CM";
+        }
+
         var creneau = Creneau.builder()
             .modules(modules)
             .groupes(groupes)
@@ -108,7 +117,7 @@ class CreneauFaker implements Iterable<Creneau> {
             .salle(pickRandom(salles))
             .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZONE).toOffsetDateTime())
             .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZONE).toOffsetDateTime())
-            .type("CM")
+            .type(type)
             .status(0)
             .build();
 
