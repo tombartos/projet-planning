@@ -76,15 +76,15 @@ public class AjouterCours {
         ComboBox<String> moduleField2 = new ComboBox<>();
         moduleField2.setPromptText("Sélectionner un module 2");
         ModuleRepository moduleRepository  = new ModuleRepository(entityManager);
-        moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
-        moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
+        moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 1000));
+        moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 1000));
         
         ComboBox<String> profField1 = new ComboBox<>();
         profField1.setPromptText("Sélectionner un professeur 1");
         ComboBox<String> profField2 = new ComboBox<>();
         profField2.setPromptText("Sélectionner un professeur 2");
         ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-        List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 100);
+        List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 1000);
         for (ProfesseurDTO p : proflist){
             profField1.getItems().add(p.getNom() + " " + p.getPrenom());
             profField2.getItems().add(p.getNom() + " " + p.getPrenom());
@@ -95,7 +95,7 @@ public class AjouterCours {
         ComboBox<String> groupeField2 = new ComboBox<>();
         groupeField2.setPromptText("Sélectionner un groupe 2");
         GroupeRepository groupeRepository = new GroupeRepository(entityManager);
-        List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 100);
+        List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 1000);
         for (GroupeDTO g : grouplist){
             groupeField1.getItems().add(g.getCode());
             groupeField2.getItems().add(g.getCode());
@@ -108,7 +108,7 @@ public class AjouterCours {
         ComboBox<String> salleField = new ComboBox<>();
         salleField.setPromptText("Sélectionner une salle");
         SalleRepository salleRepository = new SalleRepository(entityManager);
-        List<Salle> sallelist = salleRepository.getAll(0, 100);
+        List<Salle> sallelist = salleRepository.getAll(0, 1000);
         for (Salle s : sallelist){
             salleField.getItems().add(s.getCode());
         }
@@ -294,7 +294,7 @@ public class AjouterCours {
                     return;
                 }
                 Module module = moduleRepository.getModuleByCode(moduleField1.getValue());
-                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
+                List<Professeur> professeurlist = professeurRepository.getAll(0, 1000);
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());

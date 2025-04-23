@@ -79,8 +79,8 @@ public class ModifierCreneau {
 
         ComboBox<String> moduleField1 = new ComboBox<>();
         ComboBox<String> moduleField2 = new ComboBox<>();
-        moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
-        moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 100));
+        moduleField1.getItems().addAll(moduleRepository.getAllModulesCodes(0, 1000));
+        moduleField2.getItems().addAll(moduleRepository.getAllModulesCodes(0, 1000));
 
         if (!creneau.getModules().isEmpty()) {
             moduleField1.setValue(creneau.getModules().get(0).getCode());
@@ -90,7 +90,7 @@ public class ModifierCreneau {
 
         ComboBox<String> profField1 = new ComboBox<>();
         ComboBox<String> profField2 = new ComboBox<>();
-        List<ProfesseurDTO> profs = professeurRepository.getAllDTO(0, 100);
+        List<ProfesseurDTO> profs = professeurRepository.getAllDTO(0, 1000);
         for (ProfesseurDTO p : profs) {
             String fullName = p.getNom() + " " + p.getPrenom();
             profField1.getItems().add(fullName);
@@ -104,7 +104,7 @@ public class ModifierCreneau {
 
         ComboBox<String> groupeField1 = new ComboBox<>();
         ComboBox<String> groupeField2 = new ComboBox<>();
-        List<GroupeDTO> groupes = groupeRepository.getAllDTO(0, 100);
+        List<GroupeDTO> groupes = groupeRepository.getAllDTO(0, 1000);
         for (GroupeDTO g : groupes) {
             groupeField1.getItems().add(g.getCode());
             groupeField2.getItems().add(g.getCode());
@@ -120,7 +120,7 @@ public class ModifierCreneau {
         typeField.setValue(creneau.getType());
 
         ComboBox<String> salleField = new ComboBox<>();
-        List<Salle> salles = salleRepository.getAll(0, 100);
+        List<Salle> salles = salleRepository.getAll(0, 1000);
         for (Salle s : salles) salleField.getItems().add(s.getCode());
         if (creneau.getSalle() != null) salleField.setValue(creneau.getSalle().getCode());
 
@@ -314,7 +314,7 @@ public class ModifierCreneau {
                     return;
                 }
                 Module module = moduleRepository.getModuleByCode(moduleField1.getValue());
-                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
+                List<Professeur> professeurlist = professeurRepository.getAll(0, 1000);
                 Professeur professeur = professeurlist.get(profField1.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());

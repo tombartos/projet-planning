@@ -632,7 +632,7 @@ public class Gui {
     private void chargerSalles() {
         List<Salle> salles;
         SalleRepository salleRepository = new SalleRepository(entityManager);
-        salles = salleRepository.getAll(0, 100);
+        salles = salleRepository.getAll(0, 1000);
         this.salleDropdown.getItems().clear();
         for (Salle salle : salles) {
             this.salleDropdown.getItems().add(salle.getCode());
@@ -642,7 +642,7 @@ public class Gui {
     private void chargerGroupes(){
         List<GroupeDTO> groupes;
         GroupeRepository groupeRepository = new GroupeRepository(entityManager);
-        groupes = groupeRepository.getAllDTO(0, 100);
+        groupes = groupeRepository.getAllDTO(0, 1000);
         this.groupesDropdown.getItems().clear();
         for (GroupeDTO groupe : groupes) {
             this.groupesDropdown.getItems().add(groupe.getCode());
@@ -651,7 +651,7 @@ public class Gui {
 
     private void chargerProfesseurs(){
         ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-        professeurs = professeurRepository.getAllDTO(0, 100);
+        professeurs = professeurRepository.getAllDTO(0, 1000);
         this.profDropdown.getItems().clear();
         for (ProfesseurDTO professeur : professeurs) {
             this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
