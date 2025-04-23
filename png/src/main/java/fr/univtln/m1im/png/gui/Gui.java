@@ -26,6 +26,7 @@ import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -619,10 +620,11 @@ public class Gui {
     public void gestionCollision(GuiCreneau guiCreneau){
         for(GuiCreneau gc : guiCreneaux){
             if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
-             && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureFin())))
+             && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) ))
              || 
              ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
-            )){
+             && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureDebut()))))
+             {
                 
                 gc.setCollision(gc.getCollision() + 1);
                 guiCreneau.setCollision(guiCreneau.getCollision() + 1);
@@ -675,6 +677,9 @@ public class Gui {
                     this.profDropdown.getItems().add(prof);
                 }
             }
+            // if (event.getCode().toString().equals("ENTER")) {
+            //     event.consume();
+            // }
         });
 
     }    
