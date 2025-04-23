@@ -81,7 +81,7 @@ public class GuiCreneau {
         String strMoisFr = ""+jour.getMonthValue();
         String strJourFr = ""+jour.getDayOfMonth();
         String strAnneeFr = ""+jour.getYear();
-        return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr;
+        return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr+"\t";
 
     }
 
@@ -348,8 +348,9 @@ public class GuiCreneau {
         }
         String info = new String();
             for(int i = 0; i < nbAffichage; i++){
-                info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
-                info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
+                //info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
+                //info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
+                info = dateFr(listCreneaux.get(i).getHeureDebut());
                 info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":"+listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
                 info += listCreneaux.get(position + i).getHeureFin().getHour() + ":"+listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
                 info += listCreneaux.get(position + i).getType() + "\n";
@@ -388,8 +389,9 @@ public class GuiCreneau {
             String infoSc = new String();
             int j = 0;
             for(int i = (int) scrollBar.getValue(); i < (int) scrollBar.getValue() + nbAffichage; i++){
-                infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
-                infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
+                //infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
+                //infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
+                infoSc = dateFr(listCreneaux.get(i).getHeureDebut());
                 infoSc += listCreneaux.get(i).getHeureDebut().getHour() + ":" + listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
                 infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":" + listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
                 infoSc += listCreneaux.get(i).getType() + "\n";

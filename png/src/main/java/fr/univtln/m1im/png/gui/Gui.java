@@ -261,7 +261,7 @@ public class Gui {
         this.groupesDropdown.setPromptText("Groupes");
         this.groupesDropdown.setVisible(false);
         this.profDropdown = new ComboBox<>();
-        this.profDropdown.setPromptText("Professeurs");
+        // this.profDropdown.setPromptText("Professeurs");
         this.profDropdown.setVisible(false);
 
         this.profDropdown.setEditable(true);
@@ -317,6 +317,7 @@ public class Gui {
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
             this.etatCourant = 1;
+            System.out.println(profDropdown.getSelectionModel());
             idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
             genererCreneaux();
         });
@@ -662,14 +663,15 @@ public class Gui {
             this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
         }
 
+
         this.profDropdown.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
+            this.profDropdown.show();
             if(this.profDropdown.getEditor().getText() == null) return;
             List<String> listProf = new ArrayList<>();
             for (ProfesseurDTO professeur : professeurs) {
                 listProf.add(professeur.getNom() +" "+ professeur.getPrenom());
             }
             this.profDropdown.getItems().clear();
-            System.out.println(listProf);
             for(String prof : listProf)
             {
                 if(prof.toLowerCase().contains(this.profDropdown.getEditor().getText().toLowerCase()))
@@ -677,9 +679,7 @@ public class Gui {
                     this.profDropdown.getItems().add(prof);
                 }
             }
-            // if (event.getCode().toString().equals("ENTER")) {
-            //     event.consume();
-            // }
+            
         });
 
     }    
