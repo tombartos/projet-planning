@@ -191,8 +191,8 @@ public class GuiCreneau {
             listProf += prof.getPrenom()+" "+prof.getNom()+"\n";
         }
 
+        // FIXME we either need a not empty constraint on groupes or this needs to handle the empty case
         label.setText(creneau.getSalle().getCode()+"\n"+listGroupe+"\n"+listModule+creneau.getType()+"\n"+listProf);
-
 
         group.getChildren().add(rectangle);
         if(this.creneau.getStatus() == 1)

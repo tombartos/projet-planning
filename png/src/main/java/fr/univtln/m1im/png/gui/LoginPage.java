@@ -92,7 +92,6 @@ public class LoginPage {
                             log.info("Not a responsable, problem in the database ?");
                             //log.error(ex_res.getMessage());
                             ex_res.printStackTrace();
-                            
                         }
                     }
                 }

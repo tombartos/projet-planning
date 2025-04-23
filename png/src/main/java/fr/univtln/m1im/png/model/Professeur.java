@@ -23,7 +23,7 @@ import java.util.List;
 @SuperBuilder
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NamedQueries({
     @NamedQuery(
       name = "Professeur.getByLogin",

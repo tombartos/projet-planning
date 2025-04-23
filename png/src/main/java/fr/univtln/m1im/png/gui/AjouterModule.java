@@ -51,7 +51,7 @@ public class AjouterModule {
         ComboBox<String> profCombo = new ComboBox<>();
         profCombo.setPromptText("Choisir un professeur");
         ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
-        List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 100);
+        List<ProfesseurDTO> proflist = professeurRepository.getAllDTO(0, 1000);
         for (ProfesseurDTO p : proflist){
             profCombo.getItems().add(p.getNom() + " " + p.getPrenom());
         }
@@ -59,7 +59,7 @@ public class AjouterModule {
         ComboBox<String> groupeCombo = new ComboBox<>();
         groupeCombo.setPromptText("Choisir un groupe");
         GroupeRepository groupeRepository = new GroupeRepository(entityManager);
-        List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 100);
+        List<GroupeDTO> grouplist = groupeRepository.getAllDTO(0, 1000);
         for (GroupeDTO g : grouplist){
             groupeCombo.getItems().add(g.getCode());
         }
@@ -107,7 +107,7 @@ public class AjouterModule {
                 String codeM = codeField.getText();
                 String nomM = nomField.getText();
                 String desc = descriptionField.getText();
-                List<Professeur> professeurlist = professeurRepository.getAll(0, 100);
+                List<Professeur> professeurlist = professeurRepository.getAll(0, 1000);
                 Professeur professeur = professeurlist.get(profCombo.getSelectionModel().getSelectedIndex());
                 Groupe groupe = groupeRepository.getByCode(groupeCombo.getValue());
                 Module newModule = Module.builder() 

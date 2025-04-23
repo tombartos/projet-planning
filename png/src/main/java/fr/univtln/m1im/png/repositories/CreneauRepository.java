@@ -11,6 +11,7 @@ import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
+import fr.univtln.m1im.png.model.Salle;
 import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;
@@ -35,6 +36,7 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
                 .getSingleResult();
     }
 
+    // FIXME NullPointerException quand il y a des creneaux où salle == null.
     public String addCreneau(Creneau creneau, Creneau oldCreneau) {
         //All the verifications are done in this method
         //oldCreneau is the creneau to modify, if it is null we are adding a new creneau
@@ -79,13 +81,15 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         }
 
         //3: Salle check
+        List<Creneau> salleCreneaux = new ArrayList<>();
         for (Creneau c : creneauxDay) {
-            List<Creneau> salleCreneaux = new ArrayList<>();
-            if (c.getSalle().equals(creneau.getSalle())) {
+            Salle s = c.getSalle();
+            if (s.equals(creneau.getSalle())) {
                 salleCreneaux.add(c);
             }
+
         }
-        if (!Utils.canInsertCreneau(creneau, creneauxDay)) {
+        if (!Utils.canInsertCreneau(creneau, salleCreneaux)) {
             return ("Le créneau ne peut pas être inséré car il y a un conflit avec la salle " + creneau.getSalle().getCode());
         }
         if (oldCreneau != null)
