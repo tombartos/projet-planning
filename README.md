@@ -11,33 +11,32 @@ cd projet-planning/png
 ```
 
 Créer la base de données :
+Linux MacOS et Windows:
 ```bash
 docker-compose up -d
 ```
 
 Pour compiler le projet et peupler la base de données, il faut utiliser la commande suivante : 
+Linux, MacOS et Windows:
 ```bash
 mvn clean install
 ```
+Linux et MacOS:
+```bash
+mvn exec:java -Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker
+```
+Windows:
+A venir
 
 Une fois ceci fait il faut créer les utilisateurs PostGRES et leur donner les permissions nécessaires :
 
--Méthode 1 Linux et MacOS UNIQUEMENT avec psql installé sur la machine hôte : 
+-Méthode 1 Linux et MacOS avec psql installé sur la machine hôte : 
 
-    cd ..
-    ./create_user.sh
+    ./create_users
 
--Méthode 2 : Linux, MacOS et Windows: 
-    Connectez vous à la base de données en utilisant le client de votre choix avec les identifiants suivants :
+-Méthode 2 : Windows:
+    A venir
 
-    Username : postgres
-    Password : mysecretpassword
-    Database : postgres
-    Port : 8080
-
-Lancez le script SQL suivant :
-`projet-planning/init.sql `
- ou copiez collez le dans votre client SQL. 
 
 # Execution
 Pour exécuter le projet, il faut utiliser les commandes suivantes : 
@@ -47,8 +46,9 @@ mvn exec:java
 ```
 
 Pour réinitialiser la base de données, il faut utiliser la commande suivante : 
+Linux et MacOS :
 ```bash
-mvn test
+mvn exec:java -Dexec.mainClass=fr.univtln.m1im.png.generation.DataFaker
 ```
 Cette commande va supprimer la base de données et la recréer avec les données de test.
 Il faut ensuite reutiliser le script SQL (méthode 1 ou 2) pour créer les utilisateurs et leur donner les permissions nécessaires.

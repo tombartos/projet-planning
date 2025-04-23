@@ -26,7 +26,6 @@ import fr.univtln.m1im.png.repositories.GroupeRepository;
 import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import fr.univtln.m1im.png.repositories.SalleRepository;
 import jakarta.persistence.EntityManager;
-import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;

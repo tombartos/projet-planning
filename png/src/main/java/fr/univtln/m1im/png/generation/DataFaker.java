@@ -1,8 +1,6 @@
 package fr.univtln.m1im.png.generation;
 
 import java.time.LocalDate;
-import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.util.List;
 
 import fr.univtln.m1im.png.Utils;
