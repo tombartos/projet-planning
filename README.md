@@ -70,5 +70,14 @@ Cette commande va supprimer la base de données et la recréer avec les données
 Il faut ensuite reutiliser le script SQL (méthode 1 ou 2) pour créer les utilisateurs et leur donner les permissions nécessaires.
 
 
-
+Comptes disponibles actuellement :
+- Etudiant : 
+    - Login : llaurent704
+    - Mot de passe : password
+- Professeur :
+    - Login : tbaron132
+    - Mot de passe : password
+- Responsable EDT :
+    - Login : dupont888
+    - Mot de passe : password
 
