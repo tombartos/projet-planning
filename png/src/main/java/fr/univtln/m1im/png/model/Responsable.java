@@ -12,16 +12,14 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(name="Responsables")
+@Table(name = "Responsables")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
 @ToString(callSuper = true)
 @NamedQueries({
-    @NamedQuery(
-        name = "Responsable.getByLogin",
-        query = "SELECT r FROM Responsable r WHERE r.login = :login")
+        @NamedQuery(name = "Responsable.getByLogin", query = "SELECT r FROM Responsable r WHERE r.login = :login")
 })
 public class Responsable extends Utilisateur {
     @Column(nullable = false)

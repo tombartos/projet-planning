@@ -8,13 +8,12 @@ public class ResponsableRepository extends JpaRepository<Responsable, Long> {
         super(Responsable.class, entityManager);
     }
 
-
     public Responsable getByLogin(String login) {
         return em.createNamedQuery("Responsable.getByLogin", Responsable.class)
                 .setParameter("login", login)
                 .getSingleResult();
     }
 
-    //TODO: Etendre plusieurs semaines
-        
+    // TODO: Etendre plusieurs semaines
+
 }

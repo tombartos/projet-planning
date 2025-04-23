@@ -25,37 +25,25 @@ import java.util.List;
 @Setter
 @ToString(callSuper = true)
 @NamedQueries({
-    @NamedQuery(
-      name = "Professeur.getByLogin",
-      query = "SELECT p FROM Professeur p WHERE p.login = :login"
-    ),
-    @NamedQuery(
-      name = "Professeur.getWeekCrenaux",
-      query = "SELECT c FROM Professeur p JOIN p.creneaux c WHERE p.id = :professeurId AND c.heureDebut BETWEEN :firstDay AND :lastDay"
-    ),
-    @NamedQuery(
-        name = "ProfesseurDTO.getAllDTO",
-        query = "SELECT new fr.univtln.m1im.png.dto.ProfesseurDTO(p.id, p.nom, p.prenom) FROM Professeur p"
-    ),
-    @NamedQuery(
-        name = "Professeur.getAll",
-        query = "SELECT p FROM Professeur p"
-    )
-  })
+    @NamedQuery(name = "Professeur.getByLogin", query = "SELECT p FROM Professeur p WHERE p.login = :login"),
+    @NamedQuery(name = "Professeur.getWeekCrenaux", query = "SELECT c FROM Professeur p JOIN p.creneaux c WHERE p.id = :professeurId AND c.heureDebut BETWEEN :firstDay AND :lastDay"),
+    @NamedQuery(name = "ProfesseurDTO.getAllDTO", query = "SELECT new fr.univtln.m1im.png.dto.ProfesseurDTO(p.id, p.nom, p.prenom) FROM Professeur p"),
+    @NamedQuery(name = "Professeur.getAll", query = "SELECT p FROM Professeur p")
+})
 public class Professeur extends Utilisateur {
-    @ToString.Exclude
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Module> modules = new ArrayList<Module>();
+  @ToString.Exclude
+  @Builder.Default
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Module> modules = new ArrayList<Module>();
 
-    @ToString.Exclude
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<Creneau> creneaux = new ArrayList<Creneau>();
+  @ToString.Exclude
+  @Builder.Default
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<Creneau> creneaux = new ArrayList<Creneau>();
 
-    @ToString.Exclude
-    @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
-    private List<DemandeCreneau> demandes_creneaux = new ArrayList<DemandeCreneau>();
+  @ToString.Exclude
+  @Builder.Default
+  @ManyToMany(fetch = FetchType.LAZY)
+  private List<DemandeCreneau> demandes_creneaux = new ArrayList<DemandeCreneau>();
 
 }

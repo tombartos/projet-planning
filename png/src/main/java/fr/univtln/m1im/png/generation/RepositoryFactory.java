@@ -41,10 +41,10 @@ interface RepositoryFactory extends AutoCloseable {
             }
         }
 
-		@Override
-		public void close() {
+        @Override
+        public void close() {
             emf.close();
-		}
+        }
     }
 
     // Right now this just stupidly prints stuff to stdout for debugging, but we
@@ -60,7 +60,8 @@ interface RepositoryFactory extends AutoCloseable {
             });
         }
 
-		@Override
-		public void close() {}
+        @Override
+        public void close() {
+        }
     }
 }

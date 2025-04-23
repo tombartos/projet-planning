@@ -27,27 +27,16 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Entity
-@Table(name="Groupes")
+@Table(name = "Groupes")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 @ToString
 @NamedQueries({
-    @NamedQuery(
-        name = "Groupe.getAll",
-        query = "SELECT g FROM Groupe g"),
-    @NamedQuery(
-        name = "Groupe.getAllDTO",
-        query = "SELECT new fr.univtln.m1im.png.dto.GroupeDTO(g.code, g.nom, g.formation) FROM Groupe g"
-    ),
-    @NamedQuery(
-    name = "Groupe.getWeekCreneaux",
-    query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
-    ),
-    @NamedQuery(
-        name = "Groupe.getByCode",
-        query = "SELECT g FROM Groupe g WHERE g.code = :code"
-    )
+        @NamedQuery(name = "Groupe.getAll", query = "SELECT g FROM Groupe g"),
+        @NamedQuery(name = "Groupe.getAllDTO", query = "SELECT new fr.univtln.m1im.png.dto.GroupeDTO(g.code, g.nom, g.formation) FROM Groupe g"),
+        @NamedQuery(name = "Groupe.getWeekCreneaux", query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"),
+        @NamedQuery(name = "Groupe.getByCode", query = "SELECT g FROM Groupe g WHERE g.code = :code")
 })
 public class Groupe {
     @Id
@@ -67,7 +56,7 @@ public class Groupe {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-    private List<Groupe> sousGroupes = new ArrayList<Groupe>(); //Sous groupes en structure d'arbre
+    private List<Groupe> sousGroupes = new ArrayList<Groupe>(); // Sous groupes en structure d'arbre
 
     @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY)
@@ -85,7 +74,8 @@ public class Groupe {
         this.parent = parent;
         this.modules = modules;
 
-        if (parent != null) parent.sousGroupes.add(this);
+        if (parent != null)
+            parent.sousGroupes.add(this);
     }
 
     public static class GroupeBuilder {
@@ -120,21 +110,21 @@ public class Groupe {
             return new InheritanceList<>(gr, g -> g.modules);
         }
 
-		@Override
-		public Iterator<T> iterator() {
+        @Override
+        public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private Groupe groupe = firstGroupe;
                 private Iterator<T> iter = attrGetter.apply(groupe).iterator();
 
-				@Override
-				public boolean hasNext() {
+                @Override
+                public boolean hasNext() {
                     return iter.hasNext() ||
-                        groupe.parent != null &&
-                        attrGetter.apply(groupe.parent).iterator().hasNext();
-				}
+                            groupe.parent != null &&
+                                    attrGetter.apply(groupe.parent).iterator().hasNext();
+                }
 
-				@Override
-				public T next() {
+                @Override
+                public T next() {
                     if (iter.hasNext() || groupe.parent == null) {
                         return iter.next();
                     } else {
@@ -142,18 +132,18 @@ public class Groupe {
                         iter = attrGetter.apply(groupe).iterator();
                         return iter.next();
                     }
-				}
+                }
             };
-		}
+        }
 
-		@Override
-		public int size() {
+        @Override
+        public int size() {
             int size = 0;
             for (var groupe = firstGroupe; groupe != null; groupe = groupe.getParent()) {
                 size += attrGetter.apply(groupe).size();
             }
             return size;
-		}
+        }
 
         @Override
         public T get(int i) {
@@ -170,7 +160,8 @@ public class Groupe {
     }
 
     /**
-     * Adds a student to the current group and propagates the addition to the parent group if it exists, add the group to etudiant too.
+     * Adds a student to the current group and propagates the addition to the parent
+     * group if it exists, add the group to etudiant too.
      *
      * @param etudiant the student to be added to the group
      */
@@ -184,15 +175,16 @@ public class Groupe {
 
     /**
      * Adds a Creneau (time slot) to the current group and propagates the addition
-     * to the parent group if it exists. WARNING: this method does not add the Groupe to the Creneau object.
+     * to the parent group if it exists. WARNING: this method does not add the
+     * Groupe to the Creneau object.
      *
      * @param creneau the Creneau object to be added to the group
      */
     // public void addCreneau(Creneau creneau) {
-    //     this.creneaux.add(creneau);
-    //     if (parent != null) {
-    //         parent.addCreneau(creneau);
-    //     }
+    // this.creneaux.add(creneau);
+    // if (parent != null) {
+    // parent.addCreneau(creneau);
+    // }
     // }
 
     public boolean isDescendantOf(Groupe other) {

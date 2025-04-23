@@ -32,11 +32,11 @@ public class DataFaker {
             dataFaker.fakeData();
             dataFaker.initResp();
         }
-        
+
     }
 
-	private java.util.Random rand;
-	private com.github.javafaker.Faker faker;
+    private java.util.Random rand;
+    private com.github.javafaker.Faker faker;
     private RepositoryFactory emf;
 
     public DataFaker(java.util.Random rand, com.github.javafaker.Faker faker, RepositoryFactory emf) {
@@ -55,8 +55,8 @@ public class DataFaker {
 
             for (var module : groupFaker.getModules()) {
                 final var prof = FakeUser.with(faker, rand)
-                    .withProfEmail()
-                    .configure(Professeur.builder()).build();
+                        .withProfEmail()
+                        .configure(Professeur.builder()).build();
                 module.setProfesseurs(List.of(prof));
                 em.persist(prof);
                 em.persist(module);
@@ -68,8 +68,8 @@ public class DataFaker {
                 if (group.getSousGroupes().isEmpty()) {
                     for (int i = 0; i < 50; ++i) {
                         final var etudiant = FakeUser.with(faker, rand)
-                            .withStudentEmail()
-                            .configure(Etudiant.builder()).build();
+                                .withStudentEmail()
+                                .configure(Etudiant.builder()).build();
                         em.persist(etudiant);
                     }
                 }
@@ -86,17 +86,17 @@ public class DataFaker {
         });
     }
 
-    public void initResp(){
+    public void initResp() {
         emf.transaction(em -> {
             LocalDate birth = LocalDate.parse("1985-01-01");
             Responsable responsable = Responsable.builder()
-                .nom("Dupont")
-                .prenom("Jean")
-                .login("dupont888")
-                .email("dupont888@email.com")
-                .dateNaissance(birth)
-                .UFR("Sciences")
-                .build();
+                    .nom("Dupont")
+                    .prenom("Jean")
+                    .login("dupont888")
+                    .email("dupont888@email.com")
+                    .dateNaissance(birth)
+                    .UFR("Sciences")
+                    .build();
             em.persist(responsable);
         });
     }

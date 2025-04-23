@@ -26,7 +26,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="demandes_creneaux")
+@Table(name = "demandes_creneaux")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,10 +34,7 @@ import lombok.ToString;
 @Builder
 @ToString
 @NamedQueries({
-    @NamedQuery(
-        name = "DemandeCreneau.getAllPending",
-        query = "SELECT d FROM DemandeCreneau d WHERE d.status = 0"
-    )
+        @NamedQuery(name = "DemandeCreneau.getAllPending", query = "SELECT d FROM DemandeCreneau d WHERE d.status = 0")
 })
 public class DemandeCreneau {
     @Id
@@ -50,21 +47,22 @@ public class DemandeCreneau {
     @Column(nullable = false)
     private OffsetDateTime heureFin;
     @Column(nullable = false)
-    private String type; //TD CM TP EXAM
+    private String type; // TD CM TP EXAM
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     private List<Module> modules = new ArrayList<Module>();
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY, cascade ={CascadeType.MERGE})
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     private List<Groupe> groupes = new ArrayList<Groupe>();
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(mappedBy = "demandes_creneaux", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,
+            CascadeType.PERSIST })
     private List<Professeur> professeurs = new ArrayList<Professeur>();
 
     @ManyToOne
@@ -72,15 +70,16 @@ public class DemandeCreneau {
 
     @Builder.Default
     @Column(nullable = false)
-    private int status = 0; //0: En attente, 1: accepte, 2 : refuse
+    private int status = 0; // 0: En attente, 1: accepte, 2 : refuse
 
     @ManyToOne
     @Builder.Default
-    private Creneau creneauToModify = null; //Si not null, la demande est une demande de modification d'un creneau existant
+    private Creneau creneauToModify = null; // Si not null, la demande est une demande de modification d'un creneau
+                                            // existant
 
     @Builder.Default
     @Column(nullable = false)
-    private int typeDemande = 0; //0: nouveau, 1: modification, 2: annulation, 3: suppression
+    private int typeDemande = 0; // 0: nouveau, 1: modification, 2: annulation, 3: suppression
 
     public static DemandeCreneau makeFromCreneau(Creneau c) {
         List<Module> modules = new ArrayList<>();

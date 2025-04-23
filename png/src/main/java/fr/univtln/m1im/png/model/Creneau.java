@@ -28,7 +28,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name="Creneaux")
+@Table(name = "Creneaux")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,14 +37,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(exclude = "id")
 @NamedQueries({
-    @NamedQuery(
-        name = "Creneau.getCreneauxDay",
-        query = "SELECT c FROM Creneau c WHERE c.status = 0 AND c.heureDebut BETWEEN :firstHour AND :lastHour"
-    ),
-    @NamedQuery(
-        name = "Creneau.getCreneauById",
-        query = "SELECT c FROM Creneau c WHERE c.id = :id"
-    ),
+        @NamedQuery(name = "Creneau.getCreneauxDay", query = "SELECT c FROM Creneau c WHERE c.status = 0 AND c.heureDebut BETWEEN :firstHour AND :lastHour"),
+        @NamedQuery(name = "Creneau.getCreneauById", query = "SELECT c FROM Creneau c WHERE c.id = :id"),
 })
 public class Creneau {
     @Id
@@ -57,20 +51,20 @@ public class Creneau {
     @Column(nullable = false)
     private OffsetDateTime heureFin;
     @Column(nullable = false)
-    private String type; //TD CM TP EXAM
+    private String type; // TD CM TP EXAM
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     private List<Module> modules = new ArrayList<Module>();
 
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade ={CascadeType.MERGE})
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     private List<Groupe> groupes = new ArrayList<Groupe>();
 
     @ToString.Exclude
     @Builder.Default
-    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE})
+    @ManyToMany(mappedBy = "creneaux", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE })
     private List<Professeur> professeurs = new ArrayList<Professeur>();
 
     @ManyToOne
@@ -82,9 +76,10 @@ public class Creneau {
 
     @Builder.Default
     @Column(nullable = false)
-    private int status = 0; //0: actif, 1: annulé
+    private int status = 0; // 0: actif, 1: annulé
 
-    @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToMany(mappedBy = "creneau", fetch = FetchType.LAZY, cascade = { CascadeType.MERGE,
+            CascadeType.REMOVE }, orphanRemoval = true)
     @ToString.Exclude
     @Builder.Default
     private List<NotePersonnelle> notesPerso = new ArrayList<NotePersonnelle>();

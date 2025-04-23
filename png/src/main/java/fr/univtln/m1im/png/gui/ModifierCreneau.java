@@ -97,9 +97,11 @@ public class ModifierCreneau {
             profField2.getItems().add(fullName);
         }
         if (!creneau.getProfesseurs().isEmpty()) {
-            profField1.setValue(creneau.getProfesseurs().get(0).getNom() + " " + creneau.getProfesseurs().get(0).getPrenom());
+            profField1.setValue(
+                    creneau.getProfesseurs().get(0).getNom() + " " + creneau.getProfesseurs().get(0).getPrenom());
             if (creneau.getProfesseurs().size() > 1)
-                profField2.setValue(creneau.getProfesseurs().get(1).getNom() + " " + creneau.getProfesseurs().get(1).getPrenom());
+                profField2.setValue(
+                        creneau.getProfesseurs().get(1).getNom() + " " + creneau.getProfesseurs().get(1).getPrenom());
         }
 
         ComboBox<String> groupeField1 = new ComboBox<>();
@@ -121,8 +123,10 @@ public class ModifierCreneau {
 
         ComboBox<String> salleField = new ComboBox<>();
         List<Salle> salles = salleRepository.getAll(0, 1000);
-        for (Salle s : salles) salleField.getItems().add(s.getCode());
-        if (creneau.getSalle() != null) salleField.setValue(creneau.getSalle().getCode());
+        for (Salle s : salles)
+            salleField.getItems().add(s.getCode());
+        if (creneau.getSalle() != null)
+            salleField.setValue(creneau.getSalle().getCode());
 
         OffsetDateTime debut = creneau.getHeureDebut();
         OffsetDateTime fin = creneau.getHeureFin();
@@ -155,17 +159,20 @@ public class ModifierCreneau {
         moisField.setValue(reverseMoisMap.get(debut.getMonthValue()));
 
         ComboBox<String> jourField = new ComboBox<>();
-        for (int i = 1; i <= 31; i++) jourField.getItems().add(String.valueOf(i));
+        for (int i = 1; i <= 31; i++)
+            jourField.getItems().add(String.valueOf(i));
         jourField.setValue(String.valueOf(debut.getDayOfMonth()));
 
         ArrayList<String> heures = new ArrayList<>();
-        for (int i = 8; i < 20; i++) heures.add(String.format("%02d", i));
+        for (int i = 8; i < 20; i++)
+            heures.add(String.format("%02d", i));
         ComboBox<String> heureField = new ComboBox<>();
         heureField.getItems().addAll(heures);
         heureField.setValue(String.format("%02d", debut.getHour()));
 
         ArrayList<String> minutes = new ArrayList<>();
-        for (int i = 0; i < 60; i++) minutes.add(String.format("%02d", i));
+        for (int i = 0; i < 60; i++)
+            minutes.add(String.format("%02d", i));
         ComboBox<String> minuteField = new ComboBox<>();
         minuteField.getItems().addAll(minutes);
         minuteField.setValue(String.format("%02d", debut.getMinute()));
@@ -179,18 +186,18 @@ public class ModifierCreneau {
         minuteFinField.setValue(String.format("%02d", fin.getMinute()));
 
         selectedYear = anneeField.getValue();
-            if (selectedYear != null) {
-                int year = Integer.parseInt(selectedYear);
-                // Remplir le mois en fonction de l'année sélectionnée
-                if (year == anneeDebut) {
-                    moisField.getItems().clear();
-                    moisField.getItems().addAll("Septembre", "Octobre", "Novembre", "Décembre");
-                } else {
-                    moisField.getItems().clear();
-                    moisField.getItems().addAll("Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+        if (selectedYear != null) {
+            int year = Integer.parseInt(selectedYear);
+            // Remplir le mois en fonction de l'année sélectionnée
+            if (year == anneeDebut) {
+                moisField.getItems().clear();
+                moisField.getItems().addAll("Septembre", "Octobre", "Novembre", "Décembre");
+            } else {
+                moisField.getItems().clear();
+                moisField.getItems().addAll("Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
                         "Juillet");
-                }
             }
+        }
 
         anneeField.setOnAction(event -> {
             selectedYear = anneeField.getValue();
@@ -203,7 +210,7 @@ public class ModifierCreneau {
                 } else {
                     moisField.getItems().clear();
                     moisField.getItems().addAll("Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                        "Juillet");
+                            "Juillet");
                 }
             }
         });
@@ -211,7 +218,8 @@ public class ModifierCreneau {
         moisField.setOnAction(event -> {
             String selectedMonth = moisField.getValue();
             if (selectedMonth != null) {
-                int monthIndex = moisField.getItems().indexOf(selectedMonth) + 1; // +1 pour correspondre à l'index du mois
+                int monthIndex = moisField.getItems().indexOf(selectedMonth) + 1; // +1 pour correspondre à l'index du
+                                                                                  // mois
                 jourField.getItems().clear(); // Réinitialiser les jours
                 int daysInMonth = java.time.Month.of(monthIndex).length(false); // Nombre de jours dans le mois
                 for (int i = 1; i <= daysInMonth; i++) {
@@ -279,34 +287,33 @@ public class ModifierCreneau {
 
         validerButton.setOnAction(e -> {
             // Validation des champs
-            if ((moduleField1.getValue() == null && moduleField2.getValue() == null) || 
-                (profField1.getValue() == null && profField2.getValue() == null) || 
-                (groupeField1.getValue() == null && groupeField2.getValue() == null) ||
-                typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
-                moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
-                minuteField.getValue() == null || heureFinField.getValue() == null || minuteFinField.getValue() == null) {
+            if ((moduleField1.getValue() == null && moduleField2.getValue() == null) ||
+                    (profField1.getValue() == null && profField2.getValue() == null) ||
+                    (groupeField1.getValue() == null && groupeField2.getValue() == null) ||
+                    typeField.getValue() == null || salleField.getValue() == null || anneeField.getValue() == null ||
+                    moisField.getValue() == null || jourField.getValue() == null || heureField.getValue() == null ||
+                    minuteField.getValue() == null || heureFinField.getValue() == null
+                    || minuteFinField.getValue() == null) {
                 errorLabel.setText("Veuillez remplir tous les champs !");
                 errorLabel.setVisible(true);
                 return;
             } else {
                 OffsetDateTime heureDebut = OffsetDateTime.of(
-                    Integer.parseInt(anneeField.getValue()),
-                    moisMap.get(moisField.getValue()),
-                    Integer.parseInt(jourField.getValue()),
-                    Integer.parseInt(heureField.getValue()),  
-                    Integer.parseInt(minuteField.getValue()),
-                    0, 0,
-                    ZoneOffset.UTC
-                );
+                        Integer.parseInt(anneeField.getValue()),
+                        moisMap.get(moisField.getValue()),
+                        Integer.parseInt(jourField.getValue()),
+                        Integer.parseInt(heureField.getValue()),
+                        Integer.parseInt(minuteField.getValue()),
+                        0, 0,
+                        ZoneOffset.UTC);
                 OffsetDateTime heureFin = OffsetDateTime.of(
-                    Integer.parseInt(anneeField.getValue()),
-                    moisMap.get(moisField.getValue()),
-                    Integer.parseInt(jourField.getValue()),
-                    Integer.parseInt(heureFinField.getValue()),
-                    Integer.parseInt(minuteFinField.getValue()),
-                    0, 0,
-                    ZoneOffset.UTC
-                );
+                        Integer.parseInt(anneeField.getValue()),
+                        moisMap.get(moisField.getValue()),
+                        Integer.parseInt(jourField.getValue()),
+                        Integer.parseInt(heureFinField.getValue()),
+                        Integer.parseInt(minuteFinField.getValue()),
+                        0, 0,
+                        ZoneOffset.UTC);
 
                 if (!heureDebut.isBefore(heureFin)) {
                     errorLabel.setText("L'heure de début doit être avant l'heure de fin !");
@@ -319,11 +326,11 @@ public class ModifierCreneau {
                 Groupe groupe = groupeRepository.getByCode(groupeField1.getValue());
                 Salle salle = salleRepository.getByCode(salleField.getValue());
                 Creneau newCreneau = Creneau.builder()
-                                    .type(typeField.getValue())
-                                    .heureDebut(heureDebut)
-                                    .heureFin(heureFin)
-                                    .salle(salle)
-                                    .build();
+                        .type(typeField.getValue())
+                        .heureDebut(heureDebut)
+                        .heureFin(heureFin)
+                        .salle(salle)
+                        .build();
                 newCreneau.getGroupes().add(groupe);
                 newCreneau.getProfesseurs().add(professeur);
                 newCreneau.getModules().add(module);
@@ -339,7 +346,7 @@ public class ModifierCreneau {
                     Module module2 = moduleRepository.getModuleByCode(moduleField2.getValue());
                     newCreneau.getModules().add(module2);
                 }
-                if ( this.utilisateur instanceof Responsable){
+                if (this.utilisateur instanceof Responsable) {
                     CreneauRepository creneauRepository = new CreneauRepository(entityManager);
                     String res = creneauRepository.addCreneau(newCreneau, creneau);
                     if (res == "Le créneau a été inséré") {
@@ -349,8 +356,7 @@ public class ModifierCreneau {
                         errorLabel.setText(res);
                     }
                     errorLabel.setText(res);
-                }
-                else if (this.utilisateur instanceof Professeur){
+                } else if (this.utilisateur instanceof Professeur) {
                     DemandeCreneau demandeCreneau = DemandeCreneau.makeFromCreneau(newCreneau);
                     demandeCreneau.setTypeDemande(1);
                     demandeCreneau.setCreneauToModify(creneau);
@@ -359,7 +365,7 @@ public class ModifierCreneau {
                     errorLabel.setText(res);
                     log.info(res);
                 }
-         
+
             }
         });
 
@@ -369,4 +375,4 @@ public class ModifierCreneau {
     }
 }
 
-//TODO : gérer demandes annulation et suppression
+// TODO : gérer demandes annulation et suppression

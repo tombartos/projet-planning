@@ -1,6 +1,5 @@
 package fr.univtln.m1im.png.repositories;
 
-
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -10,11 +9,11 @@ import fr.univtln.m1im.png.model.Salle;
 import jakarta.persistence.EntityManager;
 
 public class SalleRepository extends JpaRepository<Salle, Long> {
-    public SalleRepository(EntityManager entityManager){
+    public SalleRepository(EntityManager entityManager) {
         super(Salle.class, entityManager);
     }
 
-    public List<Creneau> getWeekCrenaux(String code, int weekNumber, int year, int pageNumber, int pageSize){
+    public List<Creneau> getWeekCrenaux(String code, int weekNumber, int year, int pageNumber, int pageSize) {
         List<OffsetDateTime> weekdays = Utils.getFirstLastDayOfWeek(weekNumber, year);
         return em.createNamedQuery("Salle.getWeekCrenaux", Creneau.class)
                 .setParameter("code", code)
@@ -23,14 +22,14 @@ public class SalleRepository extends JpaRepository<Salle, Long> {
                 .getResultList();
     }
 
-    public List<Salle> getAll(int pageNumber, int pageSize){
+    public List<Salle> getAll(int pageNumber, int pageSize) {
         return em.createNamedQuery("Salle.getAll", Salle.class)
                 .setFirstResult(pageNumber * pageSize)
                 .setMaxResults(pageSize)
                 .getResultList();
     }
 
-    public Salle getByCode(String code){
+    public Salle getByCode(String code) {
         return em.createNamedQuery("Salle.getByCode", Salle.class)
                 .setParameter("code", code)
                 .getSingleResult();

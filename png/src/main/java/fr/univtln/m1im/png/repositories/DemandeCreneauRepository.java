@@ -1,6 +1,5 @@
 package fr.univtln.m1im.png.repositories;
 
-
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -13,28 +12,32 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
 import java.util.logging.Logger;
+
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
     private static final Logger log = Logger.getLogger(DemandeCreneauRepository.class.getName());
 
-    public DemandeCreneauRepository(EntityManager entityManager){
+    public DemandeCreneauRepository(EntityManager entityManager) {
         super(DemandeCreneau.class, entityManager);
     }
 
     public String addDemandeCreneau(DemandeCreneau DemandeCreneau) {
-        //All the verifications are done in this method
-        //First we get the list of creneaux of the day
+        // All the verifications are done in this method
+        // First we get the list of creneaux of the day
         OffsetDateTime day = DemandeCreneau.getHeureDebut().truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime firstHour = day.withHour(8).withMinute(0).withSecond(0).withNano(0);
         OffsetDateTime lastHour = day.withHour(22).withMinute(0).withSecond(0).withNano(0);
         CreneauRepository creneauRepository = new CreneauRepository(em);
-        //Here we get the list of all creneaux of the day assuming there is a reasonable number of creneaux,
-        //We could also get the creneaux of the week by criteria (one request per criteria) if the number of creneaux is too high
+        // Here we get the list of all creneaux of the day assuming there is a
+        // reasonable number of creneaux,
+        // We could also get the creneaux of the week by criteria (one request per
+        // criteria) if the number of creneaux is too high
         List<Creneau> creneauxDay = creneauRepository.getCreneauxDay(firstHour, lastHour);
         creneauxDay.sort((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()));
 
-        Creneau creneauTmp = Creneau.makeFromDemandeCreneau(DemandeCreneau); //We create a temporary creneau to check the conflicts
-        //1: Prof check
-        for(Professeur prof : DemandeCreneau.getProfesseurs()) {
+        Creneau creneauTmp = Creneau.makeFromDemandeCreneau(DemandeCreneau); // We create a temporary creneau to check
+                                                                             // the conflicts
+        // 1: Prof check
+        for (Professeur prof : DemandeCreneau.getProfesseurs()) {
             List<Creneau> profCreneaux = new ArrayList<>();
             for (Creneau c : creneauxDay) {
                 if (c.getProfesseurs().contains(prof)) {
@@ -42,11 +45,12 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 }
             }
             if (!Utils.canInsertCreneau(creneauTmp, profCreneaux)) {
-                return ("La demande ne peut pas être effectuée car il y a un conflit avec le professeur " + prof.getNom() + " " + prof.getPrenom());
+                return ("La demande ne peut pas être effectuée car il y a un conflit avec le professeur "
+                        + prof.getNom() + " " + prof.getPrenom());
             }
         }
 
-        //2: Groupe check
+        // 2: Groupe check
         for (Groupe groupe : DemandeCreneau.getGroupes()) {
             List<Creneau> groupeCreneaux = new ArrayList<>();
             for (Creneau c : creneauxDay) {
@@ -55,11 +59,12 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 }
             }
             if (!Utils.canInsertCreneau(creneauTmp, groupeCreneaux)) {
-                return ("La demande ne peut pas être effectuée car il y a un conflit avec le groupe " + groupe.getNom());
+                return ("La demande ne peut pas être effectuée car il y a un conflit avec le groupe "
+                        + groupe.getNom());
             }
         }
 
-        //3: Salle check
+        // 3: Salle check
         for (Creneau c : creneauxDay) {
             List<Creneau> salleCreneaux = new ArrayList<>();
             if (c.getSalle().equals(DemandeCreneau.getSalle())) {
@@ -67,70 +72,73 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
             }
         }
         if (!Utils.canInsertCreneau(creneauTmp, creneauxDay)) {
-            return ("La demande ne peut pas être effectuée car il y a un conflit avec la salle " + DemandeCreneau.getSalle().getCode());
+            return ("La demande ne peut pas être effectuée car il y a un conflit avec la salle "
+                    + DemandeCreneau.getSalle().getCode());
         }
         em.getTransaction().begin();
-        //Persist the creneau and make the relations with the modules, groupes and professeurs
+        // Persist the creneau and make the relations with the modules, groupes and
+        // professeurs
         for (Professeur prof : DemandeCreneau.getProfesseurs()) {
             Professeur managedProf = em.merge(prof);
             managedProf.getDemandes_creneaux().add(DemandeCreneau);
         }
-        
+
         em.persist(DemandeCreneau);
         em.getTransaction().commit();
         return ("La demande a été effectuée avec succès");
-        //TODO: Etendre plusieurs semaines
+        // TODO: Etendre plusieurs semaines
 
     }
 
-    public String acceptDemandeCreneau (DemandeCreneau demande) {
+    public String acceptDemandeCreneau(DemandeCreneau demande) {
         Creneau creneau;
         Creneau oldCreneau;
         CreneauRepository creneauRepository = new CreneauRepository(em);
         String res;
         switch (demande.getTypeDemande()) {
-            case 0:  //New creneau
-                //We create a creneau from the demande
+            case 0: // New creneau
+                // We create a creneau from the demande
                 creneau = Creneau.makeFromDemandeCreneau(demande);
-                //We delete the demande from the database
+                // We delete the demande from the database
                 em.getTransaction().begin();
                 for (Professeur prof : demande.getProfesseurs()) {
                     Professeur managedProf = em.merge(prof);
                     managedProf.getDemandes_creneaux().remove(demande);
                 }
-                demande.setStatus(1); //We set the status of the demande to accepted
+                demande.setStatus(1); // We set the status of the demande to accepted
                 em.remove(demande);
                 em.getTransaction().commit();
-                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                // We persist the creneau and make the relations with the modules, groupes and
+                // professeurs
                 res = creneauRepository.addCreneau(creneau, null);
-                log.info("Result  :"+res);
+                log.info("Result  :" + res);
                 return res;
 
-            case 1: //Modify creneau
-                //We create a creneau from the demande
+            case 1: // Modify creneau
+                // We create a creneau from the demande
                 creneau = Creneau.makeFromDemandeCreneau(demande);
                 oldCreneau = demande.getCreneauToModify();
-                //We delete the demande from the database
+                // We delete the demande from the database
                 em.getTransaction().begin();
                 for (Professeur prof : demande.getProfesseurs()) {
                     Professeur managedProf = em.merge(prof);
                     managedProf.getDemandes_creneaux().remove(demande);
                 }
-                demande.setStatus(1); //We set the status of the demande to accepted
+                demande.setStatus(1); // We set the status of the demande to accepted
                 em.remove(demande);
                 em.getTransaction().commit();
-                //We persist the creneau and make the relations with the modules, groupes and professeurs
+                // We persist the creneau and make the relations with the modules, groupes and
+                // professeurs
                 res = creneauRepository.addCreneau(creneau, oldCreneau);
-                log.info("Resuult : "+res);
+                log.info("Resuult : " + res);
                 return res;
-            case 2:  //Cancel creneau
-                //Invert creneau status
+            case 2: // Cancel creneau
+                // Invert creneau status
                 Creneau creneauToCancel = demande.getCreneauToModify();
                 if (creneauToCancel != null) {
-                    if (creneauToCancel.getStatus() == 0){
+                    if (creneauToCancel.getStatus() == 0) {
                         creneauRepository.annulerCreneau(creneauToCancel);
-                    }
-                    else{
+                    } else {
                         creneauRepository.restoreCreneau(creneauToCancel);
                     }
                     em.getTransaction().begin();
@@ -138,7 +146,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                         Professeur managedProf = em.merge(prof);
                         managedProf.getDemandes_creneaux().remove(demande);
                     }
-                    demande.setStatus(1); //We set the status of the demande to accepted
+                    demande.setStatus(1); // We set the status of the demande to accepted
                     em.remove(demande);
                     em.getTransaction().commit();
                     log.info("success");
@@ -146,43 +154,42 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 } else {
                     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
                 }
-            case 3:  //Delete creneau
-                //We delete the creneau from the database
-                //TODO: a patcher, non foncitonnel
+            case 3: // Delete creneau
+                // We delete the creneau from the database
+                // TODO: a patcher, non foncitonnel
                 // Creneau creneauToDelete = demande.getCreneauToModify();
                 // if (creneauToDelete != null) {
-                //     creneauRepository.delete(creneauToDelete);
-                //     em.getTransaction().begin();
-                //     //We set the status of the demande to accepted
-                //     demande.setStatus(1);
-                //     em.merge(demande);
-                //     em.getTransaction().commit();
-                //     return ("success");
+                // creneauRepository.delete(creneauToDelete);
+                // em.getTransaction().begin();
+                // //We set the status of the demande to accepted
+                // demande.setStatus(1);
+                // em.merge(demande);
+                // em.getTransaction().commit();
+                // return ("success");
                 // } else {
-                //     throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
+                // throw new RuntimeException("Le créneau n'existe pas ou a déjà été annulé");
                 // }
-
 
             default:
                 throw new UnsupportedOperationException("Type de demande non supporté : " + demande.getTypeDemande());
         }
-        
+
     }
 
-    public String refuseDemandeCreneau (DemandeCreneau demande) {
+    public String refuseDemandeCreneau(DemandeCreneau demande) {
         em.getTransaction().begin();
         em.merge(demande);
-        //We set the status of the demande to refused
+        // We set the status of the demande to refused
         demande.setStatus(2);
         em.getTransaction().commit();
         return ("La demande a été refusée avec succès");
     }
-    
+
     public List<DemandeCreneau> getAll(int numpage, int size) {
         return em.createNamedQuery("DemandeCreneau.getAllPending", DemandeCreneau.class)
-        .setFirstResult(size * numpage)
-        .setMaxResults(size)
-        .getResultList();
+                .setFirstResult(size * numpage)
+                .setMaxResults(size)
+                .getResultList();
     }
-    
+
 }

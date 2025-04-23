@@ -1,17 +1,15 @@
 package fr.univtln.m1im.png.repositories;
 
-
-
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.NotePersonnelle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import jakarta.persistence.EntityManager;
 
 public class NotePersonnelleRepository extends JpaRepository<NotePersonnelle, Long> {
-    public NotePersonnelleRepository(EntityManager entityManager){
+    public NotePersonnelleRepository(EntityManager entityManager) {
         super(NotePersonnelle.class, entityManager);
     }
-    
+
     public NotePersonnelle getByCreneauUtilisateur(long utilisateurId, long creneauId) {
         try {
             return em.createNamedQuery("NotePersonnelle.getByCreneauUtilisateur", NotePersonnelle.class)
@@ -25,7 +23,8 @@ public class NotePersonnelleRepository extends JpaRepository<NotePersonnelle, Lo
 
     public void modify(NotePersonnelle note, String text, Creneau creneau, Utilisateur utilisateur) {
         if (note != null) {
-            em.getTransaction().begin();    //We try without following the managedobject pattern like in the other repositories
+            em.getTransaction().begin(); // We try without following the managedobject pattern like in the other
+                                         // repositories
             em.merge(note);
             note.setNotePerso(text);
             em.getTransaction().commit();

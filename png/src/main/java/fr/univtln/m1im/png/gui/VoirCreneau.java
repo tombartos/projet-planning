@@ -1,6 +1,5 @@
 package fr.univtln.m1im.png.gui;
 
-
 import fr.univtln.m1im.png.model.Creneau;
 import jakarta.persistence.EntityManager;
 
@@ -15,13 +14,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-
 public class VoirCreneau {
     private final Creneau creneau;
     private final EntityManager entityManager;
     private final Gui gui;
 
-    public VoirCreneau(Creneau creneau,EntityManager entityManager, Gui gui) {
+    public VoirCreneau(Creneau creneau, EntityManager entityManager, Gui gui) {
         this.creneau = creneau;
         this.entityManager = entityManager;
         this.gui = gui;
@@ -38,7 +36,6 @@ public class VoirCreneau {
         grid.setVgap(10);
         grid.setAlignment(Pos.CENTER);
 
-
         Label moduleField1 = new Label();
         moduleField1.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
         Label moduleField2 = new Label();
@@ -46,18 +43,19 @@ public class VoirCreneau {
         if (!creneau.getModules().isEmpty()) {
             moduleField1.setText(creneau.getModules().get(0).getCode());
             if (creneau.getModules().size() > 1)
-            moduleField2.setText(creneau.getModules().get(1).getCode());
+                moduleField2.setText(creneau.getModules().get(1).getCode());
         }
-
 
         Label profField1 = new Label();
         profField1.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
         Label profField2 = new Label();
         profField2.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
         if (!creneau.getProfesseurs().isEmpty()) {
-            profField1.setText(creneau.getProfesseurs().get(0).getNom() + " " + creneau.getProfesseurs().get(0).getPrenom());
+            profField1.setText(
+                    creneau.getProfesseurs().get(0).getNom() + " " + creneau.getProfesseurs().get(0).getPrenom());
             if (creneau.getProfesseurs().size() > 1)
-                profField2.setText(creneau.getProfesseurs().get(1).getNom() + " " + creneau.getProfesseurs().get(1).getPrenom());
+                profField2.setText(
+                        creneau.getProfesseurs().get(1).getNom() + " " + creneau.getProfesseurs().get(1).getPrenom());
         }
 
         Label groupeField1 = new Label();
@@ -75,7 +73,8 @@ public class VoirCreneau {
 
         Label salleField = new Label();
         salleField.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
-        if (creneau.getSalle() != null) salleField.setText(creneau.getSalle().getCode());
+        if (creneau.getSalle() != null)
+            salleField.setText(creneau.getSalle().getCode());
 
         OffsetDateTime debut = creneau.getHeureDebut();
         OffsetDateTime fin = creneau.getHeureFin();
@@ -83,8 +82,8 @@ public class VoirCreneau {
         Label anneeField = new Label(String.valueOf(debut.getYear()));
         anneeField.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
 
-        String[] mois = {"Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-                 "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"};
+        String[] mois = { "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+                "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre" };
         Label moisField = new Label(mois[debut.getMonthValue() - 1]);
         moisField.setStyle("-fx-font-weight: bold;-fx-text-fill: red;");
 
@@ -116,7 +115,7 @@ public class VoirCreneau {
         grid.add(moduleField2, 1, row++);
         if (creneau.getModules().size() < 2) {
             labelModul2.setDisable(true);
-            labelModul2.setOpacity(0.01); //pour bien etre clair 
+            labelModul2.setOpacity(0.01); // pour bien etre clair
             moduleField2.setDisable(true);
             moduleField2.setOpacity(0.01);
         }
@@ -126,7 +125,7 @@ public class VoirCreneau {
         grid.add(labelProf2, 1, row++);
         grid.add(profField1, 0, row);
         grid.add(profField2, 1, row++);
-        if (creneau.getProfesseurs().size() < 2){
+        if (creneau.getProfesseurs().size() < 2) {
             labelProf2.setDisable(true);
             labelProf2.setOpacity(0.01);
             profField2.setDisable(true);
@@ -138,7 +137,7 @@ public class VoirCreneau {
         grid.add(labelGroupe2, 1, row++);
         grid.add(groupeField1, 0, row);
         grid.add(groupeField2, 1, row++);
-        if (creneau.getGroupes().size() < 2){
+        if (creneau.getGroupes().size() < 2) {
             labelGroupe2.setDisable(true);
             labelGroupe2.setOpacity(0.01);
             groupeField2.setDisable(true);
@@ -174,9 +173,9 @@ public class VoirCreneau {
         // === Actions boutons ===
         okButton.setOnAction(e -> stage.close());
 
-        modifButton.setOnAction( e -> {
+        modifButton.setOnAction(e -> {
             stage.close();
-            ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager,gui);
+            ModifierCreneau modifierCreneau = new ModifierCreneau(creneau, entityManager, gui);
             modifierCreneau.afficherModifierCreneau();
         });
 

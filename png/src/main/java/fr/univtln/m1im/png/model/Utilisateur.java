@@ -25,17 +25,14 @@ import java.util.ArrayList;
 
 @Inheritance(strategy = InheritanceType.JOINED)
 @Entity
-@Table(name="Utilisateurs")
+@Table(name = "Utilisateurs")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @SuperBuilder
 @Getter
 @ToString
 @NamedQueries({
-    @NamedQuery(
-        name = "Utilisateur.getNotePerso",
-        query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau"
-    )
+        @NamedQuery(name = "Utilisateur.getNotePerso", query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau")
 })
 
 public abstract class Utilisateur {
@@ -48,7 +45,7 @@ public abstract class Utilisateur {
     @Column(nullable = false)
     private String prenom;
     @Column(nullable = false)
-    private String login; //Username
+    private String login; // Username
     @Column(nullable = false)
     private String email;
     @Column(nullable = false)

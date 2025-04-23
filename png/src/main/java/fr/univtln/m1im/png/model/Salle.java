@@ -23,24 +23,15 @@ import lombok.ToString;
 @Builder
 @ToString
 @NamedQueries({
-    @NamedQuery(
-      name = "Salle.getWeekCrenaux",
-      query = "SELECT c FROM Creneau c WHERE c.salle.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"
-    ),
-    @NamedQuery(
-      name = "Salle.getAll",
-      query = "SELECT s FROM Salle s"
-    ),
-    @NamedQuery(
-      name = "Salle.getByCode",
-      query = "SELECT s FROM Salle s WHERE s.code = :code"
-    )
-  })
+    @NamedQuery(name = "Salle.getWeekCrenaux", query = "SELECT c FROM Creneau c WHERE c.salle.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"),
+    @NamedQuery(name = "Salle.getAll", query = "SELECT s FROM Salle s"),
+    @NamedQuery(name = "Salle.getByCode", query = "SELECT s FROM Salle s WHERE s.code = :code")
+})
 public class Salle {
-    @Id
-    private String code;
-    @Column(nullable = false)
-    private String description;
-    @Column(nullable = false)
-    private int capacite;
+  @Id
+  private String code;
+  @Column(nullable = false)
+  private String description;
+  @Column(nullable = false)
+  private int capacite;
 }

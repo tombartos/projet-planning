@@ -30,7 +30,7 @@ class CreneauFaker implements Iterable<Creneau> {
     private static record TimeSlot(LocalTime start, LocalTime finish) {
         static TimeSlot fromString(String x) {
             var startFinish = Arrays.stream(x.split(" ")).map(LocalTime::parse)
-                .toArray(LocalTime[]::new);
+                    .toArray(LocalTime[]::new);
             return new TimeSlot(startFinish[0], startFinish[1]);
         }
     };
@@ -43,8 +43,7 @@ class CreneauFaker implements Iterable<Creneau> {
             "13:00:00 15:00:00",
             "13:30:00 15:30:00",
             "15:15:00 17:15:00",
-            "15:30:00 17:30:00"
-            ).map(TimeSlot::fromString).toArray(TimeSlot[]::new);
+            "15:30:00 17:30:00").map(TimeSlot::fromString).toArray(TimeSlot[]::new);
 
     private CreneauFaker(Random rand, Groupe groupe, List<Salle> salles) {
         this.rand = rand;
@@ -112,22 +111,25 @@ class CreneauFaker implements Iterable<Creneau> {
         }
 
         var creneau = Creneau.builder()
-            .modules(modules)
-            .groupes(groupes)
-            .professeurs(profs)
-            .salle(pickRandom(salles))
-            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-            .type(type)
-            .status(0)
-            .build();
+                .modules(modules)
+                .groupes(groupes)
+                .professeurs(profs)
+                .salle(pickRandom(salles))
+                .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+                .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+                .type(type)
+                .status(0)
+                .build();
 
         // XXX the builder as is does not maintain coherence, though
         // that is where this belongs. either that, or we should change
         // the direction of ownership.
-        for (var module : modules) module.getCreneaux().add(creneau);
-        for (var group : groupes) group.getCreneaux().add(creneau);
-        for (var prof : profs) prof.getCreneaux().add(creneau);
+        for (var module : modules)
+            module.getCreneaux().add(creneau);
+        for (var group : groupes)
+            group.getCreneaux().add(creneau);
+        for (var prof : profs)
+            prof.getCreneaux().add(creneau);
 
         return creneau;
     }

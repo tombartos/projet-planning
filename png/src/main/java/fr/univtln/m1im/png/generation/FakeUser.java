@@ -18,7 +18,8 @@ class FakeUser {
     String email;
     String password;
 
-    private FakeUser() {}
+    private FakeUser() {
+    }
 
     public static FakeUser with(Faker faker, Random rand) {
         final var fu = new FakeUser();
@@ -43,11 +44,11 @@ class FakeUser {
 
     public <B extends Utilisateur.UtilisateurBuilder<?, ?>> B configure(B builder) {
         builder
-            .nom(lastName)
-            .prenom(firstName)
-            .login(String.format("%s%s%03d", asciiFirstName.charAt(0), asciiLastName, rand.nextInt(1000)))
-            .email(email)
-            .dateNaissance(LocalDate.ofYearDay(1998 + rand.nextInt(8), 1 + rand.nextInt(364)));
+                .nom(lastName)
+                .prenom(firstName)
+                .login(String.format("%s%s%03d", asciiFirstName.charAt(0), asciiLastName, rand.nextInt(1000)))
+                .email(email)
+                .dateNaissance(LocalDate.ofYearDay(1998 + rand.nextInt(8), 1 + rand.nextInt(364)));
         return builder;
     }
 }

@@ -16,7 +16,7 @@ public final class App extends Application {
     }
 
     @Override
-    public void start(Stage stage)  {
+    public void start(Stage stage) {
         int width = 1200;
         int height = 800;
         LoginPage.showLoginPage(stage, width, height);
@@ -25,14 +25,15 @@ public final class App extends Application {
     @Override
     public void stop() {
         var emf = Utils.getEntityManagerFactory();
-        if (emf != null) emf.close();
+        if (emf != null)
+            emf.close();
     }
 }
 
 // Pour executer cette classe,
 //
-//     mvn exec:java
+// mvn exec:java
 //
 // ce qui revient à
 //
-//     mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"
+// mvn exec:java "-Dexec.mainClass=fr.univtln.m1im.png.App"

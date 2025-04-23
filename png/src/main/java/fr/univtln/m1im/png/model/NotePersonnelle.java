@@ -18,10 +18,7 @@ import lombok.Builder;
 @Table(name = "notes_perso")
 
 @NamedQueries({
-    @NamedQuery(
-        name = "NotePersonnelle.getByCreneauUtilisateur",
-        query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau"
-    )
+        @NamedQuery(name = "NotePersonnelle.getByCreneauUtilisateur", query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau")
 })
 public class NotePersonnelle {
     @Id

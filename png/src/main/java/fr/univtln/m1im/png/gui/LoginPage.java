@@ -62,41 +62,43 @@ public class LoginPage {
             String password = passField.getText();
             try {
                 Utils.initconnection(username, password);
-                //Here we want to know if we are an etudiant or a professeur
+                // Here we want to know if we are an etudiant or a professeur
                 try {
-                    EtudiantRepository etudiantRepository = new EtudiantRepository(Utils.getEntityManagerFactory().createEntityManager());
+                    EtudiantRepository etudiantRepository = new EtudiantRepository(
+                            Utils.getEntityManagerFactory().createEntityManager());
                     Etudiant etudiant = etudiantRepository.getByLogin(username);
                     Group root = new Group();
                     Scene scene = new Scene(root, width, height);
-                    new Gui(etudiant,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
-                }
-                catch (Exception ex_et) {
+                    new Gui(etudiant, root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage,
+                            scene);
+                } catch (Exception ex_et) {
                     log.info("Not an etudiant");
                     try {
-                        ProfesseurRepository professeurRepository = new ProfesseurRepository(Utils.getEntityManagerFactory().createEntityManager());
+                        ProfesseurRepository professeurRepository = new ProfesseurRepository(
+                                Utils.getEntityManagerFactory().createEntityManager());
                         Professeur professeur = professeurRepository.getByLogin(username);
                         Group root = new Group();
                         Scene scene = new Scene(root, width, height);
-                        new Gui(professeur,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
-                    }
-                    catch (Exception ex_pr) {
+                        new Gui(professeur, root, width, height, Utils.getEntityManagerFactory().createEntityManager(),
+                                stage, scene);
+                    } catch (Exception ex_pr) {
                         log.info("Not a professeur");
                         try {
-                            ResponsableRepository responsableRepository = new ResponsableRepository(Utils.getEntityManagerFactory().createEntityManager());
+                            ResponsableRepository responsableRepository = new ResponsableRepository(
+                                    Utils.getEntityManagerFactory().createEntityManager());
                             Responsable responsable = responsableRepository.getByLogin(username);
                             Group root = new Group();
                             Scene scene = new Scene(root, width, height);
-                            new Gui(responsable,root, width, height, Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
-                        }
-                        catch (Exception ex_res) {
+                            new Gui(responsable, root, width, height,
+                                    Utils.getEntityManagerFactory().createEntityManager(), stage, scene);
+                        } catch (Exception ex_res) {
                             log.info("Not a responsable, problem in the database ?");
-                            //log.error(ex_res.getMessage());
+                            // log.error(ex_res.getMessage());
                             ex_res.printStackTrace();
                         }
                     }
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 message.setText(" Erreur de connexion à la base de données !");
                 message.setStyle("-fx-text-fill: red;");
             }
@@ -110,9 +112,8 @@ public class LoginPage {
     }
 
     // public static void main(String[] args) {
-    //     launch(args);
+    // launch(args);
     // }
 
-    //TODO: Disconnect button
+    // TODO: Disconnect button
 }
-
