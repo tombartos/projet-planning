@@ -87,11 +87,9 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         // 3: Salle check
         List<Creneau> salleCreneaux = new ArrayList<>();
         for (Creneau c : creneauxDay) {
-            Salle s = c.getSalle();
-            if (s.equals(creneau.getSalle())) {
+            if (c.getSalle().equals(creneau.getSalle())) {
                 salleCreneaux.add(c);
             }
-
         }
         if (!Utils.canInsertCreneau(creneau, salleCreneaux)) {
             return ("Le créneau ne peut pas être inséré car il y a un conflit avec la salle "

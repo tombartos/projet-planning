@@ -65,13 +65,16 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         }
 
         // 3: Salle check
+        List<Creneau> salleCreneaux = new ArrayList<>();
         for (Creneau c : creneauxDay) {
-            List<Creneau> salleCreneaux = new ArrayList<>();
             if (c.getSalle().equals(DemandeCreneau.getSalle())) {
                 salleCreneaux.add(c);
             }
         }
-        if (!Utils.canInsertCreneau(creneauTmp, creneauxDay)) {
+        log.info("Salle creneaux : " + salleCreneaux.size());
+        log.info(salleCreneaux.toString());
+
+        if (!Utils.canInsertCreneau(creneauTmp, salleCreneaux)) {
             return ("La demande ne peut pas être effectuée car il y a un conflit avec la salle "
                     + DemandeCreneau.getSalle().getCode());
         }
