@@ -390,25 +390,24 @@ public class Gui {
                 Label creneauModif = new Label(prof.getNom() + " " + prof.getPrenom());
                 Button voirModifButton = new Button("Voir");
                 voirModifButton.setOnAction(event -> {
-                voirModifButton.setOnAction(event -> {
-                    log.info("Voir modification");
-                    this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
-                    genererCreneaux();
-                    if (demande.getTypeDemande()<2)
-                    {
-                        Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
-                        visuCreneau.setStatus(EPHEMERE);
-                        GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
-                        gestionCollision(guiCreneau);
-                        guiCreneaux.add(guiCreneau);
-                        guiCreneau.afficherCreneau();
-                        guiCreneau.getRectangle().setStroke(Color.PINK);
-                        guiCreneau.getRectangle().setStrokeWidth(3);
-                    }
-                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande), entityManager,
-                            this);
-                    voirCreneau.afficherCreneau();
-                });
+                                    log.info("Voir modification");
+                                    this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
+                                    genererCreneaux();
+                                    if (demande.getTypeDemande()<2)
+                                    {
+                                        Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
+                                        visuCreneau.setStatus(EPHEMERE);
+                                        GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                                        gestionCollision(guiCreneau);
+                                        guiCreneaux.add(guiCreneau);
+                                        guiCreneau.afficherCreneau();
+                                        guiCreneau.getRectangle().setStroke(Color.PINK);
+                                        guiCreneau.getRectangle().setStrokeWidth(3);
+                                    }
+                                    VoirCreneau voirCreneau = new VoirCreneau(Creneau.makeFromDemandeCreneau(demande), entityManager,
+                                            this);
+                                    voirCreneau.afficherCreneau();
+                                });
 
                 Button approuverModifButton = new Button("Approuver");
                 approuverModifButton.setOnAction(event -> {

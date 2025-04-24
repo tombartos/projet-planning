@@ -19,8 +19,10 @@ import lombok.Setter;
 import lombok.ToString;
 import jakarta.persistence.Table;
 
+import java.util.AbstractCollection;
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;

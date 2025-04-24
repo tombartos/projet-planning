@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Stream;
 
 import fr.univtln.m1im.png.model.Creneau;
