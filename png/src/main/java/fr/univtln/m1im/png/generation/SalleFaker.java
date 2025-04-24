@@ -10,10 +10,10 @@ import java.util.Random;
 
 class SalleFaker implements Iterable<Salle> {
     private Random rand;
-	private char lettre;
-	private int numero;
+    private char lettre;
+    private int numero;
 
-	private SalleFaker(Random rand) {
+    private SalleFaker(Random rand) {
         this.rand = rand;
         this.lettre = 'A';
         this.numero = 1;

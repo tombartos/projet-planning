@@ -122,21 +122,21 @@ public class Groupe {
             return new InheritanceList<>(gr, g -> g.modules);
         }
 
-		@Override
-		public Iterator<T> iterator() {
+        @Override
+        public Iterator<T> iterator() {
             return new Iterator<T>() {
                 private Groupe groupe = firstGroupe;
                 private Iterator<T> iter = attrGetter.apply(groupe).iterator();
 
-				@Override
-				public boolean hasNext() {
+                @Override
+                public boolean hasNext() {
                     return iter.hasNext() ||
                         groupe.parent != null &&
                         attrGetter.apply(groupe.parent).iterator().hasNext();
-				}
+                }
 
-				@Override
-				public T next() {
+                @Override
+                public T next() {
                     if (iter.hasNext() || groupe.parent == null) {
                         return iter.next();
                     } else {
@@ -144,18 +144,18 @@ public class Groupe {
                         iter = attrGetter.apply(groupe).iterator();
                         return iter.next();
                     }
-				}
+                }
             };
-		}
+        }
 
-		@Override
-		public int size() {
+        @Override
+        public int size() {
             int size = 0;
             for (var groupe = firstGroupe; groupe != null; groupe = groupe.getParent()) {
                 size += attrGetter.apply(groupe).size();
             }
             return size;
-		}
+        }
 
         @Override
         public T get(int i) {

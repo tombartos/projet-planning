@@ -34,11 +34,10 @@ public class DataFaker {
             dataFaker.fakeData();
             dataFaker.initResp();
         }
-        
     }
 
-	private java.util.Random rand;
-	private com.github.javafaker.Faker faker;
+    private java.util.Random rand;
+    private com.github.javafaker.Faker faker;
     private RepositoryFactory emf;
 
     public DataFaker(java.util.Random rand, com.github.javafaker.Faker faker, RepositoryFactory emf) {
