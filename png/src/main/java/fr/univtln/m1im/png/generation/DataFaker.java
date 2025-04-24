@@ -67,13 +67,17 @@ public class DataFaker {
                 em.persist(group);
 
                 if (group.getSousGroupes().isEmpty()) {
+                    var groupeAncetres = new java.util.ArrayList<>(group.getAncetres());
+
                     for (int i = 0; i < 50; ++i) {
                         final var etudiant = FakeUser.with(faker, rand)
                             .withStudentEmail()
                             .configure(Etudiant.builder())
-                            .groupes(List.of(group))
+                            .groupes(groupeAncetres)
                             .build();
-                        group.getEtudiants().add(etudiant);
+                        for (var g : groupeAncetres) {
+                            g.getEtudiants().add(etudiant);
+                        }
                         em.persist(etudiant);
                     }
                 }

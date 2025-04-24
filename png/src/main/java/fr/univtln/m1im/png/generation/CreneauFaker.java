@@ -99,7 +99,7 @@ class CreneauFaker implements Iterable<Creneau> {
         final var timeSlot = TIME_SLOTS[pos.slot];
 
         final var modules = List.of(pickRandom(groupe.getModules()));
-        final var groupes = List.of(groupe);
+        final var groupes = new java.util.ArrayList<Groupe>(groupe.getAncetres());
         final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
 
         final String type;
