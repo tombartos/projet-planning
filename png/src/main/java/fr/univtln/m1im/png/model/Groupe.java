@@ -230,6 +230,38 @@ public class Groupe {
         }
     }
 
+    public Collection<Groupe> getAncetres() {
+        final var first = this;
+        return new AbstractCollection<>() {
+
+            @Override
+            public Iterator<Groupe> iterator() {
+                return new Iterator<>() {
+                    private Groupe next = first;
+
+                    @Override
+                    public boolean hasNext() {
+                        return next != null;
+                    }
+
+                    @Override
+                    public Groupe next() {
+                        final var groupe = next;
+                        next = groupe.parent;
+                        return groupe;
+                    }
+                };
+            }
+
+            @Override
+            public int size() {
+                var n = 0;
+                for (var g = first; g != null; g = g.getParent()) ++n;
+                return n;
+            }
+        };
+    }
+
     public boolean isLeaf() {
         return sousGroupes.isEmpty();
     }
