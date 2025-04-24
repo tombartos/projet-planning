@@ -76,12 +76,12 @@ public class GuiCreneau {
 
     public String dateFr(OffsetDateTime jour)
     {
-        List<String> jours = List.of("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche");
+        List<String> jours = List.of("Lundi\t", "Mardi\t", "Mercredi", "Jeudi\t", "Vendredi", "Samedi", "Dimanche");
         String strJourSemaineFr = jours.get(jour.getDayOfWeek().getValue()-1);
         String strMoisFr = ""+jour.getMonthValue();
         String strJourFr = ""+jour.getDayOfMonth();
         String strAnneeFr = ""+jour.getYear();
-        return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr+"\t";
+        return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr+"\t  ";
 
     }
 
@@ -351,8 +351,22 @@ public class GuiCreneau {
                 //info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
                 //info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
                 info = dateFr(listCreneaux.get(i).getHeureDebut());
-                info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":"+listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
-                info += listCreneaux.get(position + i).getHeureFin().getHour() + ":"+listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
+                if(listCreneaux.get(position + i).getHeureDebut().getHour() < 10){
+                    info += "0";
+                }
+                info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":";
+                if(listCreneaux.get(position + i).getHeureDebut().getMinute() < 10){
+                    info += "0";
+                }
+                info +=listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
+                if(listCreneaux.get(position + i).getHeureFin().getHour() < 10){
+                    info += "0";
+                }
+                info += listCreneaux.get(position + i).getHeureFin().getHour() + ":";
+                if(listCreneaux.get(position + i).getHeureFin().getMinute() < 10){
+                    info += "0";
+                }
+                info += listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
                 info += listCreneaux.get(position + i).getType() + "\n";
                 infoModules.add(new Label(info));
                 infoModules.get(i).setPrefSize(350, 10);
@@ -392,8 +406,22 @@ public class GuiCreneau {
                 //infoSc = listCreneaux.get(i).getHeureDebut().getDayOfWeek() + "\t";
                 //infoSc += listCreneaux.get(i).getHeureDebut().toLocalDate() + "\t";
                 infoSc = dateFr(listCreneaux.get(i).getHeureDebut());
-                infoSc += listCreneaux.get(i).getHeureDebut().getHour() + ":" + listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
-                infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":" + listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
+                if(listCreneaux.get(i).getHeureDebut().getHour() < 10){
+                    infoSc += "0";
+                }
+                infoSc += listCreneaux.get(i).getHeureDebut().getHour() + ":";
+                if(listCreneaux.get(i).getHeureDebut().getMinute() < 10){
+                    infoSc += "0";
+                }
+                infoSc += listCreneaux.get(i).getHeureDebut().getMinute()+ "\t";
+                if(listCreneaux.get(i).getHeureFin().getHour() < 10){
+                    infoSc += "0";
+                }
+                infoSc += listCreneaux.get(i).getHeureFin().getHour() + ":";
+                if(listCreneaux.get(i).getHeureFin().getMinute() < 10){
+                    infoSc += "0";
+                }
+                infoSc += listCreneaux.get(i).getHeureFin().getMinute()+ "\t";
                 infoSc += listCreneaux.get(i).getType() + "\n";
                 infoModules.get(j).setText(infoSc);
 
