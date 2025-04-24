@@ -76,10 +76,18 @@ public class GuiCreneau {
 
     public String dateFr(OffsetDateTime jour)
     {
-        List<String> jours = List.of("Lundi\t", "Mardi\t", "Mercredi", "Jeudi\t", "Vendredi", "Samedi", "Dimanche");
+        List<String> jours = List.of("Lundi\t", "Mardi\t", "Mercredi\t", "Jeudi \t", "Vendredi\t", "Samedi\t", "Dimanche\t");
         String strJourSemaineFr = jours.get(jour.getDayOfWeek().getValue()-1);
         String strMoisFr = ""+jour.getMonthValue();
+        if(jour.getMonthValue() < 10)
+        {
+            strMoisFr = "0"+strMoisFr;
+        }
         String strJourFr = ""+jour.getDayOfMonth();
+        if(jour.getDayOfMonth() < 10)
+        {
+            strJourFr = "0"+strJourFr;
+        }
         String strAnneeFr = ""+jour.getYear();
         return strJourSemaineFr + "\t" + strJourFr + "/" + strMoisFr + "/" + strAnneeFr+"\t  ";
 
@@ -348,9 +356,7 @@ public class GuiCreneau {
         }
         String info = new String();
             for(int i = 0; i < nbAffichage; i++){
-                //info = listCreneaux.get(position + i).getHeureDebut().getDayOfWeek() + "\t";
-                //info += listCreneaux.get(position + i).getHeureDebut().toLocalDate() + "\t";
-                info = dateFr(listCreneaux.get(i).getHeureDebut());
+                info = dateFr(listCreneaux.get(position + i).getHeureDebut());
                 if(listCreneaux.get(position + i).getHeureDebut().getHour() < 10){
                     info += "0";
                 }

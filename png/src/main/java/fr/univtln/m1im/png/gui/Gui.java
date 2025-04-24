@@ -108,6 +108,7 @@ public class Gui {
     private ComboBox<String> profDropdown;
 
     private List<ProfesseurDTO> professeurs;
+    private List<Integer> idProfesseurs;
     private long idProfChoisi;
 
     private String codeGroupeChoisi;
@@ -317,8 +318,7 @@ public class Gui {
         // Gérer la sélection d'un professeur
         this.profDropdown.setOnAction(event -> {
             this.etatCourant = 1;
-            System.out.println(profDropdown.getSelectionModel());
-            idProfChoisi = professeurs.get(profDropdown.getSelectionModel().getSelectedIndex()).getId();
+            idProfChoisi = professeurs.get(idProfesseurs.get(profDropdown.getSelectionModel().getSelectedIndex())).getId();
             genererCreneaux();
         });
         // Gérer la sélection d'une salle
@@ -489,7 +489,6 @@ public class Gui {
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        //System.out.println("Mois : " + permierJourSemaine.getMonthValue());
         this.gcMois.setFont(javafx.scene.text.Font.font(10)); // Définir la taille de la police
         if(permierJourSemaine.getMonthValue() != permierJourSemaine.plusDays(6).getMonthValue())
         {
@@ -497,7 +496,6 @@ public class Gui {
             {
                 if(permierJourSemaine.plusDays(i).getMonthValue() != permierJourSemaine.getMonthValue())
                 {
-                    // TODO a améliorer
                     this.gcMois.setFont(javafx.scene.text.Font.font(12)); // Changer la taille de la police
                     this.gcMois.strokeText("| "+ moisFr(permierJourSemaine.plusDays(i).getMonthValue()), 
                     i*((this.wGrille/this.nbSemaines)/6) +
@@ -585,13 +583,6 @@ public class Gui {
         if (numSemaine >= this.premierSemaine){
             annee = this.anneeDebut;
         }
-        // else if (numSemaine == 1 && OffsetDateTime.now()
-        // .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(this.anneeDebut)
-        // .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek())).getYear() == this.anneeDebut)
-        // else if (numSemaine == 1)
-        // {
-        //     annee = this.anneeDebut + 1;
-        // }
         else{
             annee = this.anneeDebut + 1;
         }
@@ -599,8 +590,6 @@ public class Gui {
         .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
         .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
         for(int i = 0; i < this.nbJour; i++){
-            
-            //this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
             this.gcJours.strokeText(dateFr(permierJourSemaine.plusDays(i)), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
         }
         
@@ -658,28 +647,35 @@ public class Gui {
     private void chargerProfesseurs(){
         ProfesseurRepository professeurRepository = new ProfesseurRepository(entityManager);
         professeurs = professeurRepository.getAllDTO(0, 1000);
+        this.idProfesseurs = new ArrayList<>();
         this.profDropdown.getItems().clear();
+        int i = 0;
         for (ProfesseurDTO professeur : professeurs) {
             this.profDropdown.getItems().add(professeur.getNom() +" "+ professeur.getPrenom());
+            this.idProfesseurs.add(i);
+            i++;
         }
 
 
         this.profDropdown.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             this.profDropdown.show();
-            if(this.profDropdown.getEditor().getText() == null) return;
+            this.idProfesseurs.clear();
+            this.profDropdown.getItems().clear();
+            int j = 0;
             List<String> listProf = new ArrayList<>();
+            if(this.profDropdown.getEditor().getText() == null) return;           
             for (ProfesseurDTO professeur : professeurs) {
                 listProf.add(professeur.getNom() +" "+ professeur.getPrenom());
             }
-            this.profDropdown.getItems().clear();
             for(String prof : listProf)
             {
                 if(prof.toLowerCase().contains(this.profDropdown.getEditor().getText().toLowerCase()))
                 {
                     this.profDropdown.getItems().add(prof);
+                    this.idProfesseurs.add(j);
                 }
+                j++;
             }
-            
         });
 
     }    
