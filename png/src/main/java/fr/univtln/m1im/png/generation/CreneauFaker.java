@@ -98,7 +98,7 @@ class CreneauFaker implements Iterable<Creneau> {
         final var timeSlot = TIME_SLOTS[pos.slot];
 
         final var modules = List.of(pickRandom(groupe.getModules()));
-        final var groupes = List.of(groupe);
+        final var groupes = new java.util.ArrayList<Groupe>(groupe.getAncetres());
         final var profs = List.of(modules.getFirst().getProfesseurs().getFirst());
 
         final String type;
@@ -111,15 +111,15 @@ class CreneauFaker implements Iterable<Creneau> {
         }
 
         var creneau = Creneau.builder()
-                .modules(modules)
-                .groupes(groupes)
-                .professeurs(profs)
-                .salle(pickRandom(salles))
-                .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-                .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-                .type(type)
-                .status(0)
-                .build();
+            .modules(modules)
+            .groupes(groupes)
+            .professeurs(profs)
+            .salle(pickRandom(salles))
+            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+            .type(type)
+            .status(Creneau.Status.ACTIF)
+            .build();
 
         // XXX the builder as is does not maintain coherence, though
         // that is where this belongs. either that, or we should change

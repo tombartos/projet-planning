@@ -32,7 +32,6 @@ public class DataFaker {
             dataFaker.fakeData();
             dataFaker.initResp();
         }
-
     }
 
     private java.util.Random rand;
@@ -66,10 +65,17 @@ public class DataFaker {
                 em.persist(group);
 
                 if (group.getSousGroupes().isEmpty()) {
+                    var groupeAncetres = new java.util.ArrayList<>(group.getAncetres());
+
                     for (int i = 0; i < 50; ++i) {
                         final var etudiant = FakeUser.with(faker, rand)
-                                .withStudentEmail()
-                                .configure(Etudiant.builder()).build();
+                            .withStudentEmail()
+                            .configure(Etudiant.builder())
+                            .groupes(groupeAncetres)
+                            .build();
+                        for (var g : groupeAncetres) {
+                            g.getEtudiants().add(etudiant);
+                        }
                         em.persist(etudiant);
                     }
                 }

@@ -136,7 +136,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
                 // Invert creneau status
                 Creneau creneauToCancel = demande.getCreneauToModify();
                 if (creneauToCancel != null) {
-                    if (creneauToCancel.getStatus() == 0) {
+                    if (creneauToCancel.getStatus() == Creneau.Status.ACTIF){
                         creneauRepository.annulerCreneau(creneauToCancel);
                     } else {
                         creneauRepository.restoreCreneau(creneauToCancel);

@@ -61,7 +61,6 @@ interface RepositoryFactory extends AutoCloseable {
         }
 
         @Override
-        public void close() {
-        }
+        public void close() {}
     }
 }

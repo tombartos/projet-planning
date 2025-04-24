@@ -1,5 +1,7 @@
 package fr.univtln.m1im.png.gui;
 
+import static fr.univtln.m1im.png.model.Creneau.Status.*;
+
 import java.time.OffsetDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.WeekFields;
@@ -94,7 +96,7 @@ public class Gui {
     private Canvas cJours;
     private GraphicsContext gcJours;
 
-    private int etatCourant = 0; // 0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
+    private int etatCourant = 0; //0: edt perso,1: edt prof, 2: edt salle, 3: edt groupe
     private String salleChoisie;
 
     private int anneeDebut;
@@ -170,10 +172,12 @@ public class Gui {
 
         this.guiCreneaux = new ArrayList<>();
 
-        this.grille = new Canvas(this.wGrille, this.hGrille);
-        this.grille.setOnMouseClicked(e -> {
-            for (GuiCreneau gc : guiCreneaux) {
-                if (gc.getCreneau().getStatus() != 2) {
+        this.grille = new Canvas(this.wGrille,this.hGrille);
+        this.grille.setOnMouseClicked(e->{
+            for(GuiCreneau gc : guiCreneaux)
+            {
+                if(gc.getCreneau().getStatus() != EPHEMERE)
+                {
                     gc.getRectangle().setStrokeWidth(1);
                     gc.getRectangle().setStroke(Color.BLACK);
                     this.popups[0].close();
@@ -246,7 +250,8 @@ public class Gui {
             }
         }
 
-        // Ajout de la barre de filtres
+
+        //Ajout de la barre de filtres
         this.gpBarreFiltres = new Group();
         this.gpBarreFiltres.minHeight(mHeight);
         this.barreFiltres = new HBox();
@@ -350,6 +355,7 @@ public class Gui {
             this.ajouteModule.setVisible(true);
         }
 
+
         // Ajouter les boutons dans la barre horizontale
         this.barreFiltres.getChildren().addAll(btnEdt, this.salleDropdown, this.groupesDropdown, this.profDropdown,
                 this.filtreDropdown, this.ajoutCours, this.ajouteModule, this.demandeCours);
@@ -363,16 +369,17 @@ public class Gui {
             MenuButton demandeModifCreneau = new MenuButton("Demandes de modification");
             DemandeCreneauRepository demandeCreneauRepository = new DemandeCreneauRepository(entityManager);
 
-            List<DemandeCreneau> demandes = demandeCreneauRepository.getAll(0, 20); // 20 max at the moment, to be
-                                                                                    // changed later maybe
-            Label demandeModifLabel = new Label("Il y a " + demandes.size() + " demandes de modification");
-            CustomMenuItem demandeModifItem = new CustomMenuItem(demandeModifLabel, false);
+
+            List<DemandeCreneau> demandes = demandeCreneauRepository.getAll(0, 20); // 20 max at the moment, to be changed later maybe
+            Label demandeModifLabel = new Label("Il y a "+ demandes.size() + " demandes de modification");
+            CustomMenuItem demandeModifItem =  new CustomMenuItem(demandeModifLabel, false);
             demandeModifCreneau.getItems().add(demandeModifItem);
             demandeModifCreneau.setOnMouseClicked(event -> {
                 demandeModifLabel.setText("Il y a " + demandes.size() + " demandes de modification");
             });
 
-            for (DemandeCreneau demande : demandes) {
+            for(DemandeCreneau demande : demandes)
+            {
 
                 HBox demandeModifHbox = new HBox();
                 demandeModifHbox.setSpacing(10);
@@ -383,15 +390,15 @@ public class Gui {
                 Label creneauModif = new Label(prof.getNom() + " " + prof.getPrenom());
                 Button voirModifButton = new Button("Voir");
                 voirModifButton.setOnAction(event -> {
+                voirModifButton.setOnAction(event -> {
                     log.info("Voir modification");
                     this.numSemaine = demande.getHeureDebut().get(weekFields.weekOfWeekBasedYear());
                     genererCreneaux();
-                    if (demande.getTypeDemande() < 2) {
+                    if (demande.getTypeDemande()<2)
+                    {
                         Creneau visuCreneau = Creneau.makeFromDemandeCreneau(demande);
-                        visuCreneau.setStatus(2);
-                        GuiCreneau guiCreneau = new GuiCreneau(this.popups, this.utilisateur, this.gpCreneaux,
-                                visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager,
-                                this);
+                        visuCreneau.setStatus(EPHEMERE);
+                        GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, visuCreneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
                         gestionCollision(guiCreneau);
                         guiCreneaux.add(guiCreneau);
                         guiCreneau.afficherCreneau();
@@ -412,7 +419,9 @@ public class Gui {
                         demandeModifCreneau.getItems().remove(item);
                         demandeModifLabel.setText(res);
                         demandes.remove(demande);
-                    } else {
+                    }
+                    else
+                    {
                         demandeModifLabel.setText(res);
                     }
                     genererCreneaux();
@@ -429,6 +438,7 @@ public class Gui {
 
             }
             this.barreFiltres.getChildren().add(demandeModifCreneau);
+
 
         }
 
@@ -486,10 +496,10 @@ public class Gui {
                 if (permierJourSemaine.plusDays(i).getMonthValue() != permierJourSemaine.getMonthValue()) {
                     // TODO a améliorer
                     this.gcMois.setFont(javafx.scene.text.Font.font(12)); // Changer la taille de la police
-                    this.gcMois.strokeText("| " + moisFr(permierJourSemaine.plusDays(i).getMonthValue()),
-                            i * ((this.wGrille / this.nbSemaines) / 6) +
-                                    index * this.wGrille / (this.nbSemaines) - index / 2,
-                            this.height * 1 / 20 / 2);
+                    this.gcMois.strokeText("| "+ moisFr(permierJourSemaine.plusDays(i).getMonthValue()),
+                    i*((this.wGrille/this.nbSemaines)/6) +
+                         index * this.wGrille / (this.nbSemaines)-index/2,
+                        this.height * 1/20 / 2);
                     break;
                 }
             }
@@ -511,7 +521,8 @@ public class Gui {
         return r;
     }
 
-    public void genererCreneaux() {
+    public void genererCreneaux()
+    {
         int annee;
         if (numSemaine >= this.premierSemaine) {
             annee = this.anneeDebut;
@@ -545,7 +556,9 @@ public class Gui {
         } else if (this.etatCourant == 2) {
             SalleRepository salleRepository = new SalleRepository(entityManager);
             creneaux = salleRepository.getWeekCrenaux(salleChoisie, this.numSemaine, annee, 0, 100);
-        } else if (this.etatCourant == 3) {
+        }
+        else if(this.etatCourant == 3)
+        {
             GroupeRepository groupeRepository = new GroupeRepository(entityManager);
             creneaux = groupeRepository.getWeekCreneaux(codeGroupeChoisi, this.numSemaine, annee, 0, 100);
 
@@ -573,39 +586,36 @@ public class Gui {
             annee = this.anneeDebut + 1;
         }
         OffsetDateTime permierJourSemaine = OffsetDateTime.now()
-                .with(weekFields.weekOfWeekBasedYear(), numSemaine).withYear(annee)
-                .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
-        for (int i = 0; i < this.nbJour; i++) {
+        .with(weekFields.weekOfWeekBasedYear(),numSemaine).withYear(annee)
+        .with(TemporalAdjusters.previousOrSame(weekFields.getFirstDayOfWeek()));
+        for(int i = 0; i < this.nbJour; i++){
 
-            // this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString()
-            // + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille /
-            // this.nbJour, this.height * 1/20 / 2);
-            this.gcJours.strokeText(dateFr(permierJourSemaine.plusDays(i)), i * this.wGrille / this.nbJour,
-                    this.height * 1 / 20 / 2);
+            //this.gcJours.strokeText(permierJourSemaine.plusDays(i).getDayOfWeek().toString() + " " + permierJourSemaine.plusDays(i).toLocalDate(), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
+            this.gcJours.strokeText(dateFr(permierJourSemaine.plusDays(i)), i * this.wGrille / this.nbJour, this.height * 1/20 / 2);
         }
+
+
 
         this.gpCreneaux.getChildren().clear();
         guiCreneaux = new ArrayList<>();
-        for (Creneau creneau : this.creneaux) {
-            GuiCreneau guiCreneau = new GuiCreneau(this.popups, this.utilisateur, this.gpCreneaux, creneau,
-                    this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
-            gestionCollision(guiCreneau);
-            guiCreneaux.add(guiCreneau);
-            guiCreneau.afficherCreneau();
+        for(Creneau creneau : this.creneaux){
+                GuiCreneau guiCreneau = new GuiCreneau(this.popups ,this.utilisateur, this.gpCreneaux, creneau, this.wGrille, this.hGrille, this.nbHeure, this.nbJour, entityManager, this);
+                gestionCollision(guiCreneau);
+                guiCreneaux.add(guiCreneau);
+                guiCreneau.afficherCreneau();
+
 
         }
     }
 
-    public void gestionCollision(GuiCreneau guiCreneau) {
-        for (GuiCreneau gc : guiCreneaux) {
-            if (((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut())
-                    || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
-                    && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin())))
-                    ||
-                    ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut())
-                            || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
-                            && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureDebut())))) {
-
+    public void gestionCollision(GuiCreneau guiCreneau){
+        for(GuiCreneau gc : guiCreneaux){
+            if(((guiCreneau.getCreneau().getHeureDebut().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureDebut().isEqual(gc.getCreneau().getHeureDebut()))
+                        && (guiCreneau.getCreneau().getHeureDebut().isBefore(gc.getCreneau().getHeureFin()) ))
+                    || 
+                    ((guiCreneau.getCreneau().getHeureFin().isAfter(gc.getCreneau().getHeureDebut()) || guiCreneau.getCreneau().getHeureFin().isEqual(gc.getCreneau().getHeureDebut()))
+                     && (guiCreneau.getCreneau().getHeureFin().isBefore(gc.getCreneau().getHeureDebut()))))
+            {
                 gc.setCollision(gc.getCollision() + 1);
                 guiCreneau.setCollision(guiCreneau.getCollision() + 1);
                 guiCreneau.setPosCollision(gc.getPosCollision() + 1);
@@ -642,7 +652,6 @@ public class Gui {
             this.profDropdown.getItems().add(professeur.getNom() + " " + professeur.getPrenom());
         }
 
-
         this.profDropdown.getEditor().addEventHandler(KeyEvent.KEY_RELEASED, event -> {
             this.profDropdown.show();
             if(this.profDropdown.getEditor().getText() == null) return;
@@ -658,9 +667,7 @@ public class Gui {
                     this.profDropdown.getItems().add(prof);
                 }
             }
-            
         });
-
     }
 
 }
