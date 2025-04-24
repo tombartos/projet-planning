@@ -355,46 +355,46 @@ public class GuiCreneau {
             position = listCreneaux.size()-nbAffichage;
         }
         String info = new String();
-            for(int i = 0; i < nbAffichage; i++){
-                info = dateFr(listCreneaux.get(position + i).getHeureDebut());
-                if(listCreneaux.get(position + i).getHeureDebut().getHour() < 10){
-                    info += "0";
-                }
-                info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":";
-                if(listCreneaux.get(position + i).getHeureDebut().getMinute() < 10){
-                    info += "0";
-                }
-                info +=listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
-                if(listCreneaux.get(position + i).getHeureFin().getHour() < 10){
-                    info += "0";
-                }
-                info += listCreneaux.get(position + i).getHeureFin().getHour() + ":";
-                if(listCreneaux.get(position + i).getHeureFin().getMinute() < 10){
-                    info += "0";
-                }
-                info += listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
-                info += listCreneaux.get(position + i).getType() + "\n";
-                infoModules.add(new Label(info));
-                infoModules.get(i).setPrefSize(350, 10);
-                if(this.creneau.getHeureDebut().equals(listCreneaux.get(position + i).getHeureDebut())){
-                    infoModules.get(i).setTextFill(Color.RED);
+        for(int i = 0; i < nbAffichage; i++){
+            info = dateFr(listCreneaux.get(position + i).getHeureDebut());
+            if(listCreneaux.get(position + i).getHeureDebut().getHour() < 10){
+                info += "0";
+            }
+            info += listCreneaux.get(position + i).getHeureDebut().getHour() + ":";
+            if(listCreneaux.get(position + i).getHeureDebut().getMinute() < 10){
+                info += "0";
+            }
+            info +=listCreneaux.get(position + i).getHeureDebut().getMinute()+ "\t";
+            if(listCreneaux.get(position + i).getHeureFin().getHour() < 10){
+                info += "0";
+            }
+            info += listCreneaux.get(position + i).getHeureFin().getHour() + ":";
+            if(listCreneaux.get(position + i).getHeureFin().getMinute() < 10){
+                info += "0";
+            }
+            info += listCreneaux.get(position + i).getHeureFin().getMinute()+ "\t";
+            info += listCreneaux.get(position + i).getType() + "\n";
+            infoModules.add(new Label(info));
+            infoModules.get(i).setPrefSize(350, 10);
+            if(this.creneau.getHeureDebut().equals(listCreneaux.get(position + i).getHeureDebut())){
+                infoModules.get(i).setTextFill(Color.RED);
+                infoModules.get(i).setStyle("-fx-background-color: lightgray;");
+            }
+            else{
+                if(listCreneaux.get(position + i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
+                    infoModules.get(i).setTextFill(Color.BLACK);
                     infoModules.get(i).setStyle("-fx-background-color: lightgray;");
                 }
-                else{
-                    if(listCreneaux.get(position + i).getHeureDebut().isBefore(this.creneau.getHeureDebut())){
-                        infoModules.get(i).setTextFill(Color.BLACK);
-                        infoModules.get(i).setStyle("-fx-background-color: lightgray;");
-                    }
-                    else
-                    {
-                        infoModules.get(i).setTextFill(Color.BLACK);
-                        infoModules.get(i).setStyle("-fx-background-color: white;");
-                    }
-                    
+                else
+                {
+                    infoModules.get(i).setTextFill(Color.BLACK);
+                    infoModules.get(i).setStyle("-fx-background-color: white;");
                 }
-                gridModules.add(infoModules.get(i), 0, 1+i);
-
+                
             }
+            gridModules.add(infoModules.get(i), 0, 1+i);
+
+        }
 
         infoGroup.getChildren().add(grid);
         ScrollBar scrollBar = new ScrollBar();
