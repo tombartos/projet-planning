@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Random;
 
+/**
+ * Utility class for generating fake room (salle) data.
+ */
 class SalleFaker implements Iterable<Salle> {
     private Random rand;
     private char lettre;

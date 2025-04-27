@@ -8,6 +8,12 @@ import fr.univtln.m1im.png.model.Utilisateur;
 import com.github.javafaker.Faker;
 import java.util.Random;
 
+/**
+ * Utility class for generating fake user data.
+ * This includes generating random names, emails, logins, and other user
+ * attributes.
+ * It supports creating both student and professor users.
+ */
 class FakeUser {
     Random rand;
     String firstName;

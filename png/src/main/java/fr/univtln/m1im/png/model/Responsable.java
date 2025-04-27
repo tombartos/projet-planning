@@ -21,6 +21,11 @@ import lombok.experimental.SuperBuilder;
 @NamedQueries({
         @NamedQuery(name = "Responsable.getByLogin", query = "SELECT r FROM Responsable r WHERE r.login = :login")
 })
+/**
+ * Represents a responsible user in the system.
+ * A responsible user is associated with a specific UFR (Unité de Formation et
+ * de Recherche).
+ */
 public class Responsable extends Utilisateur {
     @Column(nullable = false)
     String UFR; // UFR affected to the responsible

@@ -1,5 +1,11 @@
 package fr.univtln.m1im.png.generation;
 
+/**
+ * Represents a fake module used for generating test data.
+ * Each module has a code, name, and description.
+ * This class also provides predefined modules for various disciplines and
+ * formations.
+ */
 record FakeModule(String code, String nom, String description) {
         // Modules génériques (communs ou multidisciplinaires)
         static final FakeModule MODULE_GENOMIQUE = new FakeModule("BIO101", "Génomique", "Introduction à la génomique");

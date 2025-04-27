@@ -32,6 +32,11 @@ import lombok.ToString;
         @NamedQuery(name = "Module.getAllModulesCodes", query = "SELECT m.code FROM Module m"),
         @NamedQuery(name = "Module.getModuleByCode", query = "SELECT m FROM Module m WHERE m.code = :codeModule")
 })
+/**
+ * Represents a module in the system.
+ * A module can be associated with professors, groups, and time slots
+ * (creneaux).
+ */
 public class Module {
     @Id
     private String code;

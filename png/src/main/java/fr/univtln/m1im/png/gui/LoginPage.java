@@ -18,6 +18,11 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+/**
+ * GUI class for the login page.
+ * Allows users to authenticate and redirects them to the appropriate interface
+ * based on their role (student, professor, or administrator).
+ */
 public class LoginPage {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
 

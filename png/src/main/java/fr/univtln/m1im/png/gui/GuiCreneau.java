@@ -32,6 +32,10 @@ import javafx.stage.StageStyle;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents the graphical representation of a time slot (creneau) in the GUI.
+ * Handles the display, interaction, and collision management of time slots.
+ */
 @Getter
 @Setter
 public class GuiCreneau {

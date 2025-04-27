@@ -20,6 +20,11 @@ import lombok.Builder;
 @NamedQueries({
         @NamedQuery(name = "NotePersonnelle.getByCreneauUtilisateur", query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau")
 })
+/**
+ * Represents a personal note associated with a specific time slot (creneau) and
+ * user.
+ * A note can contain custom text and is linked to a user and a time slot.
+ */
 public class NotePersonnelle {
     @Id
     @SequenceGenerator(name = "note_perso_seq", sequenceName = "note_perso_sequence", allocationSize = 1)

@@ -5,23 +5,53 @@ import java.util.Optional;
 
 import jakarta.persistence.*;
 
+/**
+ * Abstract base class for JPA-based repositories.
+ * Provides common CRUD operations and pagination support.
+ *
+ * @param <T>  The type of the entity.
+ * @param <ID> The type of the entity's identifier.
+ */
 public abstract class JpaRepository<T, ID> implements GenericRepository<T, ID> {
-    // A fournir dans le constructeur ou autre (cf. CDI ou Spring)
+    /**
+     * The {@link EntityManager} used for database operations.
+     */
     protected EntityManager em;
 
-    // A fournir ou à déduire
+    /**
+     * The class type of the entity managed by this repository.
+     */
     private final Class<T> entityClass;
 
+    /**
+     * Constructs a new {@link JpaRepository}.
+     *
+     * @param entityClass   The class type of the entity.
+     * @param entityManager The {@link EntityManager} used for database operations.
+     */
     protected JpaRepository(Class<T> entityClass, EntityManager entityManager) {
         this.em = entityManager;
         this.entityClass = entityClass;
     }
 
+    /**
+     * Finds an entity by its identifier.
+     *
+     * @param id The identifier of the entity.
+     * @return An {@link Optional} containing the entity if found, or empty if not.
+     */
     @Override
     public Optional<T> findById(ID id) {
         return Optional.ofNullable(em.find(entityClass, id));
     }
 
+    /**
+     * Retrieves all entities with pagination.
+     *
+     * @param pageNumber The page number to retrieve.
+     * @param pageSize   The number of entities per page.
+     * @return A list of entities for the specified page.
+     */
     @Override
     public List<T> findAll(int pageNumber, int pageSize) {
         // Utiliser des named queries ou la criteria API
@@ -32,6 +62,13 @@ public abstract class JpaRepository<T, ID> implements GenericRepository<T, ID> {
                 .getResultList();
     }
 
+    /**
+     * Saves an entity to the repository.
+     * If the entity already exists, it will be updated.
+     *
+     * @param entity The entity to save.
+     * @return The saved entity.
+     */
     @Override
     public T save(T entity) {
         em.getTransaction().begin();
@@ -44,6 +81,11 @@ public abstract class JpaRepository<T, ID> implements GenericRepository<T, ID> {
         return entity;
     }
 
+    /**
+     * Deletes an entity from the repository.
+     *
+     * @param entity The entity to delete.
+     */
     @Override
     public void delete(T entity) {
         em.getTransaction().begin();

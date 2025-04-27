@@ -10,6 +10,9 @@ import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Module;
 import static fr.univtln.m1im.png.generation.FakeModule.*;
 
+/**
+ * Utility class for generating fake group (groupe) data.
+ */
 class GroupFaker {
     static record FakeFormation(String nom, FakeModule[] modules) {
     }

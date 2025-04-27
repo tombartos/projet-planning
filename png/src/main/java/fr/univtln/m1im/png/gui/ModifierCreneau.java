@@ -42,6 +42,11 @@ import javafx.stage.Stage;
 
 import java.util.logging.Logger;
 
+/**
+ * GUI class for modifying an existing time slot (creneau).
+ * Provides a form to update details such as modules, professors, groups, type,
+ * room, and schedule.
+ */
 public class ModifierCreneau {
 
     private final EntityManager entityManager;

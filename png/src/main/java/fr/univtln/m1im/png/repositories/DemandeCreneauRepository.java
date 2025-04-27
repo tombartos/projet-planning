@@ -13,6 +13,11 @@ import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
 import java.util.logging.Logger;
 
+/**
+ * Repository class for managing {@link DemandeCreneau} entities.
+ * Provides methods for adding, accepting, refusing, and retrieving creneau
+ * requests.
+ */
 public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long> {
     private static final Logger log = Logger.getLogger(DemandeCreneauRepository.class.getName());
 
@@ -20,10 +25,16 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         super(DemandeCreneau.class, entityManager);
     }
 
-    public String addDemandeCreneau(DemandeCreneau DemandeCreneau) {
+    /**
+     * Adds a new creneau request.
+     *
+     * @param demandeCreneau The creneau request to add.
+     * @return A message indicating the result of the operation.
+     */
+    public String addDemandeCreneau(DemandeCreneau demandeCreneau) {
         // All the verifications are done in this method
         // First we get the list of creneaux of the day
-        OffsetDateTime day = DemandeCreneau.getHeureDebut().truncatedTo(ChronoUnit.DAYS);
+        OffsetDateTime day = demandeCreneau.getHeureDebut().truncatedTo(ChronoUnit.DAYS);
         OffsetDateTime firstHour = day.withHour(8).withMinute(0).withSecond(0).withNano(0);
         OffsetDateTime lastHour = day.withHour(22).withMinute(0).withSecond(0).withNano(0);
         CreneauRepository creneauRepository = new CreneauRepository(em);
@@ -34,10 +45,10 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         List<Creneau> creneauxDay = creneauRepository.getCreneauxDay(firstHour, lastHour);
         creneauxDay.sort((c1, c2) -> c1.getHeureDebut().compareTo(c2.getHeureDebut()));
 
-        Creneau creneauTmp = Creneau.makeFromDemandeCreneau(DemandeCreneau); // We create a temporary creneau to check
+        Creneau creneauTmp = Creneau.makeFromDemandeCreneau(demandeCreneau); // We create a temporary creneau to check
                                                                              // the conflicts
         // 1: Prof check
-        for (Professeur prof : DemandeCreneau.getProfesseurs()) {
+        for (Professeur prof : demandeCreneau.getProfesseurs()) {
             List<Creneau> profCreneaux = new ArrayList<>();
             for (Creneau c : creneauxDay) {
                 if (c.getProfesseurs().contains(prof)) {
@@ -51,7 +62,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         }
 
         // 2: Groupe check
-        for (Groupe groupe : DemandeCreneau.getGroupes()) {
+        for (Groupe groupe : demandeCreneau.getGroupes()) {
             List<Creneau> groupeCreneaux = new ArrayList<>();
             for (Creneau c : creneauxDay) {
                 if (c.getGroupes().contains(groupe)) {
@@ -67,7 +78,7 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         // 3: Salle check
         List<Creneau> salleCreneaux = new ArrayList<>();
         for (Creneau c : creneauxDay) {
-            if (c.getSalle().equals(DemandeCreneau.getSalle())) {
+            if (c.getSalle().equals(demandeCreneau.getSalle())) {
                 salleCreneaux.add(c);
             }
         }
@@ -76,23 +87,29 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
 
         if (!Utils.canInsertCreneau(creneauTmp, salleCreneaux)) {
             return ("La demande ne peut pas être effectuée car il y a un conflit avec la salle "
-                    + DemandeCreneau.getSalle().getCode());
+                    + demandeCreneau.getSalle().getCode());
         }
         em.getTransaction().begin();
         // Persist the creneau and make the relations with the modules, groupes and
         // professeurs
-        for (Professeur prof : DemandeCreneau.getProfesseurs()) {
+        for (Professeur prof : demandeCreneau.getProfesseurs()) {
             Professeur managedProf = em.merge(prof);
-            managedProf.getDemandes_creneaux().add(DemandeCreneau);
+            managedProf.getDemandes_creneaux().add(demandeCreneau);
         }
 
-        em.persist(DemandeCreneau);
+        em.persist(demandeCreneau);
         em.getTransaction().commit();
         return ("La demande a été effectuée avec succès");
         // TODO: Etendre plusieurs semaines
 
     }
 
+    /**
+     * Accepts a creneau request and processes it.
+     *
+     * @param demande The creneau request to accept.
+     * @return A message indicating the result of the operation.
+     */
     public String acceptDemandeCreneau(DemandeCreneau demande) {
         Creneau creneau;
         Creneau oldCreneau;
@@ -179,6 +196,12 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
 
     }
 
+    /**
+     * Refuses a creneau request.
+     *
+     * @param demande The creneau request to refuse.
+     * @return A message indicating the result of the operation.
+     */
     public String refuseDemandeCreneau(DemandeCreneau demande) {
         em.getTransaction().begin();
         em.merge(demande);
@@ -188,6 +211,13 @@ public class DemandeCreneauRepository extends JpaRepository<DemandeCreneau, Long
         return ("La demande a été refusée avec succès");
     }
 
+    /**
+     * Retrieves all pending creneau requests.
+     *
+     * @param numpage The page number.
+     * @param size    The page size.
+     * @return A list of pending creneau requests.
+     */
     public List<DemandeCreneau> getAll(int numpage, int size) {
         return em.createNamedQuery("DemandeCreneau.getAllPending", DemandeCreneau.class)
                 .setFirstResult(size * numpage)

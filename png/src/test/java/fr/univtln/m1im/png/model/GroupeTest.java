@@ -11,7 +11,14 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests for the {@link Groupe} class.
+ */
 class GroupeTest {
+
+    /**
+     * Tests the creation of a parent group and its relationship with a child group.
+     */
     @Test
     void testBuildParentGroup() {
         var g1 = Groupe.builder().build();
@@ -29,6 +36,9 @@ class GroupeTest {
         assertEquals(count, g1.getSousGroupes().size());
     }
 
+    /**
+     * Tests setting a parent group for a group.
+     */
     @Test
     void testSetParentGroup() {
         var g1 = Groupe.builder().build();
@@ -53,6 +63,9 @@ class GroupeTest {
         assertEquals(count, g1.getSousGroupes().size());
     }
 
+    /**
+     * Tests unsetting the parent group of a group.
+     */
     @Test
     void testUnsetParentGroup() {
         var g1 = Groupe.builder().build();
@@ -68,6 +81,9 @@ class GroupeTest {
         assertNull(g2.getParent());
     }
 
+    /**
+     * Tests if a group is a descendant of another group.
+     */
     @Test
     void testIsDescendantOf() {
         var g1 = Groupe.builder().build();
@@ -89,6 +105,9 @@ class GroupeTest {
         assertFalse(g1.isDescendantOf(null));
     }
 
+    /**
+     * Tests that the group hierarchy remains acyclic.
+     */
     @Test
     void testAcyclic() {
         var g1 = Groupe.builder().build();
@@ -98,6 +117,9 @@ class GroupeTest {
         assertThrows(IllegalArgumentException.class, () -> g1.setParent(g3));
     }
 
+    /**
+     * Tests adding multiple children to a parent group.
+     */
     @Test
     void testTwoChildren() {
         var g1 = Groupe.builder().build();
@@ -112,6 +134,9 @@ class GroupeTest {
         assertTrue(g1.getSousGroupes().contains(g3));
     }
 
+    /**
+     * Tests moving a group to a new parent group.
+     */
     @Test
     void testMoveToParent() {
         var g1 = Groupe.builder().build();
@@ -126,6 +151,9 @@ class GroupeTest {
         assertTrue(g1.getSousGroupes().contains(g3));
     }
 
+    /**
+     * Tests the default builder configuration for a group.
+     */
     @Test
     void testDefaultBuilder() {
         var g = Groupe.builder().build();
@@ -136,6 +164,9 @@ class GroupeTest {
         assertTrue(g.getSousGroupes().isEmpty());
     }
 
+    /**
+     * Tests the iteration of modules in a group hierarchy.
+     */
     @Test
     void testModuleIteration() {
         var m1 = Module.builder().code("M1").build();
@@ -159,6 +190,9 @@ class GroupeTest {
         assertThrows(NoSuchElementException.class, () -> iter.next());
     }
 
+    /**
+     * Tests the indexing of modules in a group hierarchy.
+     */
     @Test
     void testModuleIndexation() {
         var m1 = Module.builder().code("M1").build();

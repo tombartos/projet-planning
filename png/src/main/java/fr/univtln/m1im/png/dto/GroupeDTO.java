@@ -4,6 +4,10 @@ import lombok.Getter;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
+/**
+ * Data Transfer Object (DTO) for the {@link Groupe} class.
+ * Used to transfer group data between layers.
+ */
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

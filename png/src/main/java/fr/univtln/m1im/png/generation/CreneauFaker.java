@@ -18,6 +18,12 @@ import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Salle;
 
+/**
+ * Utility class for generating fake time slots (creneaux) for groups and
+ * modules.
+ * It creates realistic schedules by assigning random time slots, groups,
+ * professors, and rooms.
+ */
 class CreneauFaker implements Iterable<Creneau> {
     private Random rand;
     private Groupe rootGroupe;

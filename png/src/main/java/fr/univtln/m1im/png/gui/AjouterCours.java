@@ -37,6 +37,12 @@ import fr.univtln.m1im.png.model.Module;
 
 import java.util.logging.Logger;
 
+/**
+ * GUI class for adding or requesting a new time slot (creneau).
+ * This class provides a form for selecting modules, professors, groups, type of
+ * course,
+ * room, and scheduling details such as date, time, and duration.
+ */
 @Getter
 @Setter
 public class AjouterCours {

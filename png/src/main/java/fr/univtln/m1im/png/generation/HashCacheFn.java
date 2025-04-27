@@ -3,6 +3,15 @@ package fr.univtln.m1im.png.generation;
 import java.util.HashMap;
 import java.util.function.Function;
 
+/**
+ * A utility class that caches the results of a function to avoid redundant
+ * computations.
+ * It uses a {@link HashMap} to store the mapping between input and output
+ * values.
+ *
+ * @param <T> The type of the input to the function.
+ * @param <R> The type of the result of the function.
+ */
 class HashCacheFn<T, R> implements Function<T, R> {
     private Function<T, R> f;
     private HashMap<T, R> h;

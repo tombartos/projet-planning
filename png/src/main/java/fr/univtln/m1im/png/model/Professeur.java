@@ -30,6 +30,11 @@ import java.util.List;
     @NamedQuery(name = "ProfesseurDTO.getAllDTO", query = "SELECT new fr.univtln.m1im.png.dto.ProfesseurDTO(p.id, p.nom, p.prenom) FROM Professeur p"),
     @NamedQuery(name = "Professeur.getAll", query = "SELECT p FROM Professeur p")
 })
+/**
+ * Represents a professor in the system.
+ * A professor can be associated with multiple modules, time slots (creneaux),
+ * and time slot requests.
+ */
 public class Professeur extends Utilisateur {
   @ToString.Exclude
   @Builder.Default

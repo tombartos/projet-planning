@@ -6,17 +6,41 @@ import fr.univtln.m1im.png.Utils;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
+/**
+ * Factory interface for managing repositories and database transactions.
+ * Provides implementations for interacting with a database or printing to
+ * stdout.
+ */
 interface RepositoryFactory extends AutoCloseable {
+
+    /**
+     * Executes a transaction with the provided repository consumer.
+     *
+     * @param f The consumer that performs operations on the repository.
+     */
     public void transaction(Consumer<Repository> f);
 
-    // AutoCloseable.close may throw an Exception, though EntityManagerFactory.close
-    // doesn't. Behave like EntityManagerFactory.
+    /**
+     * Closes the factory and releases resources.
+     */
+    @Override
     public void close();
 
+    /**
+     * Interface for a repository that provides persistence operations.
+     */
     static interface Repository {
+        /**
+         * Persists an object to the repository.
+         *
+         * @param o The object to persist.
+         */
         public void persist(Object o);
     }
 
+    /**
+     * Implementation of {@link RepositoryFactory} for interacting with a database.
+     */
     static class Database implements RepositoryFactory {
         private EntityManagerFactory emf = Utils.getEntityManagerFactory();
 
@@ -47,8 +71,10 @@ interface RepositoryFactory extends AutoCloseable {
         }
     }
 
-    // Right now this just stupidly prints stuff to stdout for debugging, but we
-    // could have it print a script.
+    /**
+     * Implementation of {@link RepositoryFactory} that prints objects to stdout.
+     * Useful for debugging or generating scripts.
+     */
     static class Stdout implements RepositoryFactory {
         @Override
         public void transaction(Consumer<Repository> f) {

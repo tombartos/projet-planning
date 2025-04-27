@@ -46,6 +46,13 @@ import javafx.scene.input.KeyEvent;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Main GUI class for managing and displaying the schedule (planning).
+ * Provides functionalities for filtering schedules by rooms, groups,
+ * professors,
+ * and managing time slots for different user roles (students, professors, and
+ * administrators).
+ */
 @Getter
 @Setter
 public class Gui {

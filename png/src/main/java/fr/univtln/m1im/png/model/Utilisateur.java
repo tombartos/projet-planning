@@ -35,6 +35,11 @@ import java.util.ArrayList;
         @NamedQuery(name = "Utilisateur.getNotePerso", query = "SELECT n FROM NotePersonnelle n WHERE n.utilisateur.id = :idUtilisateur AND n.creneau.id = :idCreneau")
 })
 
+/**
+ * Abstract class representing a user in the system.
+ * A user can have personal notes and is identified by their login, email, and
+ * other personal details.
+ */
 public abstract class Utilisateur {
     @Id
     @SequenceGenerator(name = "user_seq", sequenceName = "user_sequence", allocationSize = 1)

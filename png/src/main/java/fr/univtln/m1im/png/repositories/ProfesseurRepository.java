@@ -9,6 +9,12 @@ import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Professeur;
 import jakarta.persistence.EntityManager;
 
+/**
+ * Repository class for managing {@link Professeur} entities.
+ * Provides methods for retrieving professors by login, fetching weekly
+ * schedules,
+ * and retrieving all professors or their DTOs.
+ */
 public class ProfesseurRepository extends JpaRepository<Professeur, Long> {
     public ProfesseurRepository(EntityManager entityManager) {
         super(Professeur.class, entityManager);

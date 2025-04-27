@@ -8,6 +8,10 @@ import fr.univtln.m1im.png.model.Etudiant;
 import fr.univtln.m1im.png.model.Professeur;
 import fr.univtln.m1im.png.model.Responsable;
 
+/**
+ * Main class for generating fake data for the system.
+ * This includes rooms, groups, modules, students, professors, and time slots.
+ */
 public class DataFaker {
     public static void main(String[] args) {
         RepositoryFactory emf;

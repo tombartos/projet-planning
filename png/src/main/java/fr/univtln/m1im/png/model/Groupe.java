@@ -40,6 +40,11 @@ import java.util.function.Function;
         @NamedQuery(name = "Groupe.getWeekCreneaux", query = "SELECT c FROM Groupe g JOIN g.creneaux c WHERE g.code = :code AND c.heureDebut BETWEEN :firstDay AND :lastDay"),
         @NamedQuery(name = "Groupe.getByCode", query = "SELECT g FROM Groupe g WHERE g.code = :code")
 })
+/**
+ * Represents a group in the system.
+ * A group can have a hierarchical structure with parent and child groups.
+ * It can also be associated with students, modules, and time slots (creneaux).
+ */
 public class Groupe {
     @Id
     private String code;

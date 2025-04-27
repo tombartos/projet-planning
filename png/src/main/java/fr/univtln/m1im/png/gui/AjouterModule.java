@@ -20,6 +20,12 @@ import fr.univtln.m1im.png.repositories.ProfesseurRepository;
 import jakarta.persistence.EntityManager;
 import fr.univtln.m1im.png.model.Module;
 
+/**
+ * GUI class for adding a new module to the system.
+ * This class provides a form for entering module details such as code, name,
+ * description,
+ * associated professor, group, and the number of hours for CM, TD, and TP.
+ */
 public class AjouterModule {
 
     private EntityManager entityManager;

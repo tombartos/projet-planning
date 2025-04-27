@@ -42,6 +42,11 @@ import lombok.ToString;
         @NamedQuery(name = "Creneau.getCreneauxDay", query = "SELECT c FROM Creneau c WHERE c.status = 0 AND c.heureDebut BETWEEN :firstHour AND :lastHour"),
         @NamedQuery(name = "Creneau.getCreneauById", query = "SELECT c FROM Creneau c WHERE c.id = :id"),
 })
+/**
+ * Represents a time slot (creneau) in the system.
+ * A time slot can be associated with modules, groups, professors, and a room
+ * (salle).
+ */
 public class Creneau {
     @Id
     @SequenceGenerator(name = "creneau_seq", sequenceName = "creneau_sequence", allocationSize = 1)

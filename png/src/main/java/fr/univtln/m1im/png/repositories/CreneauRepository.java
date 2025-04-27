@@ -15,6 +15,11 @@ import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Repository class for managing {@link Creneau} entities.
+ * Provides methods for retrieving, adding, deleting, and modifying time slots
+ * (creneaux).
+ */
 public class CreneauRepository extends JpaRepository<Creneau, Long> {
     private static final Logger log = LoggerFactory.getLogger(CreneauRepository.class);
 
@@ -22,6 +27,13 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         super(Creneau.class, entityManager);
     }
 
+    /**
+     * Retrieves all creneaux within a specific day.
+     *
+     * @param firstHour The start of the day.
+     * @param lastHour  The end of the day.
+     * @return A list of creneaux within the specified day.
+     */
     public List<Creneau> getCreneauxDay(OffsetDateTime firstHour, OffsetDateTime lastHour) {
         return em.createNamedQuery("Creneau.getCreneauxDay", Creneau.class)
                 .setParameter("firstHour", firstHour)
@@ -29,13 +41,26 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
                 .getResultList();
     }
 
+    /**
+     * Retrieves a creneau by its ID.
+     *
+     * @param id The ID of the creneau.
+     * @return The creneau with the specified ID.
+     */
     public Creneau getCreneauById(Long id) {
         return em.createNamedQuery("Creneau.getCreneauById", Creneau.class)
                 .setParameter("id", id)
                 .getSingleResult();
     }
 
-    // FIXME NullPointerException quand il y a des creneaux où salle == null.
+    /**
+     * Adds or modifies a creneau.
+     *
+     * @param creneau    The creneau to add or modify.
+     * @param oldCreneau The existing creneau to modify, or null if adding a new
+     *                   creneau.
+     * @return A message indicating the result of the operation.
+     */
     public String addCreneau(Creneau creneau, Creneau oldCreneau) {
         // All the verifications are done in this method
         // oldCreneau is the creneau to modify, if it is null we are adding a new
@@ -118,6 +143,11 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         return ("Le créneau a été inséré");
     }
 
+    /**
+     * Deletes a creneau from the database.
+     *
+     * @param creneau The creneau to delete.
+     */
     public void deleteCreneau(Creneau creneau) {
         em.getTransaction().begin();
         em.merge(creneau);
@@ -137,6 +167,11 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         em.getTransaction().commit();
     }
 
+    /**
+     * Cancels a creneau by setting its status to "ANNULÉ".
+     *
+     * @param creneau The creneau to cancel.
+     */
     public void annulerCreneau(Creneau creneau) {
         em.getTransaction().begin();
         creneau.setStatus(Creneau.Status.ANNULE);
@@ -144,6 +179,11 @@ public class CreneauRepository extends JpaRepository<Creneau, Long> {
         em.getTransaction().commit();
     }
 
+    /**
+     * Restores a canceled creneau by setting its status to "ACTIF".
+     *
+     * @param creneau The creneau to restore.
+     */
     public void restoreCreneau(Creneau creneau) {
         em.getTransaction().begin();
         creneau.setStatus(Creneau.Status.ACTIF);

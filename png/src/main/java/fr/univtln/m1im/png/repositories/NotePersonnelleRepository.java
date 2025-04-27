@@ -5,6 +5,11 @@ import fr.univtln.m1im.png.model.NotePersonnelle;
 import fr.univtln.m1im.png.model.Utilisateur;
 import jakarta.persistence.EntityManager;
 
+/**
+ * Repository class for managing {@link NotePersonnelle} entities.
+ * Provides methods for retrieving and modifying personal notes associated with
+ * time slots (creneaux) and users.
+ */
 public class NotePersonnelleRepository extends JpaRepository<NotePersonnelle, Long> {
     public NotePersonnelleRepository(EntityManager entityManager) {
         super(NotePersonnelle.class, entityManager);

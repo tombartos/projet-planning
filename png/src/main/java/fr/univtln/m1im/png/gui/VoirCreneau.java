@@ -14,6 +14,9 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+/**
+ * GUI class for viewing details of a time slot (creneau).
+ */
 public class VoirCreneau {
     private final Creneau creneau;
     private final EntityManager entityManager;

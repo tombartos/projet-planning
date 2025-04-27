@@ -14,10 +14,22 @@ import fr.univtln.m1im.png.model.Creneau;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+/**
+ * Utility class providing helper methods for database connection, date
+ * manipulation,
+ * and creneau validation.
+ */
 public class Utils {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static EntityManagerFactory emf;
 
+    /**
+     * Initializes the {@link EntityManagerFactory} with the provided user
+     * credentials.
+     *
+     * @param user     The database username.
+     * @param password The database password.
+     */
     static public void initconnection(String user, String password) {
         log.info("Starting EntityManagerFactory initialization");
         EntityManagerFactory tryEmf = null;
@@ -37,6 +49,11 @@ public class Utils {
         emf = tryEmf;
     }
 
+    /**
+     * Retrieves the {@link EntityManagerFactory}.
+     *
+     * @return The {@link EntityManagerFactory} instance.
+     */
     public static EntityManagerFactory getEntityManagerFactory() {
         return emf;
     }
@@ -45,16 +62,24 @@ public class Utils {
         private static final String PERSISTENCE_UNIT = "png";
     }
 
+    /**
+     * Retrieves the week number for a given {@link OffsetDateTime}.
+     *
+     * @param dateTime The date and time to calculate the week number for.
+     * @return The week number of the year.
+     */
     static public int getWeekNumber(OffsetDateTime dateTime) {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         return dateTime.get(weekFields.weekOfYear());
     }
 
     /**
-     * Returns a list containing the first and last day of the week
-     * 
-     * @param weekNumber
-     * @param year
+     * Returns a list containing the first and last day of the specified week.
+     *
+     * @param weekNumber The week number.
+     * @param year       The year.
+     * @return A list with the first and last day of the week as
+     *         {@link OffsetDateTime}.
      */
     static public List<OffsetDateTime> getFirstLastDayOfWeek(int weekNumber, int year) {
         OffsetDateTime firstDayOfWeek = OffsetDateTime.of(year, 1, 1, 0, 0, 0, 0, OffsetDateTime.now().getOffset());
@@ -70,6 +95,13 @@ public class Utils {
         return res;
     }
 
+    /**
+     * Checks if a creneau can be inserted into a list of creneaux for a day.
+     *
+     * @param creneau     The creneau to check.
+     * @param creneauxDay The list of creneaux for the day, sorted by time.
+     * @return {@code true} if the creneau can be inserted, {@code false} otherwise.
+     */
     public static Boolean canInsertCreneau(Creneau creneau, List<Creneau> creneauxDay) {
         // We want to know if the creneau can be inserted in the already sorted list of
         // creneaux of the day

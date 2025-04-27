@@ -36,6 +36,10 @@ import lombok.ToString;
 @NamedQueries({
         @NamedQuery(name = "DemandeCreneau.getAllPending", query = "SELECT d FROM DemandeCreneau d WHERE d.status = 0")
 })
+/**
+ * Represents a request for a time slot (creneau).
+ * A request can involve multiple modules, groups, and professors.
+ */
 public class DemandeCreneau {
     @Id
     @SequenceGenerator(name = "demande_creneau_seq", sequenceName = "demande_creneau_sequence", allocationSize = 1)
