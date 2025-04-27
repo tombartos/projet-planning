@@ -10,7 +10,6 @@ import fr.univtln.m1im.png.Utils;
 import fr.univtln.m1im.png.model.Creneau;
 import fr.univtln.m1im.png.model.Groupe;
 import fr.univtln.m1im.png.model.Professeur;
-import fr.univtln.m1im.png.model.Salle;
 import jakarta.persistence.EntityManager;
 
 import org.slf4j.Logger;

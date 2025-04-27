@@ -12,8 +12,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import java.util.Collection;
-import java.util.List;
 import java.util.stream.Stream;
 
 import fr.univtln.m1im.png.model.Creneau;
@@ -113,15 +111,15 @@ class CreneauFaker implements Iterable<Creneau> {
         }
 
         var creneau = Creneau.builder()
-            .modules(modules)
-            .groupes(groupes)
-            .professeurs(profs)
-            .salle(pickRandom(salles))
-            .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-            .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
-            .type(type)
-            .status(Creneau.Status.ACTIF)
-            .build();
+                .modules(modules)
+                .groupes(groupes)
+                .professeurs(profs)
+                .salle(pickRandom(salles))
+                .heureDebut(pos.date.atTime(timeSlot.start()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+                .heureFin(pos.date.atTime(timeSlot.finish()).atZone(ZoneOffset.UTC).toOffsetDateTime())
+                .type(type)
+                .status(Creneau.Status.ACTIF)
+                .build();
 
         // XXX the builder as is does not maintain coherence, though
         // that is where this belongs. either that, or we should change

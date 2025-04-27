@@ -121,8 +121,8 @@ public class Groupe {
                 @Override
                 public boolean hasNext() {
                     return iter.hasNext() ||
-                        groupe.parent != null &&
-                        attrGetter.apply(groupe.parent).iterator().hasNext();
+                            groupe.parent != null &&
+                                    attrGetter.apply(groupe.parent).iterator().hasNext();
                 }
 
                 @Override
@@ -248,7 +248,8 @@ public class Groupe {
             @Override
             public int size() {
                 var n = 0;
-                for (var g = first; g != null; g = g.getParent()) ++n;
+                for (var g = first; g != null; g = g.getParent())
+                    ++n;
                 return n;
             }
         };

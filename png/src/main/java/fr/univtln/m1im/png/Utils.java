@@ -18,7 +18,7 @@ public class Utils {
     private static final Logger log = LoggerFactory.getLogger(Utils.class);
     private static EntityManagerFactory emf;
 
-    static public void initconnection(String user, String password){
+    static public void initconnection(String user, String password) {
         log.info("Starting EntityManagerFactory initialization");
         EntityManagerFactory tryEmf = null;
 
@@ -52,13 +52,14 @@ public class Utils {
 
     /**
      * Returns a list containing the first and last day of the week
+     * 
      * @param weekNumber
      * @param year
      */
-    static public List<OffsetDateTime> getFirstLastDayOfWeek(int weekNumber, int year){
+    static public List<OffsetDateTime> getFirstLastDayOfWeek(int weekNumber, int year) {
         OffsetDateTime firstDayOfWeek = OffsetDateTime.of(year, 1, 1, 0, 0, 0, 0, OffsetDateTime.now().getOffset());
-        //Searching for monday
-        while(firstDayOfWeek.getDayOfWeek().getValue() != 1){
+        // Searching for monday
+        while (firstDayOfWeek.getDayOfWeek().getValue() != 1) {
             firstDayOfWeek = firstDayOfWeek.plusDays(1);
         }
         firstDayOfWeek = firstDayOfWeek.plusWeeks(weekNumber - Utils.getWeekNumber(firstDayOfWeek));
@@ -70,29 +71,31 @@ public class Utils {
     }
 
     public static Boolean canInsertCreneau(Creneau creneau, List<Creneau> creneauxDay) {
-        //We want to know if the creneau can be inserted in the already sorted list of creneaux of the day
-        //Check empty
+        // We want to know if the creneau can be inserted in the already sorted list of
+        // creneaux of the day
+        // Check empty
         if (creneauxDay.isEmpty()) {
             return true;
         }
-        //Check if the same hours are already taken
+        // Check if the same hours are already taken
         for (Creneau c : creneauxDay) {
             if (c.getHeureDebut().isEqual(creneau.getHeureDebut()) || c.getHeureFin().isEqual(creneau.getHeureFin())) {
                 return false;
             }
         }
-        //Check if the creneau is before the first or after the last
+        // Check if the creneau is before the first or after the last
         if (creneauxDay.getFirst().getHeureDebut().isAfter(creneau.getHeureFin())) {
             return true;
         }
         if (creneauxDay.getLast().getHeureFin().isBefore(creneau.getHeureDebut())) {
             return true;
         }
-        //Check if the creneau is between two creneaux
+        // Check if the creneau is between two creneaux
         for (int i = 0; i < creneauxDay.size() - 1; i++) {
             Creneau c1 = creneauxDay.get(i);
             Creneau c2 = creneauxDay.get(i + 1);
-            if (c1.getHeureFin().isBefore(creneau.getHeureDebut()) && c2.getHeureDebut().isAfter(creneau.getHeureFin())) {
+            if (c1.getHeureFin().isBefore(creneau.getHeureDebut())
+                    && c2.getHeureDebut().isAfter(creneau.getHeureFin())) {
                 return true;
             }
         }
